@@ -4,26 +4,30 @@
 const path = require('path')
 
 module.exports = {
-    extends: "airbnb",
+    extends: ["plugin:vue/recommended"],
     env: {
-        "es6": true,
-        "browser": true,
-        "node": true,
-        "mocha": true,
+        'es6': true,
+        'browser': true,
+        'node': true,
+        'mocha': true,
     },
-    parser: "babel-eslint",
+    parserOptions: {
+        parser: 'babel-eslint',
+    },
     plugins: [
-        "vue",
+        'vue',
     ],
     rules: {
-        "indent": [2, 4, { "SwitchCase": 1, "VariableDeclarator": 2 }],
-        "max-statements": [0, 10],
-        'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+        'indent': [2, 4, { 'SwitchCase': 1, 'VariableDeclarator': 2 }],
+        'max-statements': [0, 10],
+        'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+        'vue/html-self-closing': 'off',
+        'vue/html-indent': 0,
     },
     settings: {
-        "import/resolver": {
+        'import/resolver': {
             webpack: {
-                config: path.resolve(__dirname, "build/webpack.base.conf.js",
+                config: path.resolve(__dirname, 'build/webpack.base.conf.js')
             }
         }
     }

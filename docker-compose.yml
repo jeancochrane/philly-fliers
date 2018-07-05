@@ -1,10 +1,10 @@
 version: '3'
 
 services:
-  vue:
+  app:
     build: .
     ports:
       - "8080:8080"
     volumes:
-      - .:/opt/philly-fliers
-    entrypoint: vue
+      - ./philly-fliers:/opt/philly-fliers
+    entrypoint: npm
