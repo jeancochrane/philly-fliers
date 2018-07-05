@@ -1,0 +1,152 @@
+#!/bin/bash
+
+# Most reliable way to get the path for this script.
+# h/t: https://stackoverflow.com/questions/192292/bash-how-best-to-include-other-scripts/12694189#12694189
+DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$DIR" ]];
+then
+    DIR="$PWD"
+fi
+
+# Load common configs for this script.
+source "${DIR}/_config.sh"
+
+function usage() {
+    echo -n "Usage: $(basename "$0") {app} [CMD]
+
+Starts servers using docker-compose. If an argument is specified, [CMD]
+will pass the command string into the corresponding service.
+
+Argument options:
+    - app: Starts the app on port 8080.
+    - <none>: Start all containers.
+"
+}
+
+function checkport() {
+    #
+    # Check that a given port has no processes running on it.
+    #
+    if [[ $(netstat -nlp | grep ":::${1}") ]];
+    then
+        echo "It appears you already have a process running on port ${1}:"
+        echo
+        echo $(netstat -nlp | grep ":::${1}")
+        echo
+        echo "Terminate that process, or alter docker-compose.yml to use another port."
+        exit 1
+    fi
+}
+
+function run_ashlar_service() {
+    #
+    # Run the Ashlar server instance.
+    #
+    if [ $(docker-compose ps | grep "blueprint_ashlar" | grep -q "Up" && echo "$?" || echo 1) -eq 0 ];
+    then
+        echo "Ashlar service is already running."
+    else
+        checkport 8000
+        init_db
+        if [ $# -eq 0 ];
+        then
+            # No arguments -- default to running a Django dev server
+            docker-compose up ashlar
+        else
+            if [ "$1" = "detached"  ];
+            then
+                # Run this service in the background
+                docker-compose up -d ashlar
+            else
+                # User passed in arguments -- run their command
+                docker-compose run --rm --service-ports ashlar "$@"
+            fi
+        fi
+    fi
+}
+
+function run_editor_service() {
+    #
+    # Run the schema editor app.
+    #
+    run_ashlar_service detached
+    checkport 9000
+    if [ $# -eq 0 ];
+    then
+        # No arguments -- default to running a Grunt server
+        docker-compose up editor
+    else
+        if [ "$1" = "detached"  ];
+        then
+            # Run this service in the background
+            docker-compose up -d editor
+        else
+            # User passed in arguments -- run their command
+            docker-compose run --rm --service-ports editor "$@"
+        fi
+    fi
+}
+
+function run_frontend_service() {
+    #
+    # Run the frontend app.
+    #
+    # run_ashlar_service detached
+    checkport 8080
+    if [ $# -eq 0 ];
+    then
+        # No arguments -- default to running a dev server
+        docker-compose up app
+    else
+        if [ "$1" = "detached"  ];
+        then
+            # Run this service in the background
+            docker-compose up -d frontend
+        else
+            docker-compose run --rm --service-ports app "$@"
+        fi
+    fi
+
+}
+
+function run_all_services() {
+    #
+    # Run all services in docker-compose.yml (the managed equivalent of
+    # `docker-compose up`).
+    #
+    # run_editor_service detached
+    run_frontend_service
+}
+
+if [ "${BASH_SOURCE[0]}" = "${0}" ]
+then
+    if [ -z "$1" ]
+    then
+        # If no arguments are supplied, start all services.
+        function runserver() {
+            run_all_services
+        }
+    else
+        case "$1" in
+            -h|--help)
+                usage
+                exit 0
+                ;;
+
+            app)
+                shift 1
+                function runserver() {
+                    run_frontend_service "$@"
+                }
+                ;;
+
+            *)
+                echo "ERROR: Container type '"$1"' not found."
+                echo
+                usage
+                exit 1
+                ;;
+        esac
+    fi
+    runserver "$@"
+fi

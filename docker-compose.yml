@@ -8,3 +8,4 @@ services:
     volumes:
       - ./philly-fliers:/opt/philly-fliers
     entrypoint: npm
+    command: run dev
