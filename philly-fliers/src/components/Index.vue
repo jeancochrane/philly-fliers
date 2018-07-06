@@ -1,5 +1,7 @@
 <template>
-    <leaflet-map/>
+    <leaflet-map
+        ref="map"
+    />
 </template>
 
 <script>

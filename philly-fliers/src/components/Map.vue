@@ -1,14 +1,22 @@
 <template>
     <div
-         id="map"
-         style="height:500px"></div>
+        ref="map"
+        style="height:500px">
+    </div>
 </template>
 
 <script>
 import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
 export default {
     name: 'LeafletMap',
+    props: {
+        id: {
+            type: String,
+            default: 'map',
+        },
+    },
     data () {
         return {
             map: null,
@@ -20,7 +28,7 @@ export default {
     methods: {
         initialize () {
             // Initialize a map.
-            this.map = new L.map('map', {
+            this.map = new L.map(this.$refs.map, {
                 center: [39.95, -75.16],
                 zoom: 12,
                 dragging: true,
@@ -30,7 +38,7 @@ export default {
             });
 
             // Add tile layers from OSM.
-            let tiles = new L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            const streets = new L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributors',
                 maxZoom: 18,
             }).addTo(this.map);
