@@ -4,18 +4,24 @@
         <leaflet-map
             ref="map"
         />
+        <fliers-sidebar/>
+        <fliers-footer/>
     </div>
 </template>
 
 <script>
-import LeafletMap from './Map';
 import FliersNavbar from './Navbar';
+import LeafletMap from './Map';
+import FliersSidebar from './Sidebar';
+import FliersFooter from './Footer';
 
 export default {
     name: 'IndexView',
     components: {
-        'leaflet-map': LeafletMap,
         'fliers-navbar': FliersNavbar,
+        'leaflet-map': LeafletMap,
+        'fliers-sidebar': FliersSidebar,
+        'fliers-footer': FliersFooter,
     }
 }
 </script>

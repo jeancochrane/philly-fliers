@@ -1,6 +1,9 @@
 <template>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand app-title" href="/">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a
+            class="navbar-brand app-title"
+            href="/"
+        >
             {{ title }}
         </a>
     </nav>
