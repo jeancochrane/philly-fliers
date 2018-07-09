@@ -41,15 +41,7 @@ function ashlar_tests() {
     echo "-------------------------------------------------------------------"
 
     init_db
-
-    if [ -z "$1" ]
-    then
-        # No arguments -- default to running all tests
-        docker-compose run --rm ashlar manage.py test
-    else
-        # Run tests for the environment that the user has passed in
-        docker-compose run --rm test tox -e "$1"
-    fi
+    docker-compose run --rm ashlar manage.py test
 
     # Stop the database service so that containers aren't lying around
     docker-compose stop db
