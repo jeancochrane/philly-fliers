@@ -1,5 +1,5 @@
 import json
-from mock import Mock, MagicMock
+from unittest.mock import Mock, MagicMock
 
 from django.conf import settings
 from django.test import TestCase

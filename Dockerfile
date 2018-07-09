@@ -15,8 +15,8 @@ RUN pip install -U -r /tmp/requirements.txt
 # Do not buffer output (allows Docker to stream stdout)
 ENV PYTHONUNBUFFERED 0
 
-COPY . /opt/ashlar
-WORKDIR /opt/ashlar
+COPY . /opt/ashlar-server
+WORKDIR /opt/ashlar-server
 
 EXPOSE 8000
 ENTRYPOINT python
