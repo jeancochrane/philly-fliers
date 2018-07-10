@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
     'django_extensions',
+    'django_filters',
     'ashlar',
     'ashlar_server',
     'ashlar_auth',
