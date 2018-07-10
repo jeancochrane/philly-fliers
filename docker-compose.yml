@@ -38,3 +38,12 @@ services:
     working_dir: /opt/app
     entrypoint: npm
     command: run dev
+
+  loaddata:
+    build: ./scripts/sample_data
+    volumes:
+      - ./scripts/sample_data:/opt/loaddata
+    working_dir: /opt/loaddata
+    depends_on:
+      - ashlar
+    command: python loaddata.py

@@ -1,284 +1,233 @@
 [
     {
-        "label": "Incident",
-        "plural_label": "Incidents",
-        "description": "Description of an incident.",
+        "label": "Event",
+        "plural_label": "Events",
+        "description": "A queer happening advertised by a poster.",
         "active": true,
         "schema": {
             "schema": {
-                "description": "",
+                "type": "object",
                 "title": "",
-                "plural_title": "",
-                "definitions": {
-                    "driverIncidentDetails": {
-                        "multiple": false,
-                        "description": "Details for Incident",
-                        "title": "Incident Details",
-                        "required": [
-                            "_localId"
-                        ],
-                        "plural_title": "Incident Details",
-                        "propertyOrder": 0,
-                        "details": true,
-                        "definitions": {},
-                        "type": "object",
-                        "properties": {
-                            "Select List": {
-                                "enum": [
-                                    "Foo",
-                                    "Bar",
-                                    "Baz"
-                                ],
-                                "displayType": "select",
-                                "propertyOrder": 1,
-                                "fieldType": "selectlist",
-                                "isSearchable": true,
-                                "type": "string"
-                            },
-                            "Extra description": {
-                                "isSearchable": true,
-                                "propertyOrder": 0,
-                                "type": "string",
-                                "fieldType": "text",
-                                "format": "textarea"
-                            },
-                            "_localId": {
-                                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
-                                "type": "string",
-                                "options": {
-                                    "hidden": true
-                                }
-                            }
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "properties": {
+                    "driverEventDetails": {
+                        "$ref": "#/definitions/driverEventDetails",
+                        "options": {
+                            "collapsed": true
                         }
                     }
                 },
-                "$schema": "http://json-schema.org/draft-04/schema#",
-                "type": "object",
-                "properties": {
-                    "driverIncidentDetails": {
-                        "options": {
-                            "collapsed": true
+                "definitions": {
+                    "driverEventDetails": {
+                        "type": "object",
+                        "title": "Event Details",
+                        "details": true,
+                        "multiple": false,
+                        "required": [
+                            "_localId",
+                            "Title",
+                            "Short description"
+                        ],
+                        "properties": {
+                            "URL": {
+                                "type": "string",
+                                "format": "url",
+                                "fieldType": "text",
+                                "isSearchable": true,
+                                "propertyOrder": 3
+                            },
+                            "Title": {
+                                "type": "string",
+                                "format": "text",
+                                "fieldType": "text",
+                                "minLength": 1,
+                                "isSearchable": true,
+                                "propertyOrder": 0
+                            },
+                            "_localId": {
+                                "type": "string",
+                                "options": {
+                                    "hidden": true
+                                },
+                                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+                            },
+                            "Long description": {
+                                "type": "string",
+                                "format": "textarea",
+                                "fieldType": "text",
+                                "isSearchable": true,
+                                "propertyOrder": 2
+                            },
+                            "Short description": {
+                                "type": "string",
+                                "format": "text",
+                                "fieldType": "text",
+                                "minLength": 1,
+                                "isSearchable": true,
+                                "propertyOrder": 1
+                            }
                         },
-                        "$ref": "#/definitions/driverIncidentDetails"
+                        "definitions": {},
+                        "description": "Details for Event",
+                        "plural_title": "Event Details",
+                        "propertyOrder": 0
                     }
-                }
+                },
+                "description": "",
+                "plural_title": ""
             },
             "version": 1,
             "next_version": null,
             "records": [
                 {
                     "data": {
-                        "driverIncidentDetails": {
-                            "Select List": "Foo",
-                            "Extra description": "Lorem ipsum dolor sit amet.",
-                            "_localId": "d808a3f9-512a-4cc3-b6ba-e098db8b0319"
+                        "driverEventDetails": {
+                            "URL": "https://www.instagram.com/seltzerworldwide/",
+                            "Title": "Seltzer Lime + Sea Salt",
+                            "_localId": "13cd45c2-f732-4afa-80c6-15b2a95bfb22",
+                            "Long description": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc id vestibulum ipsum. Integer quis quam eget odio aliquet gravida. Integer sit amet metus scelerisque, suscipit nulla sed, maximus nibh. Fusce pellentesque tincidunt lorem vitae convallis. Praesent feugiat venenatis aliquam. Pellentesque ut aliquam nulla. Nulla vitae mauris tristique, pretium nunc eget, gravida felis. Duis et dolor sed lorem iaculis convallis. Praesent et euismod neque. Curabitur commodo tincidunt nisi. Nam lacinia sagittis turpis et lacinia. Mauris ac blandit orci. Nulla facilisi. Maecenas ullamcorper et felis eu placerat.\n\nVestibulum id nibh sapien. Praesent bibendum enim vel est dapibus, at lacinia ipsum aliquet. Nullam quis diam non lectus luctus elementum. Aliquam hendrerit tempus mollis. Donec vulputate metus sed sem eleifend, et tincidunt nibh cursus. Integer gravida nulla sit amet lectus tincidunt pulvinar. Aenean cursus eros lorem, vel malesuada justo feugiat in. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus sit amet eros eleifend, rhoncus risus sit amet, varius nunc. Vestibulum feugiat a ex vel sollicitudin. Curabitur auctor est a felis aliquet semper. Curabitur interdum aliquet convallis.\n\nNam eu pellentesque ipsum. Mauris pharetra arcu id orci lobortis ultrices. Sed mi libero, feugiat eu arcu sit amet, laoreet cursus nisl. Morbi fringilla posuere tortor, vel consequat mauris elementum non. Donec scelerisque nulla eget feugiat sagittis. Ut convallis aliquam enim ac pellentesque. Nam volutpat tempus tellus, quis aliquet mauris facilisis quis. Quisque semper nisi in tellus vehicula, in varius diam sollicitudin. Duis consequat, augue ut commodo iaculis, diam odio congue libero, sit amet cursus dui metus vitae orci. Mauris neque nibh, dapibus eu tellus id, finibus tincidunt metus. Donec quam arcu, ullamcorper in dolor ut, pretium vulputate nulla. Duis pulvinar diam at dolor elementum sagittis. Phasellus sit amet magna non nulla pulvinar scelerisque sed vel leo. Donec nec tristique augue. Morbi sed posuere ante, vitae semper libero. Mauris feugiat urna sed finibus egestas. ",
+                            "Short description": "A queer dance party."
                         }
                     },
-                    "occurred_from": "2018-03-21T18:03:00Z",
-                    "occurred_to": "2018-03-21T18:03:00Z",
+                    "occurred_from": "2018-07-14T21:00:00Z",
+                    "occurred_to": "2018-07-15T03:00:00Z",
                     "geom": {
                         "type": "Point",
                         "coordinates": [
-                            -75.14150619506836,
-                            39.95354329351782
+                            -75.2146178483963,
+                            39.93579777176213
                         ]
                     },
-                    "location_text": null,
-                    "city": null,
-                    "city_district": null,
-                    "county": null,
-                    "neighborhood": null,
-                    "road": null,
-                    "state": null,
-                    "weather": null,
-                    "light": null,
-                    "archived": false
-                },
-                {
-                    "data": {
-                        "driverIncidentDetails": {
-                            "Select List": "Bar",
-                            "Extra description": "Incident three.",
-                            "_localId": "f97b2db1-084c-4f82-b514-2a550621b8fa"
-                        }
-                    },
-                    "occurred_from": "2018-05-22T18:01:00Z",
-                    "occurred_to": "2018-05-22T18:01:00Z",
-                    "geom": {
-                        "type": "Point",
-                        "coordinates": [
-                            -75.17491579055786,
-                            39.89911591011025
-                        ]
-                    },
-                    "location_text": null,
-                    "city": null,
-                    "city_district": null,
-                    "county": null,
-                    "neighborhood": null,
-                    "road": null,
-                    "state": null,
-                    "weather": null,
-                    "light": null,
-                    "archived": false
-                },
-                {
-                    "data": {
-                        "driverIncidentDetails": {
-                            "Select List": "Baz",
-                            "Extra description": "Another incident.",
-                            "_localId": "ba3520af-f71b-4889-9fda-f27077ab79b5"
-                        }
-                    },
-                    "created": "2018-06-21T18:01:30.331307Z",
-                    "modified": "2018-06-21T18:01:30.331328Z",
-                    "occurred_from": "2018-06-04T18:00:00Z",
-                    "occurred_to": "2018-06-04T18:00:00Z",
-                    "geom": {
-                        "type": "Point",
-                        "coordinates": [
-                            -75.16080737113953,
-                            39.96515674205093
-                        ]
-                    },
-                    "location_text": null,
-                    "city": null,
-                    "city_district": null,
-                    "county": null,
-                    "neighborhood": null,
-                    "road": null,
-                    "state": null,
-                    "weather": null,
-                    "light": null,
-                    "archived": false
-                },
-                {
-                    "data": {
-                        "driverIncidentDetails": {
-                            "Select List": "Foo",
-                            "Extra description": "Here's where description for an incident should go.",
-                            "_localId": "95f3fe51-4360-4260-8ce3-40b87b289205"
-                        }
-                    },
-                    "created": "2018-06-21T17:58:58.017764Z",
-                    "modified": "2018-06-21T17:58:58.017785Z",
-                    "occurred_from": "2018-06-19T17:58:00Z",
-                    "occurred_to": "2018-06-19T17:58:00Z",
-                    "geom": {
-                        "type": "Point",
-                        "coordinates": [
-                            -75.18635272979736,
-                            39.933795415406095
-                        ]
-                    },
-                    "location_text": null,
-                    "city": null,
-                    "city_district": null,
-                    "county": null,
-                    "neighborhood": null,
-                    "road": null,
-                    "state": null,
-                    "weather": null,
-                    "light": null,
                     "archived": false
                 }
             ]
         }
     },
     {
-        "label": "Intervention",
-        "plural_label": "Interventions",
-        "description": "A second sample record type.",
+        "label": "Poster",
+        "plural_label": "Posters",
+        "description": "An advertisement for an event.",
         "active": true,
         "schema": {
             "schema": {
-                "description": "",
+                "type": "object",
                 "title": "",
-                "plural_title": "",
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "properties": {
+                    "driverPosterDetails": {
+                        "$ref": "#/definitions/driverPosterDetails",
+                        "options": {
+                            "collapsed": true
+                        }
+                    }
+                },
                 "definitions": {
-                    "driverInterventionDetails": {
-                        "multiple": false,
-                        "description": "Details for Intervention",
-                        "title": "Intervention Details",
-                        "required": [
-                            "_localId"
-                        ],
-                        "plural_title": "Intervention Details",
-                        "propertyOrder": 0,
-                        "details": true,
-                        "definitions": {},
+                    "driverPosterDetails": {
                         "type": "object",
+                        "title": "Poster Details",
+                        "details": true,
+                        "multiple": false,
+                        "required": [
+                            "_localId",
+                            "Image",
+                            "Event name",
+                            "Short description"
+                        ],
                         "properties": {
-                            "Select List": {
-                                "enum": [
-                                    "Foo",
-                                    "Bar",
-                                    "Baz"
-                                ],
-                                "displayType": "select",
-                                "propertyOrder": 0,
-                                "fieldType": "selectlist",
-                                "isSearchable": true,
-                                "type": "string"
-                            },
-                            "Number field": {
-                                "maximum": 100,
-                                "minimum": 0,
-                                "propertyOrder": 1,
-                                "fieldType": "number",
-                                "isSearchable": true,
-                                "type": "number"
-                            },
-                            "Text Field": {
-                                "isSearchable": true,
-                                "propertyOrder": 2,
+                            "URL": {
                                 "type": "string",
+                                "format": "url",
                                 "fieldType": "text",
-                                "format": "text"
+                                "isSearchable": true,
+                                "propertyOrder": 6
+                            },
+                            "Image": {
+                                "type": "string",
+                                "media": {
+                                    "type": "image/jpeg",
+                                    "binaryEncoding": "base64"
+                                },
+                                "fieldType": "image",
+                                "propertyOrder": 0
                             },
                             "_localId": {
-                                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
                                 "type": "string",
                                 "options": {
                                     "hidden": true
-                                }
+                                },
+                                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+                            },
+                            "Artist URL": {
+                                "type": "string",
+                                "format": "url",
+                                "fieldType": "text",
+                                "isSearchable": true,
+                                "propertyOrder": 5
+                            },
+                            "Event name": {
+                                "type": "string",
+                                "format": "text",
+                                "fieldType": "text",
+                                "minLength": 1,
+                                "isSearchable": true,
+                                "propertyOrder": 1
+                            },
+                            "Artist name": {
+                                "type": "string",
+                                "format": "text",
+                                "fieldType": "text",
+                                "isSearchable": true,
+                                "propertyOrder": 4
+                            },
+                            "Long description": {
+                                "type": "string",
+                                "format": "textarea",
+                                "fieldType": "text",
+                                "isSearchable": true,
+                                "propertyOrder": 3
+                            },
+                            "Short description": {
+                                "type": "string",
+                                "format": "text",
+                                "fieldType": "text",
+                                "minLength": 1,
+                                "isSearchable": true,
+                                "propertyOrder": 2
                             }
-                        }
+                        },
+                        "definitions": {},
+                        "description": "Details for Poster",
+                        "plural_title": "Poster Details",
+                        "propertyOrder": 0
                     }
-                }
+                },
+                "description": "",
+                "plural_title": ""
             },
             "version": 1,
             "next_version": null,
             "records": [
                 {
-                    "uuid": "0bac7803-96b1-41ed-a7b4-d73c5074b40d",
                     "data": {
-                        "driverInterventionDetails": {
-                            "Select List": "Foo",
-                            "Number field": 5,
-                            "Text Field": ""
+                        "driverPosterDetails": {
+                            "URL": "https://www.instagram.com/p/Bj8XMnslE0E/?taken-by=seltzerworldwide",
+                            "_localId": "cf24282b-e18f-4390-b868-1a998206ee31",
+                            "Artist URL": "",
+                            "Event name": "Seltzer Lime + Sea Salt",
+                            "Artist name": "",
+                            "Long description": "\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet elit enim. Donec sit amet neque ornare, euismod leo eget, lacinia erat. Nulla tempor porta eros a maximus. Pellentesque fermentum, urna mattis euismod volutpat, libero tortor pretium leo, eu iaculis justo massa eget elit. Morbi nec nisl nisi. Nunc vitae purus id tellus tempus pharetra quis quis orci. Duis viverra laoreet metus sed euismod. Sed viverra ante tortor, eu ultricies lorem tincidunt blandit. Duis feugiat nisi eu congue malesuada. Nulla lacinia dignissim nunc et eleifend. Aliquam non risus vel leo ornare dictum vel sit amet nulla.\n\nUt non tincidunt eros, quis laoreet metus. Maecenas faucibus tincidunt odio, eget porta ex. Nam sodales leo lectus, sed elementum mauris rutrum ac. Nam ut rhoncus lacus. Sed sit amet luctus ex. Nam dictum rutrum massa, sit amet ornare nibh efficitur sit amet. Praesent nisl quam, maximus a urna eu, congue porta mauris. Suspendisse potenti. Integer dapibus in dui quis vulputate. Aliquam vehicula, neque quis rutrum molestie, diam turpis volutpat sapien, ac aliquet sapien justo vel turpis. Cras sit amet elit auctor, vestibulum nunc ut, suscipit sem. ",
+                            "Short description": "A poster wheatpasted on the side of a mailbox."
                         }
                     },
-                    "created": "2018-06-26T17:54:55.733637Z",
-                    "modified": "2018-06-26T17:54:55.733657Z",
-                    "occurred_from": "2018-06-26T17:54:14.848000Z",
-                    "occurred_to": "2018-06-26T17:54:14.848000Z",
+                    "occurred_from": "2018-07-08T19:04:00Z",
+                    "occurred_to": "2018-07-08T19:04:00Z",
                     "geom": {
                         "type": "Point",
                         "coordinates": [
-                            -75.16376852989197,
-                            39.95185070207273
+                            -75.20918101072311,
+                            39.949631680360746
                         ]
                     },
-                    "location_text": null,
-                    "city": null,
-                    "city_district": null,
-                    "county": null,
-                    "neighborhood": null,
-                    "road": null,
-                    "state": null,
-                    "weather": null,
-                    "light": null,
                     "archived": false
                 }
             ]

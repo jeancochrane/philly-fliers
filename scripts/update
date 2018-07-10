@@ -34,6 +34,9 @@ then
         init_db
         docker-compose run --rm ashlar manage.py migrate
 
+        # Upload sample data.
+        docker-compose run --rm loaddata
+
         # Install NPM modules.
         docker-compose run --rm app install
 
