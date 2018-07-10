@@ -11,17 +11,25 @@ fi
 # Load common configs for this script.
 source "${DIR}/_config.sh"
 
+# Import DB initialization methods.
+source "${DIR}/_init_db.sh"
+
 function usage() {
-    echo -n "Usage: $(basename "$0") {app} [CMD]
+    echo -n "Usage: $(basename "$0") {ashlar,app} [CMD]
 
 Starts servers using docker-compose. If an argument is specified, [CMD]
 will pass the command string into the corresponding service.
 
 Argument options:
+    - ashlar: Starts the Ashlar database server on port 8000.
     - app: Starts the app on port 8080.
-    - <none>: Start all containers.
+    - <none>: Start all services.
 "
 }
+
+# The name of the Ashlar service to search for when checking if it's running
+# (e.g. <repo-name>_ashlar)
+ASHLAR_GREP="fliers_ashlar"
 
 function checkport() {
     #
@@ -42,7 +50,7 @@ function run_ashlar_service() {
     #
     # Run the Ashlar server instance.
     #
-    if [ $(docker-compose ps | grep "blueprint_ashlar" | grep -q "Up" && echo "$?" || echo 1) -eq 0 ];
+    if [ $(docker-compose ps | grep "${ASHLAR_GREP}" | grep -q "Up" && echo "$?" || echo 1) -eq 0 ];
     then
         echo "Ashlar service is already running."
     else
@@ -91,7 +99,7 @@ function run_frontend_service() {
     #
     # Run the frontend app.
     #
-    # run_ashlar_service detached
+    run_ashlar_service detached
     checkport 8080
     if [ $# -eq 0 ];
     then
@@ -101,7 +109,7 @@ function run_frontend_service() {
         if [ "$1" = "detached"  ];
         then
             # Run this service in the background
-            docker-compose up -d frontend
+            docker-compose up -d app
         else
             docker-compose run --rm --service-ports app "$@"
         fi
@@ -114,7 +122,7 @@ function run_all_services() {
     # Run all services in docker-compose.yml (the managed equivalent of
     # `docker-compose up`).
     #
-    # run_editor_service detached
+    run_editor_service detached
     run_frontend_service
 }
 
@@ -131,6 +139,20 @@ then
             -h|--help)
                 usage
                 exit 0
+                ;;
+
+            ashlar)
+                shift 1
+                function runserver() {
+                    run_ashlar_service "$@"
+                }
+                ;;
+
+            editor)
+                shift 1
+                function runserver() {
+                    run_editor_service "$@"
+                }
                 ;;
 
             app)

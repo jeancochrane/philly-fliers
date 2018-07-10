@@ -1,11 +1,40 @@
 version: '3'
 
 services:
+
+  db:
+    image: quay.io/azavea/postgis:2.4-postgres10.3-slim
+
+  ashlar:
+    build: ./ashlar-server
+    depends_on:
+      - db
+    volumes:
+      - ./ashlar-server:/opt/ashlar-server
+    entrypoint: python
+    command: manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    env_file: ./ashlar-server/.env
+
+  editor:
+    build: ./ashlar-schema-editor
+    depends_on:
+      - ashlar
+    volumes:
+      - ./ashlar-schema-editor:/opt/ashlar-schema-editor
+    entrypoint: grunt
+    command: serve
+    ports:
+      - "9000:9000"
+      - "35731:35731"
+
   app:
-    build: .
+    image: node:9.11.1-alpine
     ports:
       - "8080:8080"
     volumes:
-      - ./philly-fliers:/opt/philly-fliers
+      - ./app:/opt/app
+    working_dir: /opt/app
     entrypoint: npm
     command: run dev

@@ -11,10 +11,13 @@ fi
 # Load common configs for this script.
 source "${DIR}/_config.sh"
 
+# Import DB initialization methods.
+source "${DIR}/_init_db.sh"
+
 function usage() {
     echo -n "Usage: $(basename "$0")
 
-Make sure contianers and NPM modules are up to date.
+Make sure containers and NPM modules are up to date.
 "
 }
 
@@ -27,7 +30,14 @@ then
         # Build containers.
         docker-compose build
 
+        # Run migrations.
+        init_db
+        docker-compose run --rm ashlar manage.py migrate
+
         # Install NPM modules.
         docker-compose run --rm app install
+
+        # Stop all services.
+        docker-compose stop
     fi
 fi

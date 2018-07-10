@@ -26,8 +26,6 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
         docker-compose down
 
         # Remove unused containers, images, and volumes
-        docker images -qf dangling=true | xargs -r docker rmi
-        docker volume ls -qf dangling=true | xargs -r docker volume rm
-        docker ps -a | grep Exit | cut -d ' ' -f 1 | xargs -r docker rm
+        docker system prune -f
     fi
 fi

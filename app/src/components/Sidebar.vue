@@ -16,7 +16,6 @@
 
 <script>
 import AddressSearch from './filters/Address';
-import JQuery from 'jquery';
 
 export default {
     name: 'FliersSidebar',
