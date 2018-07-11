@@ -28,9 +28,9 @@ export default {
     },
     methods: {
         initMap() {
-            //
-            // Initialize a Leaflet map in this component.
-            //
+            /*
+             * Initialize a Leaflet map in this component.
+             */
             this.map = new L.map(this.$refs.map, {
                 center: [39.95, -75.16],
                 zoom: 12,
@@ -42,14 +42,14 @@ export default {
         },
 
         initLayers() {
-            //
-            // Add tile layers from OSM to the map.
-            //
+            /*
+             * Add tile layers from OSM to the map.
+             */
             const streets = new L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributors',
                 maxZoom: 18,
             }).addTo(this.map);
-        },
+        }
     }
 }
 

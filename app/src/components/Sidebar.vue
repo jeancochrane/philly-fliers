@@ -16,11 +16,22 @@
 
 <script>
 import AddressSearch from './filters/Address';
+import Grout from '@/api.js';
 
 export default {
     name: 'FliersSidebar',
     components: {
         'address-search': AddressSearch,
     },
+    mounted() {
+        console.log(Grout.types);
+        Grout.types.all()
+            .then(data => {
+                console.log(data);
+            })
+            .catch(reason => {
+                console.log(`Failed to load RecordTypes: ${reason}`);
+            });
+    }
 }
 </script>
