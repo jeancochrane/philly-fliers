@@ -27,13 +27,8 @@ import { mapState } from 'vuex';
 
 export default {
     name: 'FliersFilters',
-    props: {
-        types: {
-            type: Array,
-            default: () => [],
-        }
-    },
     computed: mapState({
+        types: state => state.filters.types,
         activeType: state => state.filters.activeType,
     }),
     methods: {

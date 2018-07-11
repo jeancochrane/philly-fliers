@@ -6,22 +6,30 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+
 
 export default {
     name: 'LeafletMap',
     props: {
         id: {
+            // Optional ID to use for the map DOM element.
             type: String,
             default: 'map',
-        },
+        }
     },
     data() {
         return {
-            map: null,
+            map: null,  // Local state object to store a reference to the Leaflet map.
         };
     },
+    computed: mapState({
+        types: state => state.filters.types,
+        activeType: state => state.filters.activeType
+    }),
     mounted() {
         this.initMap();
         this.initLayers();
@@ -52,6 +60,4 @@ export default {
         }
     }
 }
-
-
 </script>

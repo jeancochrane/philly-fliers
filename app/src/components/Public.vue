@@ -1,25 +1,22 @@
 <template>
     <div class="row">
         <div class="col-sm-8 col-xl-9">
-            <leaflet-map
-                ref="map"
-                :types="types"
-            />
+            <leaflet-map ref="map" />
         </div>
         <div class="col-sm-4 col-xl-3">
-            <fliers-sidebar
-                :types="types"
-            />
+            <fliers-sidebar/>
         </div>
         <fliers-modal/>
     </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import LeafletMap from './Map';
 import FliersSidebar from './Sidebar';
 import FliersModal from './Modal';
-import Grout from '@/api.js';
+
 
 export default {
     name: 'FliersPublic',
@@ -28,20 +25,16 @@ export default {
         'fliers-sidebar': FliersSidebar,
         'fliers-modal': FliersModal,
     },
-    data() {
-        return {
-            types: [],  // Store active RecordTypes.
-        }
-    },
+    computed: mapState({
+        types: state => state.filters.types,
+        activeType: state => state.filters.activeType
+    }),
     mounted() {
-        // Populate the app with the available RecordTypes.
-        Grout.types.all()
-            .then(data => {
-                this.types = data.results;
-            })
-            .catch(error => {
-                console.log(`Failed to load RecordTypes: ${error}`);
-            });
+        /*
+         * Populate the app by retrieving the available RecordTypes and updating
+         * the map with records.
+         */
+        this.$store.dispatch('loadRecords');
     }
 }
 </script>

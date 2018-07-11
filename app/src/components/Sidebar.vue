@@ -2,9 +2,7 @@
     <div class="row">
         <div class="col-xs-12">
             <address-search ref="address"/>
-            <fliers-filters
-                :types="types"
-            />
+            <fliers-filters/>
             <h4>{{ activeType }}</h4>
         </div>
     </div>
@@ -23,13 +21,8 @@ export default {
         'address-search': AddressSearch,
         'fliers-filters': FliersFilters,
     },
-    props: {
-        types: {
-            type: Array,
-            default: () => [],
-        }
-    },
     computed: mapState({
+        types: state => state.filters.types,
         activeType: state => state.filters.activeType
     }),
 }
