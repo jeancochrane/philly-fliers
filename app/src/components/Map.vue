@@ -11,6 +11,9 @@ import { mapState } from 'vuex';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+import 'leaflet/dist/images/marker-icon-2x.png';
+import 'leaflet/dist/images/marker-shadow.png';
+
 
 export default {
     name: 'LeafletMap',
@@ -103,8 +106,7 @@ export default {
                     </pre>
                 `;
 
-                let icon = L.divIcon({className: 'div-icon'});
-                markers.push(new L.marker([lng, lat], {icon: icon}).bindPopup(popup));
+                markers.push(new L.marker([lng, lat]).bindPopup(popup));
             }
 
             // Add the layer to the map.
@@ -114,12 +116,3 @@ export default {
     }
 }
 </script>
-
-<style>
-.div-icon {
-    border-radius: 100%;
-    color: black;
-    background-color: black;
-    width: 5px;
-}
-</style>

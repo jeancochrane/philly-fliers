@@ -53,10 +53,19 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        exclude: /leaflet\/.*.png/,
         loader: 'url-loader',
         options: {
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
+        }
+      },
+      {
+        test: /leaflet\/.*.png/,
+        loader: 'file-loader',
+        options: {
+          limit: 10000,
+          name: utils.assetsPath('map/images/[name].[ext]')
         }
       },
       {
