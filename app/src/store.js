@@ -13,7 +13,7 @@ const filterState = {
      */
     state: {
         types: [],  // List of available RecordTypes in the Grout API.
-        activeType: '',  // The RecordType that the user has currently selected.
+        activeTypeId: {},  // The RecordType that the user has currently selected.
         records: [],  // List of records that are currently being displayed.
     },
     mutations: {
@@ -29,14 +29,14 @@ const filterState = {
             state.types = types;
         },
 
-        updateActiveType(state, type) {
+        updateActiveTypeId(state, type) {
             /*
              * Set the active (currently selected) RecordType.
              *
-             * @param {string} type - The UUID for the RecordType that should be
+             * @param {string} type - The UUID for the RecordType object that should be
              *                        set to `active`.
              */
-            state.activeType = type;
+            state.activeTypeId = type;
         },
 
         updateRecords(state, records) {
@@ -66,7 +66,7 @@ const filterState = {
 
                         // Select the first returned Type and set it to `active`.
                         let initialType = types[0].uuid;
-                        context.commit('updateActiveType', initialType);
+                        context.commit('updateActiveTypeId', initialType);
 
                         resolve(initialType);
                     })
@@ -100,7 +100,7 @@ const filterState = {
              * Records. Useful when a new RecordType has been selected.
              */
             return new Promise((resolve, reject) => {
-                Grout.records.query({type: context.state.activeType})
+                Grout.records.query({type: context.state.activeTypeId})
                     .then(records => {
                         context.commit('updateRecords', records);
                         resolve(records);
@@ -111,7 +111,15 @@ const filterState = {
             });
         }
     },
-    getters: {}
+    getters: {
+        activeType: state => {
+            /*
+             * Retrieve the Type object with the UUID corresponding to the
+             * current activeTypeId.
+             */
+            return state.types.find(type => { return type.uuid == state.activeTypeId })
+        }
+    }
 }
 
 const store = new Vuex.Store({

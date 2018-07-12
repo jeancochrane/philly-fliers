@@ -1,7 +1,8 @@
 <template>
     <div class="row">
-        <div class="col-xs-12">
-            <address-search ref="address"/>
+        <div class="col-sm-12">
+            <h3 class="mt-3">Filters</h3>
+            <hr />
             <fliers-filters/>
         </div>
     </div>
@@ -19,10 +20,6 @@ export default {
     components: {
         'address-search': AddressSearch,
         'fliers-filters': FliersFilters,
-    },
-    computed: mapState({
-        types: state => state.filters.types,
-        activeType: state => state.filters.activeType
-    }),
+    }
 }
 </script>

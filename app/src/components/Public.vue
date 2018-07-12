@@ -25,10 +25,6 @@ export default {
         'fliers-sidebar': FliersSidebar,
         'fliers-modal': FliersModal,
     },
-    computed: mapState({
-        types: state => state.filters.types,
-        activeType: state => state.filters.activeType
-    }),
     mounted() {
         /*
          * Populate the app by retrieving the available RecordTypes and updating

@@ -32,7 +32,7 @@ export default {
     },
     computed: mapState({
         types: state => state.filters.types,
-        activeType: state => state.filters.activeType,
+        activeTypeId: state => state.filters.activeTypeId,
         records: state => state.filters.records
     }),
     watch: {

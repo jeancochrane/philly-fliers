@@ -1,8 +1,8 @@
 <template>
     <form>
         <select
-            :value="activeType"
-            @change="updateActiveType"
+            :value="activeTypeId"
+            @change="selectNewType"
         >
             <option
                 disabled
@@ -18,27 +18,68 @@
                 {{ type.label }}
             </option>
         </select>
+        <filter-container
+            v-for="(fields, formName) in filters"
+            :fields="fields"
+            :form-name="formName"
+            :key="formName"
+        />
     </form>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 
+import Grout from '@/api';
+import FilterContainer from './filters/Container';
+
 
 export default {
     name: 'FliersFilters',
+    components: {
+        'filter-container': FilterContainer,
+    },
+    data() {
+        return {
+            filters: {
+                type: Object,
+                default: {}
+            }
+        }
+    },
     computed: mapState({
         types: state => state.filters.types,
-        activeType: state => state.filters.activeType,
+        activeTypeId: state => state.filters.activeTypeId,
     }),
+    watch: {
+        activeTypeId: function(oldType, newType) {
+            this.updateFilters();
+        }
+    },
     methods: {
-        updateActiveType(e) {
+        selectNewType(e) {
+            /*
+             * Update global state when a new RecordType is selected.
+             */
             // Update the currently-selected RecordType in the datastore.
-            this.$store.commit('updateActiveType', e.target.value);
+            this.$store.commit('updateActiveTypeId', e.target.value);
 
             // Use the currently-selected RecordType to update the array of
             // Records in the datastore.
             this.$store.dispatch('updateRecords');
+        },
+
+        updateFilters() {
+            /*
+             * Update the filters based on the schema of the global type.
+             */
+            Grout.types.getFilters(this.activeTypeId)
+                .then(filters => {
+                    this.filters = filters;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         }
     }
 }

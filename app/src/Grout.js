@@ -18,7 +18,8 @@ class AbstractApiClass {
          *                        an app running on the same server as the API,
          *                        this might be e.g. 'localhost:8000/api'.
          */
-        this.url = url;
+        this.baseUrl = url;
+        this.url = this.baseUrl;
     }
 
     get(uuid) {
@@ -30,9 +31,9 @@ class AbstractApiClass {
          * @returns {object} - The JSON blob corresponding to the instance.
          */
         return new Promise((resolve, reject) => {
-            axios.get(`${this.url}/${uuid}`)
+            axios.get(`${this.url}${uuid}`)
                 .then(response => {
-                    resolve(response);
+                    resolve(response.data);
                 })
                 .catch(error => {
                     reject(error);
@@ -74,6 +75,88 @@ class AbstractApiClass {
 }
 
 
+class Schema extends AbstractApiClass {
+    /*
+     * API query methods for the RecordSchema data type.
+     *
+     * @class
+     */
+    constructor(...args) {
+        super(...args);
+        this.url = `${this.baseUrl}/recordschemas/`;
+    }
+
+    getFilters(uuid) {
+        /*
+         * Returns the filterable fields for a RecordSchema given its UUID.
+         *
+         * @params {string} uuid - The UUID for the RecordSchema whose fields
+         *                         should be returned.
+         * @returns {Promise} - If the query is successful, returns an array
+         *                      of fields that can be filtered. Otherwise, throws
+         *                      an error.
+         */
+        return new Promise((resolve, reject) => {
+            this.get(uuid)
+                .then(schema => {
+                    const filters = this._parseFilters(schema);
+                    resolve(filters);
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    _parseFilters(schema) {
+        /*
+         * Private helper method to parse a set of filterable fields given
+         * a RecordSchema object.
+         */
+        // Each RecordSchema stores its field specifications in a nested object
+        // inside of the `schema.definitions` object, so check to make sure that
+        // those definitions exist. If they don't, the object will be empty,
+        // and most of the logic of this method will be skipped.
+        let definitions = {};
+        if (schema.schema && schema.schema.definitions) {
+            definitions = schema.schema.definitions;
+        }
+
+        let schemaFilters = {};
+
+        // The field definitions are mapped to a form name, to allow admins to
+        // create multiple forms for a given schema (the default form is
+        // "${RecordType.label}Details"). Since there can be multiple forms in
+        // a given schema, iterate the keys of the field definitions object in
+        // order to extract fields from each form.
+        Object.keys(definitions).forEach(key => {
+            let schema = definitions[key];
+            schemaFilters[schema.title] = {};
+
+            // The `schema.properties` object stores the fields on this form.
+            Object.keys(schema.properties).forEach((prop) => {
+                let property = schema.properties[prop];
+                // The `isSearchable` flag determines whether the field can
+                // be filtered or not.
+                if (property.isSearchable) {
+                    // Merge some information in with the properties to
+                    // facilitate queries later on.
+                    let propertyAdditions = {
+                        multiple: schema.multiple,  // The containment type.
+                        field: prop  // The name of the field.
+                    }
+                    let formattedProperty = Object.assign({}, property, propertyAdditions);
+
+                    // Namespace the filter IDs with `key + # + prop`, in case
+                    // multiple forms have the same name for fields.
+                    schemaFilters[schema.title][key + '#' + prop] = formattedProperty;
+                }
+            });
+        });
+
+        return schemaFilters;
+    }
+}
+
+
 class Type extends AbstractApiClass {
     /*
      * API query methods for the RecordType data type.
@@ -82,12 +165,40 @@ class Type extends AbstractApiClass {
      */
     constructor(...args) {
         super(...args);
-        this.url = `${this.url}/recordtypes/`;
+        this.url = `${this.baseUrl}/recordtypes/`;
+    }
+
+    getFilters(uuid) {
+        /*
+         * Returns the filterable fields for the current schema of a RecordType
+         * given the RecordType's UUID.
+         *
+         * @params {string} uuid - The UUID for the RecordType whose active
+         *                         schema's fields should be returned.
+         * @returns {Promise} - If the query is successful, returns an array
+         *                      of fields that can be filtered. Otherwise, throws
+         *                      an error.
+         */
+        return new Promise((resolve, reject) => {
+            this.get(uuid)
+                .then(type => {
+                    // Create a Schema instance in order to proxy its
+                    // `getFilters` method.
+                    const schemas = new Schema(this.baseUrl);
+                    schemas.getFilters(type.current_schema)
+                        .then(filters => {
+                            resolve(filters);
+                        })
+                        .catch(error => {
+                            reject(error);
+                        });
+                })
+                .catch(error => {
+                    reject(error);
+                })
+        });
     }
 }
-
-
-class Schema extends AbstractApiClass {}
 
 
 class Record extends AbstractApiClass {
@@ -98,7 +209,7 @@ class Record extends AbstractApiClass {
      */
     constructor(...args) {
         super(...args);
-        this.url = `${this.url}/records/`;
+        this.url = `${this.baseUrl}/records/`;
     }
 
     query(params = {}) {
@@ -149,9 +260,9 @@ class Grout extends AbstractApiClass {
      */
     constructor(...args) {
         super(...args);
-        this.types = new Type(this.url);
-        this.schemas = new Schema(this.url);
-        this.records = new Record(this.url);
+        this.types = new Type(this.baseUrl);
+        this.schemas = new Schema(this.baseUrl);
+        this.records = new Record(this.baseUrl);
     }
 }
 
