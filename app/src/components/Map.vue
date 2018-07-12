@@ -23,16 +23,26 @@ export default {
     },
     data() {
         return {
-            map: null,  // Local state object to store a reference to the Leaflet map.
+            map: null,  // Reference to this component's L.Map object.
+            activeLayer: null  // Currently-selected marker layer.
         };
     },
     computed: mapState({
         types: state => state.filters.types,
-        activeType: state => state.filters.activeType
+        activeType: state => state.filters.activeType,
+        records: state => state.filters.records
     }),
+    watch: {
+        records: function(oldRecords, newRecords) {
+            // Update the map whenever the set of active Records changes in the
+            // datastore.
+            this.updateLayers();
+        }
+    },
     mounted() {
         this.initMap();
-        this.initLayers();
+        this.initTiles();
+        this.map.whenReady(this.updateLayers);
     },
     methods: {
         initMap() {
@@ -49,7 +59,7 @@ export default {
             });
         },
 
-        initLayers() {
+        initTiles() {
             /*
              * Add tile layers from OSM to the map.
              */
@@ -57,7 +67,59 @@ export default {
                 attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributors',
                 maxZoom: 18,
             }).addTo(this.map);
+        },
+
+        updateLayers() {
+            /*
+             * Update the marker layer on the map using the currently-active
+             * set of Records.
+             */
+            // If a layer is currently visible, remove it from the map.
+            if (this.activeLayer && this.map.hasLayer(this.activeLayer)) {
+                this.map.removeLayer(this.activeLayer);
+            }
+
+            // Create a marker layer from the set of active Records.
+            let markers = [];
+            for (let record of this.records) {
+                // Extract data for display as a marker.
+                const coords = record.geom.coordinates;
+                const lat = coords[0];
+                const lng = coords[1];
+
+                const details = JSON.stringify({
+                    start: record.occurred_from,
+                    end: record.occurred_to,
+                    data: record.data,
+                }, null, 2);
+
+                let popup = `
+                    <h3>Details</h3>
+                    <hr/>
+                    <pre>
+                        <code>
+                            ${details}
+                        </code>
+                    </pre>
+                `;
+
+                let icon = L.divIcon({className: 'div-icon'});
+                markers.push(new L.marker([lng, lat], {icon: icon}).bindPopup(popup));
+            }
+
+            // Add the layer to the map.
+            this.activeLayer = new L.layerGroup(markers);
+            this.map.addLayer(this.activeLayer);
         }
     }
 }
 </script>
+
+<style>
+.div-icon {
+    border-radius: 100%;
+    color: black;
+    background-color: black;
+    width: 5px;
+}
+</style>

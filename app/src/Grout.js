@@ -1,4 +1,5 @@
 const axios = require('axios');
+const qs = require('qs');
 
 
 class AbstractApiClass {
@@ -20,10 +21,23 @@ class AbstractApiClass {
         this.url = url;
     }
 
-    get() {
-        throw new Exception(`
-            Children of AbstractApiClass must implement the 'get'method.
-        `);
+    get(uuid) {
+        /*
+         * Retrieve an instance of a data type from the Grout API based on its
+         * UUID.
+         *
+         * @param {string} uuid - A unique identifier for the data type instance.
+         * @returns {object} - The JSON blob corresponding to the instance.
+         */
+        return new Promise((resolve, reject) => {
+            axios.get(`${this.url}/${uuid}`)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(error => {
+                    reject(error);
+                })
+        });
     }
 
     create() {
@@ -70,23 +84,6 @@ class Type extends AbstractApiClass {
         super(...args);
         this.url = `${this.url}/recordtypes/`;
     }
-
-    get(uuid) {
-        /*
-         * Retrieve a RecordType from the Grout API.
-         *
-         * @param {string} uuid - A unique identifier for the RecordType.
-         * @returns {object} - The JSON blob corresponding to the RecordType. 
-         */
-    }
-
-    create() {
-        /*
-         * Make a new RecordType.
-         */
-    }
-
-    query(params = {}) {}
 }
 
 
@@ -129,8 +126,10 @@ class Record extends AbstractApiClass {
                 data.json = params.filters;
             }
 
+            const queryUrl = `${this.url}?${qs.stringify(data)}`;
+
             return new Promise((resolve, reject) => {
-                axios.get(`${this.url}`, {data: data})
+                axios.get(queryUrl)
                     .then(response => {
                         resolve(response.data.results);
                     })

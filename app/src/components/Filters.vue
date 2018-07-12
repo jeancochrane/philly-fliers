@@ -33,7 +33,12 @@ export default {
     }),
     methods: {
         updateActiveType(e) {
+            // Update the currently-selected RecordType in the datastore.
             this.$store.commit('updateActiveType', e.target.value);
+
+            // Use the currently-selected RecordType to update the array of
+            // Records in the datastore.
+            this.$store.dispatch('updateRecords');
         }
     }
 }

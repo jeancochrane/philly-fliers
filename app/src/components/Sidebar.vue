@@ -3,7 +3,6 @@
         <div class="col-xs-12">
             <address-search ref="address"/>
             <fliers-filters/>
-            <h4>{{ activeType }}</h4>
         </div>
     </div>
 </template>

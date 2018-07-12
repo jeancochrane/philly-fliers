@@ -56,7 +56,8 @@ const filterState = {
         loadTypes(context) {
             /*
              * Retrieve the currently available RecordTypes from the Grout API,
-             * and set the first returned RecordType to `active`.
+             * and set the first returned RecordType to `active`. Used to
+             * initialize RecordType state in the app.
              */
             return new Promise((resolve, reject) => {
                 Grout.types.all()
@@ -78,27 +79,37 @@ const filterState = {
         loadRecords(context) {
             /*
              * Retrieve the all Record for the currently active RecordType
-             * from the Grout API.
+             * from the Grout API. Used to initialize Record state in the app.
              */
             return new Promise((resolve, reject) => {
                 context.dispatch('loadTypes')
-                    .then((initialType) => {
+                    .then(() => {
                         // Successfully loaded RecordTypes -- use the currently-
                         // selected RecordType to load Records.
-                        Grout.records.query({type: initialType})
-                            .then(records => {
-                                context.commit('updateRecords', records);
-                                resolve(records);
-                            })
-                            .catch(error => {
-                                reject(`Failed to load Records: ${error}`);
-                            });
+                        context.dispatch('updateRecords')
+                            .then(records => resolve(records))
+                            .catch(error => reject(error));
+                    })
+                    .catch(error => reject(error));
+            });
+        },
+
+        updateRecords(context) {
+            /*
+             * Given the current type, update the array of corresponding
+             * Records. Useful when a new RecordType has been selected.
+             */
+            return new Promise((resolve, reject) => {
+                Grout.records.query({type: context.state.activeType})
+                    .then(records => {
+                        context.commit('updateRecords', records);
+                        resolve(records);
                     })
                     .catch(error => {
                         reject(`Failed to load Records: ${error}`);
-                    })
+                    });
             });
-        },
+        }
     },
     getters: {}
 }
