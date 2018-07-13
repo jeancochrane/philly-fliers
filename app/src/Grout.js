@@ -42,13 +42,13 @@ class AbstractApiClass {
     }
 
     create() {
-        throw new Exception(`
+        throw new Error(`
             Children of AbstractApiClass must implement the 'create' method.
         `);
     }
 
     query () {
-        throw new Exception(`
+        throw new Error(`
             Children of AbstractApiClass must implement the 'query' method.
         `);
     }
@@ -234,7 +234,10 @@ class Record extends AbstractApiClass {
             }
             // Check for arbitrary JSON filters.
             if (params.filters) {
-                data.json = params.filters;
+                // qs provides some utilities for encoding arbitrarily-nested
+                // JSON, but Grout doesn't actually accept input in that format.
+                // Instead, transform the object into a string.
+                data.jsonb = JSON.stringify(params.filters);
             }
 
             const queryUrl = `${this.url}?${qs.stringify(data)}`;

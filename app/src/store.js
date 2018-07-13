@@ -9,12 +9,13 @@ Vue.use(Vuex);
 
 const filterState = {
     /*
-     * State module for the Grout filters.
+     * State module to facilitate the app's Record filtering mechanism.
      */
     state: {
-        types: [],  // List of available RecordTypes in the Grout API.
+        types: [],  // Array of available RecordTypes in the Grout API.
         activeTypeId: {},  // The RecordType that the user has currently selected.
-        records: [],  // List of records that are currently being displayed.
+        records: [],  // Array of records that are currently being displayed.
+        filters: {},  // Map of currently selected filters.
     },
     mutations: {
 
@@ -48,6 +49,112 @@ const filterState = {
              *                          API.
              */
             state.records = records;
+        },
+
+        updateFilter(state, payload) {
+            /*
+             * Update the active filters based on user input.
+             *
+             * @param {Object} payload - Data to update the filter.
+             * @param {string} payload.schemaName - The name of the schema (the base
+             *                                      key in the `state.filters` object
+                     *                              in which to store this data).
+             * @param {string} payload.fieldName - The name of the field that this query
+             *                                     pertains to.
+             * @param {string} payload.fieldType - The type of field represented by this
+             *                                     filter (one of 'text', 'select',
+             *                                     'min', or 'max').
+             * @param {string} payload.query - The user-inputted query value.
+             */
+            // Validate input parameters.
+            const schemaName = payload.schemaName;
+            const fieldName = payload.fieldName;
+            const fieldType = payload.fieldType;
+            const query = payload.query;
+
+            const paramDict = {
+                'schemaName': schemaName,
+                'fieldName': fieldName,
+                'fieldType': fieldType,
+                'query': query
+            };
+
+            Object.keys(paramDict).forEach(paramName => {
+                let param = paramDict[paramName];
+                if (!param) {
+                    throw new Error(`
+                        Function argument "${paramName}" is required in order
+                        to update filters.
+                    `)
+                }
+            });
+
+            // Check whether an entry already exists for this schema. If not,
+            // initialize it.
+            if (!state.filters[schemaName]) {
+                state.filters[schemaName] = {};
+            }
+
+            // If this is a number query (or another type of field
+            // that accepts multiple inputs, like a multiselect)
+            // the nested query object may already exist, so check
+            // for it before creating it.
+            let nestedQuery = {};
+            if (!state.filters[schemaName][fieldName]) {
+                state.filters[schemaName][fieldName] = {};
+            } else {
+                nestedQuery = state.filters[schemaName][fieldName];
+            }
+
+            // Construct the actual query.
+            switch(fieldType) {
+                case 'text':
+                    nestedQuery = {
+                        '_rule_type': 'containment',
+                        'contains': [
+                            query
+                        ]
+                    };
+                    break;
+
+                case 'select':
+                    // Select can have multiple attributes, so
+                    // if that's the case, append to the containment
+                    // array.
+                    if (nestedQuery.contains) {
+                        nestedQuery.contains.push(query);
+                    } else {
+                        nestedQuery._rule_type = 'containment';
+                        nestedQuery.contains = [query];
+                    }
+                    break;
+
+                case 'min':
+                    nestedQuery._rule_type = 'intrange';
+                    nestedQuery.min = query;
+                    break;
+
+                case 'max':
+                    nestedQuery._rule_type = 'intrange';
+                    nestedQuery.max = query;
+                    break;
+
+                default:
+                    throw new Error(`
+                        Field type "${fieldType}" is not registered
+                        as a valid type of query.
+                    `)
+            }
+
+            // Reassign the updated nested query to the proper field.
+            state.filters[schemaName][fieldName] = nestedQuery;
+        },
+
+        clearFilters(state){
+            /*
+             * Clear all filters.
+             */
+            state.filters = {};
         }
 
     },
@@ -78,7 +185,7 @@ const filterState = {
 
         loadRecords(context) {
             /*
-             * Retrieve the all Record for the currently active RecordType
+             * Retrieve all the Records for the currently active RecordType
              * from the Grout API. Used to initialize Record state in the app.
              */
             return new Promise((resolve, reject) => {
@@ -96,11 +203,15 @@ const filterState = {
 
         updateRecords(context) {
             /*
-             * Given the current type, update the array of corresponding
-             * Records. Useful when a new RecordType has been selected.
+             * Given the current filters, update the array of
+             * Records. Useful when a new filter has been selected.
              */
+            let queryParams = {
+                type: context.state.activeTypeId,
+                filters: context.state.filters
+            };
             return new Promise((resolve, reject) => {
-                Grout.records.query({type: context.state.activeTypeId})
+                Grout.records.query(queryParams)
                     .then(records => {
                         context.commit('updateRecords', records);
                         resolve(records);
@@ -117,7 +228,7 @@ const filterState = {
              * Retrieve the Type object with the UUID corresponding to the
              * current activeTypeId.
              */
-            return state.types.find(type => { return type.uuid == state.activeTypeId })
+            return state.types.find(type => { return type.uuid == state.activeTypeId });
         }
     }
 }
