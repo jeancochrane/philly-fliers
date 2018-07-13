@@ -10,16 +10,15 @@ class AbstractApiClass {
      *
      * @class
      */
-    constructor(url) {
+    constructor(baseUrl) {
         /*
-         * The constructor function for AbstractApiClass.
+         * The constructor method for AbstractApiClass.
          *
-         * @params {string} url - The base URL for the Grout API endpoint. For
-         *                        an app running on the same server as the API,
-         *                        this might be e.g. 'localhost:8000/api'.
+         * @params {string} baseUrl - The base URL for the Grout API server. For
+         *                            an app running on the same server as the API,
+         *                            this might be e.g. 'localhost:8000/api'.
          */
-        this.baseUrl = url;
-        this.url = this.baseUrl;
+        this.url = this.baseUrl = baseUrl;
     }
 
     get(uuid) {
@@ -28,7 +27,7 @@ class AbstractApiClass {
          * UUID.
          *
          * @param {string} uuid - A unique identifier for the data type instance.
-         * @returns {object} - The JSON blob corresponding to the instance.
+         * @returns {Object} - The JSON blob corresponding to the instance.
          */
         return new Promise((resolve, reject) => {
             axios.get(`${this.url}${uuid}`)
@@ -37,7 +36,7 @@ class AbstractApiClass {
                 })
                 .catch(error => {
                     reject(error);
-                })
+                });
         });
     }
 
@@ -195,7 +194,7 @@ class Type extends AbstractApiClass {
                 })
                 .catch(error => {
                     reject(error);
-                })
+                });
         });
     }
 }
@@ -217,10 +216,14 @@ class Record extends AbstractApiClass {
          * Send a query to the Grout API, returning an array of Records
          * that match the query.
          *
-         * @param {object} params - A list of query parameters (filters) to
+         * @param {Object} params - A list of query parameters (filters) to
          *                          apply. If this object is empty or if the
          *                          argument is undefined, the method will
          *                          default to returning all RecordTypes.
+         * @param {string} params.type - The UUID of a RecordType. Will restrict
+         *                               the returned Records to only those with
+         *                               the corresponding RecordType.
+         * @param {Object} params.filters - Filters for this query.
          */
         const hasQueryParams = Object.keys(params).length > 0;
         if (!hasQueryParams) {
@@ -259,7 +262,7 @@ class Record extends AbstractApiClass {
 class Grout extends AbstractApiClass {
     /*
      * Container class for this module, allowing the user to configure a Grout
-     * instance once and then have access to each type of query.
+     * instance once and then have access to each query class.
      */
     constructor(...args) {
         super(...args);

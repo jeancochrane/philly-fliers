@@ -19,7 +19,7 @@ import FliersModal from './Modal';
 
 
 export default {
-    name: 'FliersPublic',
+    name: 'FliersContent',
     components: {
         'leaflet-map': LeafletMap,
         'fliers-sidebar': FliersSidebar,

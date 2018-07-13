@@ -11,6 +11,10 @@ import { mapState } from 'vuex';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+// These imports indicate to webpack that it needs to load these Leaflet assets
+// into the static files directory. `marker-icon.png` will get loaded automatically
+// since the Leaflet source code references it directly, but these
+// two assets are not referenced, so we need to force them to load.
 import 'leaflet/dist/images/marker-icon-2x.png';
 import 'leaflet/dist/images/marker-shadow.png';
 
@@ -18,8 +22,7 @@ import 'leaflet/dist/images/marker-shadow.png';
 export default {
     name: 'LeafletMap',
     props: {
-        id: {
-            // Optional ID to use for the map DOM element.
+        id: {  // Optional ID to use for the map DOM element.
             type: String,
             default: 'map',
         }
@@ -75,7 +78,7 @@ export default {
         updateLayers() {
             /*
              * Update the marker layer on the map using the currently-active
-             * set of Records.
+             * set of Records defined in the datastore.
              */
             // If a layer is currently visible, remove it from the map.
             if (this.activeLayer && this.map.hasLayer(this.activeLayer)) {

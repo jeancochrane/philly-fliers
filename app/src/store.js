@@ -228,7 +228,7 @@ const filterState = {
              * Retrieve the Type object with the UUID corresponding to the
              * current activeTypeId.
              */
-            return state.types.find(type => { return type.uuid == state.activeTypeId });
+            return state.types.find(type => { return type.uuid === state.activeTypeId });
         }
     }
 }

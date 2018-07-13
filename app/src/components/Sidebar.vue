@@ -11,14 +11,12 @@
 <script>
 import { mapState } from 'vuex';
 
-import AddressSearch from './filters/Address';
 import FliersFilters from './Filters';
 
 
 export default {
     name: 'FliersSidebar',
     components: {
-        'address-search': AddressSearch,
         'fliers-filters': FliersFilters,
     }
 }
