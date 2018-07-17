@@ -236,8 +236,6 @@ module.exports = function(config) {
       'app/scripts/leaflet/**.js',
       'app/scripts/localization/module.js',
       'app/scripts/localization/**.js',
-      'app/scripts/login/module.js',
-      'app/scripts/login/**.js',
       'app/scripts/map-layers/module.js',
       'app/scripts/map-layers/**.js',
       'app/scripts/notifications/module.js',
