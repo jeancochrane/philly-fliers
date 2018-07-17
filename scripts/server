@@ -15,21 +15,21 @@ source "${DIR}/_config.sh"
 source "${DIR}/_init_db.sh"
 
 function usage() {
-    echo -n "Usage: $(basename "$0") {ashlar,app} [CMD]
+    echo -n "Usage: $(basename "$0") {grout,app} [CMD]
 
 Starts servers using docker-compose. If an argument is specified, [CMD]
 will pass the command string into the corresponding service.
 
 Argument options:
-    - ashlar: Starts the Ashlar database server on port 8000.
+    - grout: Starts the Grout database server on port 8000.
     - app: Starts the app on port 8080.
     - <none>: Start all services.
 "
 }
 
-# The name of the Ashlar service to search for when checking if it's running
-# (e.g. <repo-name>_ashlar)
-ASHLAR_GREP="fliers_ashlar"
+# The name of the Grout service to search for when checking if it's running
+# (e.g. <repo-name>_grout)
+GROUT_GREP="fliers_grout"
 
 function checkport() {
     #
@@ -46,28 +46,28 @@ function checkport() {
     fi
 }
 
-function run_ashlar_service() {
+function run_grout_service() {
     #
-    # Run the Ashlar server instance.
+    # Run the Grout server instance.
     #
-    if [ $(docker-compose ps | grep "${ASHLAR_GREP}" | grep -q "Up" && echo "$?" || echo 1) -eq 0 ];
+    if [ $(docker-compose ps | grep "${GROUT_GREP}" | grep -q "Up" && echo "$?" || echo 1) -eq 0 ];
     then
-        echo "Ashlar service is already running."
+        echo "Grout service is already running."
     else
         checkport 8000
         init_db
         if [ $# -eq 0 ];
         then
             # No arguments -- default to running a Django dev server
-            docker-compose up ashlar
+            docker-compose up grout
         else
             if [ "$1" = "detached"  ];
             then
                 # Run this service in the background
-                docker-compose up -d ashlar
+                docker-compose up -d grout
             else
                 # User passed in arguments -- run their command
-                docker-compose run --rm --service-ports ashlar "$@"
+                docker-compose run --rm --service-ports grout "$@"
             fi
         fi
     fi
@@ -77,7 +77,7 @@ function run_editor_service() {
     #
     # Run the schema editor app.
     #
-    run_ashlar_service detached
+    run_grout_service detached
     checkport 9000
     if [ $# -eq 0 ];
     then
@@ -99,7 +99,7 @@ function run_frontend_service() {
     #
     # Run the frontend app.
     #
-    run_ashlar_service detached
+    run_grout_service detached
     checkport 8080
     if [ $# -eq 0 ];
     then
@@ -141,10 +141,10 @@ then
                 exit 0
                 ;;
 
-            ashlar)
+            grout)
                 shift 1
                 function runserver() {
-                    run_ashlar_service "$@"
+                    run_grout_service "$@"
                 }
                 ;;
 

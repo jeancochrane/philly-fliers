@@ -1,14 +1,14 @@
-# load.py -- load sample data into an Ashlar Blueprint instance
+# load.py -- load sample data into an Grout Blueprint instance
 import time
 import json
 import sys
 
 import requests
 
-# Ashlar server URL
-BASE_URL = 'http://ashlar:8000/api/'
+# Grout server URL
+BASE_URL = 'http://grout:8000/api/'
 
-# Number of times to retry the connection to the Ashlar server (helpful if
+# Number of times to retry the connection to the Grout server (helpful if
 # Docker instances spin up at different times)
 NUM_RETRIES = 10
 
@@ -32,7 +32,7 @@ if __name__ == '__main__':
             print(f'Connected to the host at {BASE_URL}')
             break
         except requests.exceptions.ConnectionError as e:
-            # Failed to establish a connection with the Ashlar host -- try
+            # Failed to establish a connection with the Grout host -- try
             # for 10 seconds, and then raise the error
             print(f'Host at {BASE_URL} is not available -- retrying ({num_retries} attempts remaining)')
             num_retries -= 1
