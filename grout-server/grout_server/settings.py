@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
     'django_extensions',
+    'django_filters',
     'grout',
     'grout_server',
     'grout_auth',
