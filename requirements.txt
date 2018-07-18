@@ -1,2 +1,2 @@
-git+https://github.com/azavea/grout.git@develop#egg=ashlar
+git+https://github.com/azavea/grout.git@develop#egg=grout
 django-cors-headers==2.2.0
