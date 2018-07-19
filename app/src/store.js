@@ -64,23 +64,22 @@ const filterState = {
              * @param {string} payload.fieldType - The type of field represented by this
              *                                     filter (one of 'text', 'select',
              *                                     'min', or 'max').
-             * @param {string} payload.query - The user-inputted query value.
+             * @param {string} payload.query - The user-inputted query value. If
+             *                                 this value is falsey, the method
+             *                                 will remove the filter.
              */
             // Validate input parameters.
             const schemaName = payload.schemaName;
             const fieldName = payload.fieldName;
             const fieldType = payload.fieldType;
-            const query = payload.query;
 
             const paramDict = {
                 'schemaName': schemaName,
                 'fieldName': fieldName,
                 'fieldType': fieldType,
-                'query': query
             };
 
-            Object.keys(paramDict).forEach(paramName => {
-                let param = paramDict[paramName];
+            Object.entries(paramDict).forEach(([paramName, param]) => {
                 if (!param) {
                     throw new Error(`
                         Function argument "${paramName}" is required in order
@@ -88,6 +87,14 @@ const filterState = {
                     `)
                 }
             });
+
+            // Check if a value exists for the query. If not, the user is
+            // clearing this filter.
+            const query = payload.query;
+            if (query === '') {
+                state.filters[schemaName] = {};
+                return;
+            }
 
             // Check whether an entry already exists for this schema. If not,
             // initialize it.
