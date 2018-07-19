@@ -9,12 +9,14 @@
 import { mapState } from 'vuex';
 
 import L from 'leaflet';
+import leafletDraw from 'leaflet-draw';
 import 'leaflet/dist/leaflet.css';
+import 'leaflet-draw/dist/leaflet.draw.css';
 
 // These imports indicate to webpack that it needs to load these Leaflet assets
 // into the static files directory. `marker-icon.png` will get loaded automatically
-// since the Leaflet source code references it directly, but these
-// two assets are not referenced, so we need to force them to load.
+// since the Leaflet source code references it directly, but the
+// other assets are not referenced, so we need to force them to load.
 import 'leaflet/dist/images/marker-icon-2x.png';
 import 'leaflet/dist/images/marker-shadow.png';
 
@@ -30,14 +32,17 @@ export default {
     data() {
         return {
             map: null,  // Reference to this component's L.Map object.
-            activeLayer: null  // Currently-selected marker layer.
+            activeLayer: null,  // Currently-selected marker layer.
+            filterLayer: null,  // Geometry filters defined by the user.
         };
     },
-    computed: mapState({
-        types: state => state.filters.types,
-        activeTypeId: state => state.filters.activeTypeId,
-        records: state => state.filters.records
-    }),
+    computed: {
+        ...mapState({
+            types: state => state.filters.types,
+            activeTypeId: state => state.filters.activeTypeId,
+            records: state => state.filters.records,
+        })
+    },
     watch: {
         records: function(oldRecords, newRecords) {
             // Update the map whenever the set of active Records changes in the
@@ -61,7 +66,36 @@ export default {
                 dragging: true,
                 touchZoom: true,
                 tap: true,
-                scrollWheelZoom: false
+                scrollWheelZoom: false,
+            });
+
+            // Initialize Leaflet Draw component for drawing geometries.
+            this.map.addControl(new L.Control.Draw({
+                draw: {
+                    marker: false,
+                    circle: false,
+                    circlemarker: false,
+                    polyline: false,
+                    polygon: {
+                        allowIntersection: false,
+                    }
+                },
+            }));
+
+            // Define geometry drawing events.
+            this.map.on('draw:created', event => {
+                // Remove existing filter layer, if one exists.
+                if (this.filterLayer) {
+                    this.map.removeLayer(this.filterLayer);
+                }
+
+                // Add the new layer that the user has defined to the map.
+                this.filterLayer = event.layer;
+                this.map.addLayer(this.filterLayer);
+
+                // Update Records from a query.
+                this.$store.commit('updatePolygon', event.layer.toGeoJSON().geometry);
+                this.$store.dispatch('updateRecords');
             });
         },
 

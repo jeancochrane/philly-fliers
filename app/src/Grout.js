@@ -370,8 +370,9 @@ class Record extends AbstractApiClass {
 
             filters.forEach(filter => {
                 // Validate that the filter is formatted appropriately.
-                // First, check the pre-defined filters (type and date/time).
-                if (filter.type || filter.from || filter.to) {
+                // First, check the pre-defined filters (type, date/time, and
+                // polygon).
+                if (filter.type || filter.from || filter.to || filter.polygon) {
                     if (filter.type) {
                         data.record_type = filter.type;
                     }
@@ -380,6 +381,10 @@ class Record extends AbstractApiClass {
                     }
                     if (filter.to) {
                         data.occurred_to = filter.to;
+                    }
+                    if (filter.polygon) {
+                        // Polygons should be passed in as GeoJSON objects.
+                        data.polygon = JSON.stringify(filter.polygon);
                     }
                 } else {
                     // Dynamic query -- build the nested query structure.

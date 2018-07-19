@@ -18,6 +18,7 @@ const filterState = {
         filters: [],  // Array of currently selected filters.
         from: '',  // Minimum date for Records.
         to: '',  // Maximum date for Records.
+        polygon: {},  // Geometry for filtering records (GeoJSON).
     },
     mutations: {
 
@@ -73,6 +74,16 @@ const filterState = {
              *                        as YYY:MM:DDTHH:mm:ss.SSS
              */
             state.to = to;
+        },
+
+        updatePolygon(state, geojson) {
+            /*
+             * Set the value for the geometry to use to filter records.
+             *
+             * @param {Object} geojson - The GeoJSON object to use for
+             *                           filtering.
+             */
+            state.polygon = geojson;
         },
 
         updateFilter(state, filter) {
@@ -210,6 +221,9 @@ const filterState = {
             }
             if (context.state.to) {
                 queryParams.push({to: context.state.to});
+            }
+            if (Object.keys(context.state.polygon).length > 0) {
+                queryParams.push({polygon: context.state.polygon})
             }
 
             // Add any other filters that are defined in the filter state.
