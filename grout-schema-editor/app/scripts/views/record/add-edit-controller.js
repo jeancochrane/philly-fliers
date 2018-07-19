@@ -243,11 +243,14 @@
                     theme: 'bootstrap3',
                     iconlib: 'bootstrap3',
                     show_errors: 'change',
-                    no_additional_properties: true,
-                    startval: ctl.record ? ctl.record.data : null
                 },
                 errors: []
             };
+
+            // If a record is loaded, seed the editor with that record.
+            if (ctl.record) {
+                ctl.editor.startval = ctl.record.data
+            }
             /* jshint camelcase: true */
         }
 

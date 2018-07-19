@@ -14,7 +14,7 @@
     "angular-sanitize": "~1.7.2",
     "angular-ui-router": "~1.0.19",
     "angular-uuids": "~0.0.4",
-    "json-editor": "jeancochrane/json-editor#31473c2bfca1ef7964154086cbe9d71996bdb6b2",
+    "json-editor": "@json-editor/json-editor",
     "angular-local-storage": "~0.2.2",
     "angular-bootstrap": "~0.13.0",
     "lodash": "^3.8.0",
