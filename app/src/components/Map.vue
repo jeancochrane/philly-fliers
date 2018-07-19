@@ -33,7 +33,6 @@ export default {
         return {
             map: null,  // Reference to this component's L.Map object.
             activeLayer: null,  // Currently-selected marker layer.
-            filterLayer: null,  // Geometry filters defined by the user.
         };
     },
     computed: {
@@ -69,8 +68,22 @@ export default {
                 scrollWheelZoom: false,
             });
 
+            // The FeatureGroup for saving filter geometries defined by the user
+            // needs to live as local state in this method in
+            // order to interact properly with Leaflet, since `this` gets
+            // overridden in Leaflet event methods to refer to the object that
+            // the event is bound to (e.g. `L.map`). It's not pretty, but
+            // it works.
+            let filterLayer = new L.featureGroup().addTo(this.map);
+
             // Initialize Leaflet Draw component for drawing geometries.
             this.map.addControl(new L.Control.Draw({
+                edit: {
+                    featureGroup: filterLayer,
+                    poly: {
+                        allowIntersection: false,
+                    }
+                },
                 draw: {
                     marker: false,
                     circle: false,
@@ -79,21 +92,18 @@ export default {
                     polygon: {
                         allowIntersection: false,
                     }
-                },
+                }
             }));
 
-            // Define geometry drawing events.
+            // When the user draws a geometry, use it as a filter.
             this.map.on('draw:created', event => {
                 // Remove existing filter layer, if one exists.
-                if (this.filterLayer) {
-                    this.map.removeLayer(this.filterLayer);
-                }
+                filterLayer.clearLayers();
 
                 // Add the new layer that the user has defined to the map.
-                this.filterLayer = event.layer;
-                this.map.addLayer(this.filterLayer);
+                filterLayer.addLayer(event.layer);
 
-                // Update Records from a query.
+                // Update Records based on the new filter.
                 this.$store.commit('updatePolygon', event.layer.toGeoJSON().geometry);
                 this.$store.dispatch('updateRecords');
             });
