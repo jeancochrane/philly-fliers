@@ -107,6 +107,13 @@ export default {
                 this.$store.commit('updatePolygon', event.layer.toGeoJSON().geometry);
                 this.$store.dispatch('updateRecords');
             });
+
+            // When a user deletes a geometry, rerun queries.
+            this.map.on('draw:deleted', event => {
+                // Update Records.
+                this.$store.commit('updatePolygon', {});
+                this.$store.dispatch('updateRecords');
+            })
         },
 
         initTiles() {
