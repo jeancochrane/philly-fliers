@@ -15,7 +15,7 @@ const filterState = {
         types: [],  // Array of available RecordTypes in the Grout API.
         activeTypeId: {},  // The RecordType that the user has currently selected.
         records: [],  // Array of records that are currently being displayed.
-        filters: {},  // Map of currently selected filters.
+        filters: [],  // Array of currently selected filters.
     },
     mutations: {
 
@@ -51,117 +51,75 @@ const filterState = {
             state.records = records;
         },
 
-        updateFilter(state, payload) {
+        updateFilter(state, filter) {
             /*
              * Update the active filters based on user input.
              *
-             * @param {Object} payload - Data to update the filter.
-             * @param {string} payload.schemaName - The name of the schema (the base
-             *                                      key in the `state.filters` object
-                     *                              in which to store this data).
-             * @param {string} payload.fieldName - The name of the field that this query
-             *                                     pertains to.
-             * @param {string} payload.fieldType - The type of field represented by this
-             *                                     filter (one of 'text', 'select',
-             *                                     'min', or 'max').
-             * @param {string} payload.query - The user-inputted query value. If
-             *                                 this value is falsey, the method
-             *                                 will remove the filter.
+             * @param {Filter} filter - A Grout Filter object.
              */
-            // Validate input parameters.
-            const schemaName = payload.schemaName;
-            const fieldName = payload.fieldName;
-            const fieldType = payload.fieldType;
+            // Perform a type check on the filter param to make sure it matches
+            // the Filter type.
+            const form = filter.form;
+            const name = filter.name;
+            const fieldType = filter.fieldType;
+            const order = filter.order;
+            const multiple = filter.multiple;
+            const query = filter.query;
 
             const paramDict = {
-                'schemaName': schemaName,
-                'fieldName': fieldName,
+                'form': form,
+                'name': name,
                 'fieldType': fieldType,
+                'order': order,
+                'multiple': multiple,
+                // Don't check query, since it's significant if it's missing
+                // (that means the user is clearing a filter).
             };
 
             Object.entries(paramDict).forEach(([paramName, param]) => {
-                if (!param) {
+                if (typeof(param) === 'undefined') {
                     throw new Error(`
-                        Function argument "${paramName}" is required in order
-                        to update filters.
+                        The 'field' parameter is not a valid Field object: it
+                        is missing the '${paramName}' attribute.
                     `)
                 }
             });
 
-            // Check if a value exists for the query. If not, the user is
-            // clearing this filter.
-            const query = payload.query;
-            if (query === '') {
-                state.filters[schemaName] = {};
-                return;
-            }
-
-            // Check whether an entry already exists for this schema. If not,
-            // initialize it.
-            if (!state.filters[schemaName]) {
-                state.filters[schemaName] = {};
-            }
-
-            // If this is a number query (or another type of field
-            // that accepts multiple inputs, like a multiselect)
-            // the nested query object may already exist, so check
-            // for it before creating it.
-            let nestedQuery = {};
-            if (!state.filters[schemaName][fieldName]) {
-                state.filters[schemaName][fieldName] = {};
-            } else {
-                nestedQuery = state.filters[schemaName][fieldName];
-            }
-
-            // Construct the actual query.
-            switch(fieldType) {
-                case 'text':
-                    nestedQuery = {
-                        '_rule_type': 'containment',
-                        'contains': [
-                            query
-                        ]
-                    };
-                    break;
-
-                case 'select':
-                    // Select can have multiple attributes, so
-                    // if that's the case, append to the containment
-                    // array.
-                    if (nestedQuery.contains) {
-                        nestedQuery.contains.push(query);
+            // Update the filter.
+            let updated = false;  // Use this flag to determine if a filter was updated or not.
+            // Use a classic for-loop, since Array.forEach doesn't allow
+            // breaking.
+            for (let idx = 0; idx < state.filters.length; idx++) {
+                let filt = state.filters[idx];
+                if (filt.form == form && filt.name == name) {
+                    // There already exists a filter for this field in the
+                    // filters array. Update the old value with the new one.
+                    if (query) {
+                        // A new filter exists, so replace the old one.
+                        state.filters[idx] = filter;
                     } else {
-                        nestedQuery._rule_type = 'containment';
-                        nestedQuery.contains = [query];
+                        // The user must be deleting the filter. Remove the
+                        // filter object entirely, instead of updating it.
+                        state.filters.splice(idx, 1);
                     }
+                    updated = true;
                     break;
-
-                case 'min':
-                    nestedQuery._rule_type = 'intrange';
-                    nestedQuery.min = query;
-                    break;
-
-                case 'max':
-                    nestedQuery._rule_type = 'intrange';
-                    nestedQuery.max = query;
-                    break;
-
-                default:
-                    throw new Error(`
-                        Field type "${fieldType}" is not registered
-                        as a valid type of query.
-                    `)
+                }
             }
 
-            // Reassign the updated nested query to the proper field.
-            state.filters[schemaName][fieldName] = nestedQuery;
+            // If a query exists and there isn't already a filter for it in
+            // the filters array, add it on.
+            if (!updated && query) {
+                state.filters.push(filter)
+            }
+
         },
 
         clearFilters(state){
             /*
              * Clear all filters.
              */
-            state.filters = {};
+            state.filters = [];
         }
 
     },
@@ -213,12 +171,11 @@ const filterState = {
              * Given the current filters, update the array of
              * Records. Useful when a new filter has been selected.
              */
-            let queryParams = {
-                type: context.state.activeTypeId,
-                filters: context.state.filters
-            };
+            const type = context.state.activeTypeId;
+            const filters = context.state.filters;
+
             return new Promise((resolve, reject) => {
-                Grout.records.query(queryParams)
+                Grout.records.query({type: type}, ...filters)
                     .then(records => {
                         context.commit('updateRecords', records);
                         resolve(records);

@@ -18,7 +18,7 @@
                 {{ type.label }}
             </option>
         </select>
-        <filter-container :fields="fields"/>
+        <filter-container :filters="filters"/>
     </form>
 </template>
 
@@ -36,7 +36,7 @@ export default {
     },
     data() {
         return {
-            fields: {
+            filters: {
                 type: Array,
                 default: [],
             },
@@ -48,7 +48,7 @@ export default {
     }),
     watch: {
         activeTypeId: function(oldType, newType) {
-            this.updateFields();
+            this.updateFilters();
         }
     },
     methods: {
@@ -67,13 +67,13 @@ export default {
             this.$store.dispatch('updateRecords');
         },
 
-        updateFields() {
+        updateFilters() {
             /*
              * Update the filter form based on the schema of the global type.
              */
-            Grout.types.getFields(this.activeTypeId)
-                .then(fields => {
-                    this.fields = fields;
+            Grout.types.getFilters(this.activeTypeId)
+                .then(filters => {
+                    this.filters = filters;
                 })
                 .catch(error => {
                     console.log(error);

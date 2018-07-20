@@ -4,8 +4,8 @@
             <hr />
             <div class="accordion">
                 <div
-                    v-for="(field, index) in fields"
-                    :key="field.name"
+                    v-for="(filter, index) in filters"
+                    :key="filter.name"
                     class="card"
                 >
                     <div class="card-header">
@@ -16,7 +16,7 @@
                                 type="button"
                                 data-toggle="collapse"
                             >
-                                {{ field.name }}
+                                {{ filter.name }}
                             </button>
                         </h5>
                     </div>
@@ -26,9 +26,8 @@
                     >
                         <div class="card-body">
                             <text-filter
-                                v-if="field.type == 'text'"
-                                :form="field.form"
-                                :field-name="field.name"
+                                v-if="filter.fieldType == 'text'"
+                                :filter="filter"
                             />
                         </div>
                     </div>
@@ -48,7 +47,7 @@ export default {
         'text-filter': TextFilter
     },
     props: {
-        fields: {
+        filters: {
             /* eslint-disable vue/require-valid-default-prop */
             type: Array,
             default: []

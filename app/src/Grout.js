@@ -70,13 +70,12 @@ class AbstractApiClass {
                 });
         });
     }
-
 }
 
 
 class Form {
     /*
-     * A data structure for storing information about a form (group of Fields)
+     * A data structure for storing information about a form (group of Filters)
      * on a RecordSchema.
      *
      * @property {string} id - A unique identifier for this Form, typically
@@ -99,35 +98,6 @@ class Form {
 }
 
 
-class Field {
-    /*
-     * A data structure for storing information about a filterable field on
-     * a RecordSchema.
-     *
-     * @property {string} form - The ID of the Form that this Field is a part of.
-     *                           (typically a slugified version of the Form
-     *                           name). Useful if you want to group Fields by Form.
-     * @property {string} name - The name of the Field.
-     * @property {string} type - The data type of this Field, (one of `number`,
-     *                           `integer`, `text`, `selectlist`, `image`, or
-     *                           `reference`)
-     * @property {number} order - The position of this Field in the Form (which
-     *                            number Field it is). Useful if you want to
-     *                            display fields in the same order they are
-     *                            defined in the schema.
-     * @property {boolean} multiple - Whether or not a Record can contain
-     *                                multiple instances of this Field.
-     */
-    constructor(form, name, type, order, multiple) {
-        this.form = form;
-        this.name = name;
-        this.type = type;
-        this.order = order;
-        this.multiple = (multiple) ? multiple : false;
-    }
-}
-
-
 class Filter {
     /*
      * A data structure for storing information about a filter to be applied on
@@ -136,18 +106,35 @@ class Filter {
      * @property {string} form - The ID of the Form that this filter should be
      *                           applied to (typically a slugified version of
      *                           the Form's name).
-     * @property {string} field - The name of the Field that this filter should
-     *                            be applied to.
-     * @property {string|number} value - The value that the user wants to
-     *                           filter by.
-     * @property {string} rule - The query rule (one of `single`,
-     *                           `multiple`, or `range`).
+     * @property {string} name - The name of the Filter that this filter should
+     *                           be applied to.
+     * @property {string} fieldType - The data type of this Filter, (one of `number`,
+     *                                `integer`, `text`, `selectlist`, `image`, or
+     *                                `reference`)
+     * @property {number} order - The position of this Filter in the Form (which
+     *                            number Filter it is). Useful if you want to
+     *                            display filters in the same order they are
+     *                            defined in the schema.
+     * @property {boolean} multiple - Whether or not a Record can contain
+     *                                multiple instances of this Filter.
+     * @property {string|number} query - The value that will be used for the
+     *                                   filter query.
      */
-    constructor(field, value, rule) {
+    constructor(form, name, fieldType, order, rule, multiple, query) {
         this.form = form;
-        this.field = field;
-        this.value = value;
-        this.rule = rule;
+        this.name = name;
+
+        // Check that `type` is a valid type identifier.
+        const validTypes = ['number', 'text', 'selectlist', 'image', 'reference'];
+        if (validTypes.includes(fieldType)) {
+            this.fieldType = fieldType;
+        } else {
+            throw new Error("Filter type '${fieldType}' is invalid. Type must be one of: ${validTypes}");
+        }
+
+        this.order = order;
+        this.multiple = (multiple) ? multiple : false;
+        this.query = (query) ? query : '';
     }
 }
 
@@ -163,13 +150,13 @@ class Schema extends AbstractApiClass {
         this.url = `${this.baseUrl}/recordschemas/`;
     }
 
-    getFields(uuid) {
+    getFilters(uuid) {
         /*
          * Returns the filterable fields for a RecordSchema given its UUID.
          *
          * @param {string} uuid - The UUID for the RecordSchema whose fields
          *                        should be returned.
-         * @returns {Promise.<Field[]>} - If the query is successful, returns
+         * @returns {Promise.<Filter[]>} - If the query is successful, returns
          *                                an array of fields that can be filtered.
          *                                Otherwise, throws an error.
          */
@@ -177,8 +164,8 @@ class Schema extends AbstractApiClass {
             this.get(uuid)
                 .then(schema => {
                     const definitions = this._parseDefinitions(schema);
-                    const fields = this._parseFields(definitions);
-                    resolve(fields);
+                    const filters = this._parseFilters(definitions);
+                    resolve(filters);
                 })
                 .catch(error => reject(error));
         });
@@ -230,18 +217,18 @@ class Schema extends AbstractApiClass {
         return definitions;
     }
 
-    _parseFields(definitions) {
+    _parseFilters(definitions) {
         /*
          * Private helper method to parse a set of filterable fields given
          * RecordSchema field definitions and format the fields for easy display.
          *
          * @param {Object} definitions - A set of fields structured as a JSONSchema
          *                               `definitions` object.
-         * @returns {Array.<Field>} - An array of Field objects corresponding to the
-         *                            filterable fields for this schema.
+         * @returns {Array.<Filter>} - An array of Filter objects corresponding to the
+         *                             filterable fields for this schema.
          */
         // Initialize an array for the output.
-        let fields = [];
+        let filters = [];
 
         // The field definitions are mapped to a form name, to allow admins to
         // create multiple forms for a given schema (the default form is
@@ -256,22 +243,22 @@ class Schema extends AbstractApiClass {
                 // The `isSearchable` flag determines whether the field can
                 // be filtered or not. Skip any fields that are not filterable.
                 if (fieldData.isSearchable) {
-                    // Fields are initialized with the parameters:
+                    // Filters are initialized with the parameters:
                     // `form`, `name`, `type`, `order`, `multiple`
                     /* eslint-disable indent */
-                    const field = new Field(formName,
-                                            fieldName,
-                                            fieldData.fieldType,
-                                            fieldData.propertyOrder,
-                                            formData.multiple);
+                    const filter = new Filter(formName,
+                                              fieldName,
+                                              fieldData.fieldType,
+                                              fieldData.propertyOrder,
+                                              formData.multiple);
                     /* eslint-enable indent */
 
-                    fields.push(field);
+                    filters.push(filter);
                 }
             });
         });
 
-        return fields;
+        return filters;
     }
 
     _parseForms(definitions) {
@@ -290,9 +277,7 @@ class Schema extends AbstractApiClass {
         // The field definitions are mapped to a form name, to allow admins to
         // create multiple forms for a given schema (the default form is
         // "${RecordType.label}Details"). These are stored as key-value pairs
-        // mapping the form name to its corresponding data, including the fields
-        // contained in it. Iterate the keys of the field definitions object in
-        // order to extract fields for each form.
+        // mapping the form name to its corresponding data.
         Object.entries(definitions).forEach(([formName, formData]) => {
             // Forms are initialized with the property order:
             // `id`, `name`, `plural`, `description`, `order`
@@ -323,14 +308,14 @@ class Type extends AbstractApiClass {
         this.url = `${this.baseUrl}/recordtypes/`;
     }
 
-    getFields(uuid) {
+    getFilters(uuid) {
         /*
          * Returns the filterable fields for the current schema of a RecordType
          * given the RecordType's UUID.
          *
          * @param {string} uuid - The UUID for the RecordType whose active
-         *                         schema's fields should be returned.
-         * @returns {Promise.<Field[]>} - If the query is successful, returns an array
+         *                        schema's fields should be returned.
+         * @returns {Promise.<Filter[]>} - If the query is successful, returns an array
          *                                of fields that can be filtered. Otherwise, throws
          *                                an error.
          */
@@ -340,9 +325,9 @@ class Type extends AbstractApiClass {
                     // Create a Schema instance in order to proxy its
                     // `getFilters` method.
                     const schemas = new Schema(this.baseUrl);
-                    schemas.getFields(type.current_schema)
-                        .then(fields => filters{
-                            resolve(fields);
+                    schemas.getFilters(type.current_schema)
+                        .then(filters => {
+                            resolve(filters);
                         })
                         .catch(error => {
                             reject(error);
@@ -367,37 +352,81 @@ class Record extends AbstractApiClass {
         this.url = `${this.baseUrl}/records/`;
     }
 
-    query(params = {}) {
+    query(...filters) {
         /*
-         * Send a query to the Grout API, returning an array of Records
-         * that match the query.
+         * Send a query to the Grout API including an optional set of filters,
+         * returning an array of Records that match the query.
          *
-         * @param {Object} params - A list of query parameters (filters) to
-         *                          apply. If this object is empty or if the
-         *                          argument is undefined, the method will
-         *                          default to returning all RecordTypes.
-         * @param {string} params.type - The UUID of a RecordType. Will restrict
-         *                               the returned Records to only those with
-         *                               the corresponding RecordType.
-         * @param {Object} params.filters - Filters for this query.
+         * @param {...*} filters - Optional filters to restrict the query.
+         *                         Filters must be formatted as Filter data
+         *                         structures.
+         * @returns {Promise.Array} - An array of Grout Records.
          */
-        const hasQueryParams = Object.keys(params).length > 0;
-        if (!hasQueryParams) {
+        const hasFilters = filters.length > 0;
+        if (!hasFilters) {
             return this.all();
         } else {
             let data = {};  // Build an object for formatting query parameters.
 
-            // Check if the user is filtering by RecordType.
-            if (params.type) {
-                data.record_type = params.type;
-            }
-            // Check for arbitrary JSON filters.
-            if (params.filters) {
-                // qs provides some utilities for encoding arbitrarily-nested
-                // JSON, but Grout doesn't actually accept input in that format.
-                // Instead, transform the object into a string.
-                data.jsonb = JSON.stringify(params.filters);
-            }
+            filters.forEach(filter => {
+                // Validate that the filter is formatted appropriately.
+                // First, check the pre-defined filters (type and date/time).
+                if (filter.type || filter.from || filter.to) {
+                    if (filter.type) {
+                        data.record_type = filter.type;
+                    }
+                    if (filter.from) {
+                        data.occurred_min = filter.from;
+                    }
+                    if (filter.to) {
+                        data.occurred_to = filter.to;
+                    }
+                } else {
+                    // Dynamic query -- build the nested query structure.
+                    let jsonb = {};
+                    jsonb[filter.form] = {};
+                    jsonb[filter.form][filter.name] = {};
+
+                    // Construct the actual query.
+                    let nestedQuery = {};
+                    switch(filter.fieldType) {
+                        case 'text':
+                            nestedQuery._rule_type = 'containment';
+                            nestedQuery.contains = [filter.query];
+                            break;
+
+                        case 'select':
+                            nestedQuery._rule_type = 'containment';
+                            nestedQuery.contains = [filter.query];
+                            break;
+
+                        case 'min':
+                            nestedQuery._rule_type = 'intrange';
+                            nestedQuery.min = query;
+                            break;
+
+                        case 'max':
+                            nestedQuery._rule_type = 'intrange';
+                            nestedQuery.max = query;
+                            break;
+
+                        default:
+                            debugger;
+                            throw new Error(`
+                                Filter type "${filter.type}" is not registered
+                                as a valid type of query.
+                            `)
+                    }
+
+                    // Reassign the updated nested query to the proper field.
+                    jsonb[filter.form][filter.name] = nestedQuery;
+
+                    // Update the params object.
+                    // (Turn the JSONB query into a string, since that's how the
+                    // Grout API expects to receive it.)
+                    data.jsonb = JSON.stringify(jsonb);
+                }
+            });
 
             const queryUrl = `${this.url}?${qs.stringify(data)}`;
 
