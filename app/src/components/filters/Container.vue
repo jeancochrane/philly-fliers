@@ -1,12 +1,11 @@
 <template>
     <div class="row mt-3">
         <div class="col-sm-12">
-            <h5>Filter by {{ formName }}</h5>
             <hr />
             <div class="accordion">
                 <div
-                    v-for="(field, fieldName, index) in fields"
-                    :key="fieldName"
+                    v-for="(field, index) in fields"
+                    :key="field.name"
                     class="card"
                 >
                     <div class="card-header">
@@ -17,7 +16,7 @@
                                 type="button"
                                 data-toggle="collapse"
                             >
-                                {{ field.field }}
+                                {{ field.name }}
                             </button>
                         </h5>
                     </div>
@@ -27,8 +26,9 @@
                     >
                         <div class="card-body">
                             <text-filter
-                                v-if="field.fieldType == 'text'"
-                                :field-name="fieldName"
+                                v-if="field.type == 'text'"
+                                :form="field.form"
+                                :field-name="field.name"
                             />
                         </div>
                     </div>
@@ -48,13 +48,11 @@ export default {
         'text-filter': TextFilter
     },
     props: {
-        formName: {
-            type: String,
-            default: '...'
-        },
         fields: {
-            type: Object,
-            default: () => { return {}; }
+            /* eslint-disable vue/require-valid-default-prop */
+            type: Array,
+            default: []
+            /* eslint-enable vue/require-valid-default-prop */
         }
     }
 }

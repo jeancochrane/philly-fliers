@@ -18,12 +18,7 @@
                 {{ type.label }}
             </option>
         </select>
-        <filter-container
-            v-for="(fields, formName) in filters"
-            :fields="fields"
-            :form-name="formName"
-            :key="formName"
-        />
+        <filter-container :fields="fields"/>
     </form>
 </template>
 
@@ -41,10 +36,10 @@ export default {
     },
     data() {
         return {
-            filters: {
-                type: Object,
-                default: {}
-            }
+            fields: {
+                type: Array,
+                default: [],
+            },
         }
     },
     computed: mapState({
@@ -53,7 +48,7 @@ export default {
     }),
     watch: {
         activeTypeId: function(oldType, newType) {
-            this.updateFilters();
+            this.updateFields();
         }
     },
     methods: {
@@ -72,13 +67,13 @@ export default {
             this.$store.dispatch('updateRecords');
         },
 
-        updateFilters() {
+        updateFields() {
             /*
-             * Update the filters based on the schema of the global type.
+             * Update the filter form based on the schema of the global type.
              */
-            Grout.types.getFilters(this.activeTypeId)
-                .then(filters => {
-                    this.filters = filters;
+            Grout.types.getFields(this.activeTypeId)
+                .then(fields => {
+                    this.fields = fields;
                 })
                 .catch(error => {
                     console.log(error);

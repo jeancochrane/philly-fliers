@@ -26,24 +26,18 @@
 export default {
     name: 'TextFilter',
     props: {
-        fieldName: {
+        fieldName: {  // The name of the field that this component queries.
             type: String,
-            default: ''
+            default: '',
+        },
+        form: {  // The ID (slugified name) of the form that this component queries.
+            type: String,
+            default: '',
         }
     },
     data() {
         return {
             query: '',  // The user's query value for the filter.
-        }
-    },
-    computed: {
-        schemaName: function() {
-            // The fieldName stores information about the schemaName and the
-            // field itself.
-            return this.fieldName.split('#')[0];
-        },
-        field: function() {
-            return this.fieldName.split('#')[1];
         }
     },
     methods: {
@@ -53,8 +47,8 @@ export default {
              * filter.
              */
             const payload = {
-                'schemaName': this.schemaName,
-                'fieldName': this.field,
+                'schemaName': this.form,
+                'fieldName': this.fieldName,
                 'fieldType': 'text',
                 'query': this.query,
             };
