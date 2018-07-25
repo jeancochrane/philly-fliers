@@ -24,3 +24,12 @@ Finally, run the services with the `server` script:
 ```
 ./scripts/server
 ```
+
+## Deployment
+
+Push static files to S3:
+
+```
+docker build -t philly-fliers_deploy:latest deployment/grout
+docker run -it --env-file grout-server/.env --env-file deployment/grout/.env --entrypoint python philly-fliers_deploy:latest manage.py collectstatic
+```
