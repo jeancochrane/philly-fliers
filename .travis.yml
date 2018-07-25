@@ -1,0 +1,10 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - cp grout-server/.env.example grout-server/.env
+
+install:
+  - ./scripts/update
