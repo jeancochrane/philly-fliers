@@ -11,3 +11,6 @@ install:
 
 script:
   - echo "Hello, world!"
+
+after_success:
+  - ./deployment/publish.sh
