@@ -60,7 +60,7 @@ EOL
         eval $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
 
         # Push containers to ECR.
-        for service in nginx grout;
+        for service in grout nginx;
         do
             docker tag "philly-fliers_${service}:latest" "${AWS_ECR_URL}/${service}:latest"
             docker push "${AWS_ECR_URL}/${service}:latest"
