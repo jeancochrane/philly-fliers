@@ -23,7 +23,4 @@ install:
   - "./scripts/update"
 
 script:
-  - echo "Build complete -- checking whether to run a deployment..."
-
-after_success:
   - "./deployment/publish.sh"

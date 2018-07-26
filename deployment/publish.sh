@@ -22,7 +22,7 @@ then
         # Rebuild the Grout image with production credentials.
         cp ./grout-server/grout_server/settings.s3.py \
            ./grout-server/grout_server/settings_deployment.py
-        docker-compose build grout
+        docker build -t philly-fliers_grout:latest ./grout-server
 
         # Collect and push static files to S3. This step needs to happen after
         # the Grout image has been rebuilt, since the container for deploying
@@ -46,7 +46,7 @@ then
         cp -R ./grout-schema-editor/dist ./deployment/nginx/editor/
 
         # Rebuild Nginx container to load it with static apps.
-        docker-compose build nginx
+        docker build -t philly-fliers_nginx:latest ./deployment/nginx
 
         # Log in with AWS credentials.
         pip install --user awscli
