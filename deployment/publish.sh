@@ -62,8 +62,8 @@ EOL
         # Push containers to ECR.
         for service in grout nginx;
         do
-            docker tag "philly-fliers_${service}:latest" "${AWS_ECR_URL}/${service}:latest"
-            docker push "${AWS_ECR_URL}/${service}:latest"
+            docker tag "philly-fliers_${service}:latest" "${AWS_ECR_URL}/nfn/${service}:latest"
+            docker push "${AWS_ECR_URL}/nfn/${service}:latest"
         done
 
         # Update the app service -- redirect output to /dev/null to avoid
