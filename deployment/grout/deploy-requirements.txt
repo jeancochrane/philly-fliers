@@ -1,2 +1,2 @@
-boto3
-django-storages
+boto3==1.7.64
+django-storages==1.6.6
