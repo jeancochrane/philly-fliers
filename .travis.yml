@@ -20,7 +20,10 @@ before_install:
   - cp grout-server/.env.example grout-server/.env
 
 install:
-  - "./scripts/update"
+  - docker-compose build app
+  - docker-compose run --rm --no-deps app install
+  - docker-compose build editor
+  # - "./scripts/update"
 
 script:
   - "./deployment/publish.sh"

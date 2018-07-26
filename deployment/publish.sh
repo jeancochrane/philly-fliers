@@ -31,7 +31,7 @@ then
         docker run --env-file grout-server/.env \
                    -e DEBUG="False" \
                    -e INSTALLED_APPS="storages" \
-                   -e AWS_ACCESS_KEY_ID
+                   -e AWS_ACCESS_KEY_ID \
                    -e AWS_SECRET_ACCESS_KEY \
                    -e AWS_STORAGE_BUCKET_NAME \
                    -e AWS_LOCATION \
