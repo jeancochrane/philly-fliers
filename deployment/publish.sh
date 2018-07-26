@@ -80,9 +80,8 @@ EOL
                                --region $AWS_DEFAULT_REGION \
                                --force-new-deployment > /dev/null 2>&1
 
+        # Remove the credentials file, to appease superstition.
         rm -Rf ~/.aws
-
-        # TODO: Figure out a way to run migrations.
     else
         echo "Skipping deployment because branch is not 'deploy'"
     fi
