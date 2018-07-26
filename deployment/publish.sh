@@ -27,7 +27,7 @@ then
         # Collect and push static files to S3. This step needs to happen after
         # the Grout image has been rebuilt, since the container for deploying
         # static files depends on the production Grout image.
-        docker build -t philly-fliers_deploy:latest ./deployment/grout
+        docker build -t philly-fliers_grout:deploy ./deployment/grout
         docker run --env-file grout-server/.env \
                    -e DEBUG="False" \
                    -e INSTALLED_APPS="storages" \
@@ -36,17 +36,18 @@ then
                    -e AWS_STORAGE_BUCKET_NAME \
                    -e AWS_LOCATION \
                    --entrypoint python \
-                   philly-fliers_deploy:latest manage.py collectstatic --noinput
+                   philly-fliers_grout:deploy manage.py collectstatic --noinput
 
         # Build static apps.
         docker-compose run --rm --no-deps app run build
         cp -R ./app/dist ./deployment/nginx/app/
 
+        mv ./deployment/editor/config.js ./grout-schema-editor/app/scripts/config.js
         docker-compose run --rm --no-deps editor build
         cp -R ./grout-schema-editor/dist ./deployment/nginx/editor/
 
         # Rebuild Nginx container to load it with static apps.
-        docker build -t philly-fliers_nginx:latest ./deployment/nginx
+        docker build -t philly-fliers_nginx:deploy ./deployment/nginx
 
         # Log in with AWS credentials.
         pip install --user awscli
@@ -62,7 +63,7 @@ EOL
         # Push containers to ECR.
         for service in grout nginx;
         do
-            docker tag "philly-fliers_${service}:latest" "${AWS_ECR_URL}/nfn/${service}:latest"
+            docker tag "philly-fliers_${service}:deploy" "${AWS_ECR_URL}/nfn/${service}:latest"
             docker push "${AWS_ECR_URL}/nfn/${service}:latest"
         done
 
