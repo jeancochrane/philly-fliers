@@ -70,7 +70,7 @@ EOL
         # the API response from printing to the console.
         aws ecs update-service --cluster $AWS_ECS_CLUSTER \
                                --service $AWS_ECS_SERVICE \
-                               --region $AWS_DEFAULT_REGION
+                               --region $AWS_DEFAULT_REGION \
                                --force-new-deployment > /dev/null 2>&1
 
         rm -Rf ~/.aws
