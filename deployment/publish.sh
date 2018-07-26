@@ -66,6 +66,12 @@ EOL
             docker push "${AWS_ECR_URL}/nfn/${service}:latest"
         done
 
+        # Run migrations for the Grout server.
+        aws ecs run-task --cluster $AWS_ECS_CLUSTER \
+                         --task-definition nfn-migrations:7 \
+                         --count 1 \
+                         --launch-type EC2 > /dev/null 2>&1
+
         # Update the app service -- redirect output to /dev/null to avoid
         # the API response from printing to the console.
         aws ecs update-service --cluster $AWS_ECS_CLUSTER \
