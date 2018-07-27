@@ -1,6 +1,5 @@
-# /etc/cron.d/certbot: crontab entries for the certbot package
-#
-# Upstream recommends attempting renewal twice a day
+# /etc/cron.d/certbot: crontab entries for the certbot package. Generated
+# automatically by the `certbot certonly` command.
 #
 # Eventually, this will be an opportunity to validate certificates
 # haven't been revoked, etc.  Renewal will only occur if expiration

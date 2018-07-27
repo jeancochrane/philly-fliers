@@ -29,5 +29,5 @@ script:
   # Run the deployment script. This needs to run in `script` instead of
   # `after_success`, since we want any failures in the script to fail the build
   # and non-zero exit codes raised in the `after_success` block won't fail the
-  # build:https://docs.travis-ci.com/user/customizing-the-build/#breaking-the-build
+  # build: https://docs.travis-ci.com/user/customizing-the-build/#breaking-the-build
   - "./deployment/publish.sh"

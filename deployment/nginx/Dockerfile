@@ -12,5 +12,4 @@ COPY ./editor/ /usr/share/nginx/html/editor/
 
 # Install requirements for serving SSL certs.
 RUN apt-get update
-RUN apt-get install -y certbot \
-					   openssl
+RUN apt-get install -y certbot

@@ -1,3 +1,5 @@
+// config.js -- Production deployment config for the NFN schema editing app.
+
 (function () {
     'use strict';
 
@@ -14,7 +16,7 @@
             prefix: '!'
         },
         api: {
-            hostname: 'http://nfn.jeancochrane.com/api',
+            hostname: 'https://nfn.jeancochrane.com/api',
             // These group names are defined server-side in settings.py
             groups: {
                 admin: 'admin',

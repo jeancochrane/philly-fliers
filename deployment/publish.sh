@@ -17,7 +17,7 @@ set -euo pipefail
 
 if [ -z "$TRAVIS_PULL_REQUEST" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ];
 then
-    if [ "$TRAVIS_BRANCH" == "deploy" ];
+    if [ "$TRAVIS_BRANCH" == "develop" ];
     then
         # Rebuild the Grout image with production credentials.
         cp ./grout-server/grout_server/settings.s3.py \
@@ -83,7 +83,7 @@ EOL
         # Remove the credentials file, to appease superstition.
         rm -Rf ~/.aws
     else
-        echo "Skipping deployment because branch is not 'deploy'"
+        echo "Skipping deployment because branch is not 'develop'"
     fi
 else
     echo "Skipping deployment because the build is a pull request"
