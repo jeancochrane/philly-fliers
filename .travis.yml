@@ -20,10 +20,14 @@ before_install:
   - cp grout-server/.env.example grout-server/.env
 
 install:
-  - docker-compose build app
-  - docker-compose run --rm --no-deps app install
-  - docker-compose build editor
-  # - "./scripts/update"
+  # Build containers and install NPM modules.
+  - "./scripts/update"
 
 script:
+  # Run tests.
+  - "./scripts/test"
+  # Run the deployment script. This needs to run in `script` instead of
+  # `after_success`, since we want any failures in the script to fail the build
+  # and non-zero exit codes raised in the `after_success` block won't fail the
+  # build:https://docs.travis-ci.com/user/customizing-the-build/#breaking-the-build
   - "./deployment/publish.sh"
