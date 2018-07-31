@@ -4,9 +4,10 @@ services:
   - docker
 env:
   global:
-    - INSTALLED_APPS=storages
-    # Environment variables for deployment -- see ./deployment/publish.sh for a
+    # Environment variables for deployment -- see ./scripts/cipublish for a
     # list of required variables.
+    - DEPLOY_BRANCH="deploy"
+    - AWS_ECS_MIGRATION_TASK_DEFINITION="nfn-migrations:7"
     - secure: dtbl34cgiJ5gZACfQyr81HbEMdNss2f+FjThOnflNb8S/2/0HreaFK3u0VXCG/DwCb0Fh3fp135jvY3ySWfaPajiuh9RwhLAZD/iBD1dJtetzyqs9bcSS6LhQY4MRt2w64Te55d65EOxZ6L56XhFzvsGSE2Fh28T1R0pb/Pd/jFLBmr9ZxBvhk8jgaWe+d+8rjPYXgiqomU5VWBjGlmNS2bEy5OP3Qi3g1Hx+gi0NQRSoSH6EpL4/DSW0uuGcH4PnDAtgWAcu54JUSGaCD+tva+Zrx8yX5bgDMWRbHdDBcyykok/cF/EIU6sFBLwJSt+KufmlIFK1jMvEMggPLBA1GSSH7ziK9ILUEO2UsL+QHtWmRrfE1dNUkRcaWPp/kZTSEACq2AbTsoxLhWp0GBcnEfxtrki/Nf9hs0x3zudPQJS8S3AqRR5AyVBr40bZl3SoIEyUKmBaQG0ewxelmtB7e7+Nj8+osfIfHa59OrLbKPiwrIC2gZx0hG5cpRZMIjlAnUDV1RGf8gW4lJeBWMyY4tnVRbOrFaMxdqos2AFozRGFj9JBT92mjCZJfNKkrKl/6nMw5RYVZUTaIqIp9QByKU3PUvyWC17rNQeo+4nmkjP6d3DSyu/p/0N/cqp1wIjxowpsIfVQ0XrgswLtTIo8XC6fj7GrtpmzD9xNQpAz4w=
     - secure: oZgXJr1oOg0a7HZexTkNJH5fgQkSHZp9NtJb1E4xhsPkD+lZZQ1KszBbkWIUUXiG5KpnjgLPHdyrPt1xVCcYni2VFqchqbDonKiNfuZjnwuEv43Sg7DjNALzLkrjyeXyTeJp5GE7wdmWd7jmxThPmrCIKHu77nSOI8kBg3PuxWH0sVwFaf6uCyXwinKLpYO2/gz398fzGegraqE2RllQS6rDLjc/k3xNCRnhSWUGK6pO1Pj/uPWHuL6AqDPbjJ0gdeBJRzj3W0f82g6roSethmHK3a4zGBXUo9ooNeotwB8ZgS9spjew0NzvR1PgAhSx4xFljPWP7yVRAL0s5E/rxkRSpbe/HdRkjYrMPYEsX/ojXeJz/ZNlNSgsbopc7ujFroAklIAu093PNU20SIt6hLQIw+HcPLHN8bHA7RdaZw6Cma373ZdH9NNUPYTPd7XcIdMHK3hJ2leNO1ye1kjK9Fo7dLC6p20XAIVJpP3IbE8+X3AJoQp0B5lgkxRlFUOiQLmXgPiR+qKZDU04qhQto4amFKSHhn4Q+/KzPGKUuQZ9wRT1DgNfq4hHCZa76tkgWePePjqzfx879rfpWQkmczq15zLI1sp6CsUxiz79ix38X1NGam/vL/3v8jieUolO+DNfeXcgH6rB/PcMci1W8hFOY5bxRkmPmMVlIIqzEz4=
     - secure: dnBFJb4k/VBjRzILwEjNqT/Wn58ZUP2ec11hMSDw3DDD4bPF3T1SCHkGoLyHGXGg65srS2Shrv+yPqqBLi2/nRCqSKqRQ7gmDZ5CWb7u/giVYm4ruGsuyblLX2GuPkIKKcgRWrLOTPwLGUeImAatbefgW02xPuIaSzZCAFOy21pGzteM69tFYSRpT8l/stlIzjT0j/nw1ARakQH2G+J/xsKd+JsZtm8nEPNgFT+wX7oDrKm+1cswrmjkPrSSBa3Wz6NqfMA5A1MyrRNGNDvXzppa+DN49Mquii5aeKYT+QSfbg4wZokePwGIHRO/0xgToHwuZbejBrDDduq00q9xlwlrZlTebgWX0QoRl0Z4q3+0lH0UOrce3JIttecX3Ct1RtpnOuE6Zw9IXcZmaoqVWAia1DbTBd4BUZKFKyhmDmmNTp6IRcwTaNJttfbHMIKkhJR9isQP+57ZE1cQaBlwNt2axWunLPjxYxJhh+RUWBHm6mas5HeyyZodiwX7nX9hTvhGR3O390hihLtw8wLdzzxdDkK+ulF6uh2tYhIKLKuyH0B0SmWGlP3oKwXypVXbMytk8iaFM795Y87BDsUvvKZFiqEvvUsbmWzHPOohKabdOAocbtnE4JUtA62qSrFGlMFTgMa1aG+ALExv6+S9Qsi0bVz97NpU0rdkhk4Dk/E=
@@ -30,4 +31,4 @@ script:
   # `after_success`, since we want any failures in the script to fail the build
   # and non-zero exit codes raised in the `after_success` block won't fail the
   # build: https://docs.travis-ci.com/user/customizing-the-build/#breaking-the-build
-  - "./deployment/publish.sh"
+  - "./scripts/cipublish"
