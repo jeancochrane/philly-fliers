@@ -380,7 +380,7 @@ class Record extends AbstractApiClass {
                         data.occurred_min = filter.from;
                     }
                     if (filter.to) {
-                        data.occurred_to = filter.to;
+                        data.occurred_max = filter.to;
                     }
                     if (filter.polygon) {
                         // Polygons should be passed in as GeoJSON objects.
