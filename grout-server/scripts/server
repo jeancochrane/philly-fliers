@@ -15,21 +15,20 @@ source "${DIR}/_config.sh"
 source "${DIR}/_init_db.sh"
 
 function usage() {
-    echo -n "Usage: $(basename "$0") {grout,app} [CMD]
+    echo -n "Usage: $(basename "$0") {grout} [CMD]
 
 Starts servers using docker-compose. If an argument is specified, [CMD]
 will pass the command string into the corresponding service.
 
 Argument options:
     - grout: Starts the Grout database server on port 8000.
-    - app: Starts the app on port 8080.
     - <none>: Start all services.
 "
 }
 
 # The name of the Grout service to search for when checking if it's running
 # (e.g. <repo-name>_grout)
-GROUT_GREP="fliers_grout"
+GROUT_GREP="server_grout"
 
 function checkport() {
     #
@@ -73,57 +72,12 @@ function run_grout_service() {
     fi
 }
 
-function run_editor_service() {
-    #
-    # Run the schema editor app.
-    #
-    run_grout_service detached
-    checkport 9000
-    if [ $# -eq 0 ];
-    then
-        # No arguments -- default to running a Grunt server
-        docker-compose up editor
-    else
-        if [ "$1" = "detached"  ];
-        then
-            # Run this service in the background
-            docker-compose up -d editor
-        else
-            # User passed in arguments -- run their command
-            docker-compose run --rm --service-ports editor "$@"
-        fi
-    fi
-}
-
-function run_frontend_service() {
-    #
-    # Run the frontend app.
-    #
-    run_grout_service detached
-    checkport 8080
-    if [ $# -eq 0 ];
-    then
-        # No arguments -- default to running a dev server
-        docker-compose up app
-    else
-        if [ "$1" = "detached"  ];
-        then
-            # Run this service in the background
-            docker-compose up -d app
-        else
-            docker-compose run --rm --service-ports app "$@"
-        fi
-    fi
-
-}
-
 function run_all_services() {
     #
     # Run all services in docker-compose.yml (the managed equivalent of
     # `docker-compose up`).
     #
-    run_editor_service detached
-    run_frontend_service
+    run_grout_service
 }
 
 if [ "${BASH_SOURCE[0]}" = "${0}" ]
@@ -145,20 +99,6 @@ then
                 shift 1
                 function runserver() {
                     run_grout_service "$@"
-                }
-                ;;
-
-            editor)
-                shift 1
-                function runserver() {
-                    run_editor_service "$@"
-                }
-                ;;
-
-            app)
-                shift 1
-                function runserver() {
-                    run_frontend_service "$@"
                 }
                 ;;
 

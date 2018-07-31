@@ -17,7 +17,7 @@ source "${DIR}/_init_db.sh"
 function usage() {
     echo -n "Usage: $(basename "$0")
 
-Make sure containers and NPM modules are up to date.
+Make sure containers are up to date.
 "
 }
 
@@ -33,12 +33,6 @@ then
         # Run migrations.
         init_db
         docker-compose run --rm grout manage.py migrate
-
-        # Upload sample data.
-        docker-compose run --rm loaddata
-
-        # Install NPM modules.
-        docker-compose run --rm app install
 
         # Stop all services.
         docker-compose stop

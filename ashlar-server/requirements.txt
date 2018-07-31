@@ -1,2 +1,0 @@
-git+https://github.com/azavea/ashlar.git@develop#egg=ashlar
-django-cors-headers==2.2.0

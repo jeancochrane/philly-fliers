@@ -5,24 +5,24 @@ services:
   db:
     image: quay.io/azavea/postgis:2.4-postgres10.3-slim
 
-  ashlar:
-    build: ./ashlar-server
+  grout:
+    build: ./grout-server
     depends_on:
       - db
     volumes:
-      - ./ashlar-server:/opt/ashlar-server
+      - ./grout-server:/opt/grout-server
     entrypoint: python
     command: manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
-    env_file: ./ashlar-server/.env
+    env_file: ./grout-server/.env
 
   editor:
-    build: ./ashlar-schema-editor
+    build: ./grout-schema-editor
     depends_on:
-      - ashlar
+      - grout
     volumes:
-      - ./ashlar-schema-editor:/opt/ashlar-schema-editor
+      - ./grout-schema-editor:/opt/schema_editor
     entrypoint: grunt
     command: serve
     ports:
@@ -45,5 +45,12 @@ services:
       - ./scripts/sample_data:/opt/loaddata
     working_dir: /opt/loaddata
     depends_on:
-      - ashlar
+      - grout
     command: python loaddata.py
+
+  nginx:
+    build: ./deployment/nginx
+    depends_on:
+      - grout
+    ports:
+      - "80:80"

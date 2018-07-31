@@ -3,11 +3,11 @@
 # _config.sh -- common config settings for dev scripts
 
 # If an unhandled command returns a non-zero exit code, stop the script.
-set -e
+set -eo pipefail
 
-# If the user has set the ASHLAR_DEBUG variable to any value, run
+# If the user has set the GROUT_DEBUG variable to any value, run
 # this script in debug mode (print all commands before they run).
-if [[ -n "${ASHLAR_DEBUG}" ]]; then
+if [[ -n "${GROUT_DEBUG}" ]]; then
     set -x
 fi
 

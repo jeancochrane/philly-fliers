@@ -1,16 +1,28 @@
-# load.py -- load sample data into an Ashlar Blueprint instance
+# load.py -- load sample data into an Grout Blueprint instance
 import time
 import json
 import sys
 
 import requests
 
-# Ashlar server URL
-BASE_URL = 'http://ashlar:8000/api/'
+# Grout server URL
+BASE_URL = 'http://grout:8000/api/'
 
-# Number of times to retry the connection to the Ashlar server (helpful if
+# Number of times to retry the connection to the Grout server (helpful if
 # Docker instances spin up at different times)
 NUM_RETRIES = 10
+
+
+def raise_for_status(response):
+    '''
+    Check the status of an HTTP response. If it's an error, raise the error
+    and print the content of the response.
+    '''
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        print(response.content.decode('utf-8'))
+        raise(e)
 
 
 if __name__ == '__main__':
@@ -32,7 +44,7 @@ if __name__ == '__main__':
             print(f'Connected to the host at {BASE_URL}')
             break
         except requests.exceptions.ConnectionError as e:
-            # Failed to establish a connection with the Ashlar host -- try
+            # Failed to establish a connection with the Grout host -- try
             # for 10 seconds, and then raise the error
             print(f'Host at {BASE_URL} is not available -- retrying ({num_retries} attempts remaining)')
             num_retries -= 1
@@ -42,7 +54,7 @@ if __name__ == '__main__':
             else:
                 time.sleep(1)
 
-    existing_recs.raise_for_status()
+    raise_for_status(existing_recs)
     if existing_recs.json()['count'] > 0 :
         print('Sample data already exists in the database -- skipping upload.')
         sys.exit(0)
@@ -52,7 +64,7 @@ if __name__ == '__main__':
     # POST the record type
     for rt in sample_data:
         rt_res = requests.post(BASE_URL + 'recordtypes/', json=rt)
-        rt_res.raise_for_status()
+        raise_for_status(rt_res)
         rt_json = rt_res.json()
         print('Uploaded RecordType', rt_json['uuid'])
 
@@ -60,6 +72,7 @@ if __name__ == '__main__':
         schema = rt['schema']
         schema['record_type'] = rt_json['uuid']
         schema_res = requests.post(BASE_URL + 'recordschemas/', json=schema)
+        raise_for_status(schema_res)
         schema_json = schema_res.json()
         print('Uploaded RecordSchema', schema_json['uuid'])
 
@@ -67,7 +80,7 @@ if __name__ == '__main__':
         for record in schema['records']:
             record['schema'] = schema_json['uuid']
             record_res = requests.post(BASE_URL + 'records/', json=record)
-            record_res.raise_for_status()
+            raise_for_status(record_res)
             record_json = record_res.json()
             print('Uploaded Record', record_json['uuid'])
 
