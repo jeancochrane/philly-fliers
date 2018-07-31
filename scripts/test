@@ -1,0 +1,95 @@
+#!/bin/bash
+
+# Most reliable way to get the path for this script.
+# h/t: https://stackoverflow.com/questions/192292/bash-how-best-to-include-other-scripts/12694189#12694189
+DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$DIR" ]];
+then
+    DIR="$PWD"
+fi
+
+# Load common configs for this script.
+source "${DIR}/_config.sh"
+
+# Load database initialization procedure
+source "${DIR}/_init_db.sh"
+
+function usage() {
+    echo -n "Usage: $(basename "$0") {git,grout,editor}
+Run tests.
+
+Options:
+    -h --help       Display this help text
+    git             Check git commit titles
+    grout           Run tests for the Grout Server app
+    editor          Run tests for the Schema Editor app
+    <none>          Run all tests
+"
+}
+
+function grout_tests() {
+    echo "Testing the Grout Server app..."
+    echo "-------------------------------------------------------------------"
+
+    init_db
+    docker-compose run --rm grout manage.py test
+
+    # Stop the database service so that containers aren't lying around
+    docker-compose stop db
+
+    echo "PASSED: Grout Server tests passed."
+}
+
+function editor_tests() {
+    echo "Testing the Schema Editor app..."
+    echo "-------------------------------------------------------------------"
+
+    docker-compose run --rm --no-deps editor test
+
+    echo "PASSED: Grout Server tests passed."
+}
+
+function git_tests() {
+    # Fail build if any commit title in this branch contains these words
+    echo "Making sure that all commits in this branch are clean..."
+    echo "-------------------------------------------------------------------"
+    if git log --oneline master.. | grep -wiE "fixup|squash|wip"
+    then
+        echo "FAILED: Illegal words in git commit:"
+        echo
+        echo $(git log --oneline master.. | grep -wiE "fixup|squash|wip")
+        echo
+        echo "Please squash these changes before merging."
+        exit 1
+    else
+        echo "PASSED: Git commits are clean."
+    fi
+}
+
+function all_tests() {
+    echo "Running all tests..."
+    echo "-------------------------------------------------------------------"
+    grout_tests
+    echo "-------------------------------------------------------------------"
+    editor_tests
+    echo "-------------------------------------------------------------------"
+    git_tests
+    echo "-------------------------------------------------------------------"
+    echo "PASSED: All tests passed."
+}
+
+if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
+    if [ -z "$1" ]
+    then
+        # If no arguments are supplied, run app tests.
+        all_tests
+    else
+        case "${1:-}" in
+            -h|--help) usage ;;
+            git)       git_tests ;;
+            grout)     grout_tests ;;
+            editor)    editor_tests ;;
+            *)         usage ;;
+        esac
+    fi
+fi

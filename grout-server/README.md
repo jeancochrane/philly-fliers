@@ -60,3 +60,29 @@ To run the tests, use the `test` script:
 # In the grout-server repo:
 ./scripts/test
 ```
+
+## Deployment
+
+You can define extra Django settings for your deployment in an optional config
+file, `grout_server/settings_deployment.py`. The project settings file will attempt to import
+all settings from this config, and if the file doesn't exist it will skip the
+import.
+
+An example deployment config file is provided in
+`grout_server/settings.s3.py`, which defines extra configuration settings for
+serving static files from AWS S3 using the [django-storages
+backend](https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html).
+To use this file for your deployment, copy it to the path that the settings
+file expects:
+
+```bash
+cp grout_server/settings.s3.py grout_server/settings_deployment.py
+```
+
+If you use the S3 settings file, make sure to update your environmental variables
+according to the template provided in `.env.s3.example` in order to load the
+appropriate login credentials.
+
+For a step-by-step guide to setting up the necessary configuration on the S3
+side, see [Victor Freitas' blog post on setting up S3 to serve Django static
+files](https://simpleisbetterthancomplex.com/tutorial/2017/08/01/how-to-setup-amazon-s3-in-a-django-project.html).
