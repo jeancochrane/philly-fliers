@@ -411,7 +411,6 @@ class Record extends AbstractApiClass {
                             break;
 
                         default:
-                            debugger;
                             throw new Error(`
                                 Filter type "${filter.type}" is not registered
                                 as a valid type of query.

@@ -47,6 +47,12 @@ INSTALLED_APPS = (
     'rest_framework_gis',
 )
 
+# Check for extra apps, defined as a comma-separated bash string in the
+# .env file.
+EXTRA_APPS = tuple(app for app in os.environ.get('INSTALLED_APPS', '').split(',') if app)
+
+INSTALLED_APPS += EXTRA_APPS
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -126,6 +132,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
 if DEBUG:
@@ -164,3 +171,10 @@ USER_GROUPS = {
 
 # Grout-specific global variables
 GROUT = { 'SRID': 4326 }
+
+# Try to import extra deployment-specific settings.
+if DEBUG is False:
+    try:
+        from grout_server.settings_deployment import *
+    except ImportError:
+        pass

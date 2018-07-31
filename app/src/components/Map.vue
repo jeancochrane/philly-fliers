@@ -69,8 +69,8 @@ export default {
             /*
              * Add tile layers from OSM to the map.
              */
-            const streets = new L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributors',
+            const streets = new L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> Contributors',
                 maxZoom: 18,
             }).addTo(this.map);
         },

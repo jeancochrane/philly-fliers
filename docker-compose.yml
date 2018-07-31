@@ -22,7 +22,7 @@ services:
     depends_on:
       - grout
     volumes:
-      - ./grout-schema-editor:/opt/grout-schema-editor
+      - ./grout-schema-editor:/opt/schema_editor
     entrypoint: grunt
     command: serve
     ports:
@@ -47,3 +47,10 @@ services:
     depends_on:
       - grout
     command: python loaddata.py
+
+  nginx:
+    build: ./deployment/nginx
+    depends_on:
+      - grout
+    ports:
+      - "80:80"

@@ -59,6 +59,8 @@ coverage.xml
 # Django stuff:
 *.log
 local_settings.py
+settings_deployment.py
+setting
 db.sqlite3
 
 # Sphinx documentation
