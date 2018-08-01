@@ -67,7 +67,7 @@ if __name__ == '__main__':
         'password': 'admin'
     }
 
-    token_res = requests.post(BASE_URL + 'token-auth/', auth_info)
+    token_res = requests.post(BASE_URL + 'auth/token/post/', auth_info)
     raise_for_status(token_res)
     token = 'Token   ' + token_res.json()['token']
     headers = {'Authorization': token}
