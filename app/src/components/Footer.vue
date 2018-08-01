@@ -1,5 +1,8 @@
 <template>
-    <footer class="bg-dark text-light text-center py-3">
+    <footer
+        id="footer"
+        class="bg-dark text-light text-center py-3"
+    >
         &#169; 2018. Website by Jean Cochrane.
         Built for the
         <a

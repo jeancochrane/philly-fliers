@@ -166,6 +166,13 @@ export default {
             // Add the layer to the map.
             this.activeLayer = new L.layerGroup(markers);
             this.map.addLayer(this.activeLayer);
+        },
+
+        setStyle(attr, val) {
+            /*
+             * Set the style of the map for a given CSS `attr` to `val`.
+             */
+            this.$refs.map.style[attr] = val;
         }
     }
 }
