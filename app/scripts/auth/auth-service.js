@@ -27,7 +27,7 @@
 
         module.authenticate = function(auth, needsAdmin) {
             var dfd = $q.defer();
-            $http.post(ASEConfig.api.hostname + '/api-token-auth/', auth)
+            $http.post(ASEConfig.api.hostname + '/api/auth/token/post/', auth)
             .success(function(data, status) {
                 var result = {
                     status: status,

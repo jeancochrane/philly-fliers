@@ -14,7 +14,7 @@ describe('ase.auth:AuthService', function () {
     var AuthService;
     var ResourcesMock;
     var UserService;
-    var queryUrl = /\/api-token-auth/;
+    var queryUrl = /\/api\/auth\/token\/post/;
 
     beforeEach(function() {
         var $window;
