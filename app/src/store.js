@@ -227,7 +227,7 @@ const filterState = {
             }
 
             // Add any other filters that are defined in the filter state.
-            queryParams.concat(context.state.filters);
+            queryParams = queryParams.concat(context.state.filters);
 
             return new Promise((resolve, reject) => {
                 Grout.records.query(...queryParams)
