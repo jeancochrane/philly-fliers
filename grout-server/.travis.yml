@@ -3,6 +3,9 @@ sudo: required
 services:
   - docker
 
+before_install:
+  - cp .env.example .env
+
 install:
   - ./scripts/update
 
