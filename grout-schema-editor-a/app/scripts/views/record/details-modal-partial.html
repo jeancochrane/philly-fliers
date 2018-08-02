@@ -1,0 +1,33 @@
+<div class="incident-report modal-content">
+    <div class="modal-content">
+        <div class="close" ng-click="modal.close()">
+            &times;
+        </div>
+        <div class="report-header">
+            <h3 class="modal-title">
+                <small ng-if="modal.userCanWrite" class="pull-right">
+                    <a ui-sref="record.edit({ recorduuid: modal.record.uuid })" target="_blank">
+                        <span class="glyphicon glyphicon-share"></span> Edit
+                    </a>
+                </small>
+                <small class="pull-right">
+                    <a ui-sref="record.details({ recorduuid: modal.record.uuid })" target="_blank">
+                        <span class="glyphicon glyphicon-share"></span> View
+                    </a>
+                </small>
+                {{ modal.recordType.label }} Details
+            </h3>
+        </div>
+        <ase-details-tabs
+            class="modal-body"
+            record-schema="modal.recordSchema"
+            record="modal.record"
+            user-can-write="modal.userCanWrite">
+        </ase-details-tabs>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="modal.close()">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
