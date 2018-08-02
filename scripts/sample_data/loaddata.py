@@ -59,11 +59,24 @@ if __name__ == '__main__':
         print('Sample data already exists in the database -- skipping upload.')
         sys.exit(0)
 
+    print('Requesting authentication token...')
+
+    # Use development auth credentials.
+    auth_info = {
+        'username': 'admin',
+        'password': 'admin'
+    }
+
+    token_res = requests.post(BASE_URL + 'auth/token/post/', auth_info)
+    raise_for_status(token_res)
+    token = 'Token   ' + token_res.json()['token']
+    headers = {'Authorization': token}
+
     print('Uploading sample data...')
 
     # POST the record type
     for rt in sample_data:
-        rt_res = requests.post(BASE_URL + 'recordtypes/', json=rt)
+        rt_res = requests.post(BASE_URL + 'recordtypes/', json=rt, headers=headers)
         raise_for_status(rt_res)
         rt_json = rt_res.json()
         print('Uploaded RecordType', rt_json['uuid'])
@@ -71,7 +84,7 @@ if __name__ == '__main__':
         # POST the record schema
         schema = rt['schema']
         schema['record_type'] = rt_json['uuid']
-        schema_res = requests.post(BASE_URL + 'recordschemas/', json=schema)
+        schema_res = requests.post(BASE_URL + 'recordschemas/', json=schema, headers=headers)
         raise_for_status(schema_res)
         schema_json = schema_res.json()
         print('Uploaded RecordSchema', schema_json['uuid'])
@@ -79,7 +92,7 @@ if __name__ == '__main__':
         # POST the records
         for record in schema['records']:
             record['schema'] = schema_json['uuid']
-            record_res = requests.post(BASE_URL + 'records/', json=record)
+            record_res = requests.post(BASE_URL + 'records/', json=record, headers=headers)
             raise_for_status(record_res)
             record_json = record_res.json()
             print('Uploaded Record', record_json['uuid'])

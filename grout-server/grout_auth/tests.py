@@ -7,7 +7,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework.request import Request
 from rest_framework.test import APIClient
 
-from grout_auth.permissions import IsOwnerOrAdmin, ReadersReadWritersWrite, IsAdminOrReadOnly
+from grout_auth import permissions
 
 
 class UserViewTestCase(TestCase):
@@ -56,7 +56,7 @@ class PermissionsTestCase(TestCase):
         self.assertEquals(self.public_user.groups.first(), self.public_group)
 
     def test_isowneroradmin(self):
-        owner_or_admin = IsOwnerOrAdmin()
+        owner_or_admin = permissions.IsOwnerOrAdmin()
 
         self.request.user = self.public_user
         obj = MagicMock()
@@ -74,7 +74,7 @@ class PermissionsTestCase(TestCase):
         self.assertTrue(owner_or_admin.has_object_permission(self.request, MagicMock(), obj))
 
     def test_readers_read_writers_write(self):
-        readers_writers = ReadersReadWritersWrite()
+        readers_writers = permissions.ReadersReadWritersWrite()
 
         # public user can read but not write record
         self.request.user = self.public_user
@@ -98,7 +98,7 @@ class PermissionsTestCase(TestCase):
         self.assertTrue(readers_writers.has_permission(self.request, MagicMock()))
 
     def admin_or_readonly(self):
-        admin_or_readonly = IsAdminOrReadOnly()
+        admin_or_readonly = permissions.IsAdminOrReadOnly()
 
         # public user can read but not write record
         self.request.user = self.public_user
@@ -120,3 +120,34 @@ class PermissionsTestCase(TestCase):
         self.assertTrue(admin_or_readonly.has_permission(self.request, MagicMock()))
         self.request.method = 'POST'
         self.assertTrue(admin_or_readonly.has_permission(self.request, MagicMock()))
+
+    def test_public_reads_writers_write(self):
+        public_reads_writers_write = permissions.PublicReadsWritersWrite()
+
+        # Test that a guest can read, but not write.
+        self.request.user = None
+        self.request.method = 'GET'
+        self.assertTrue(public_reads_writers_write.has_permission(self.request, MagicMock()))
+        self.request.method = 'POST'
+        self.assertFalse(public_reads_writers_write.has_permission(self.request, MagicMock()))
+
+        # Test that a public user can read, but not write.
+        self.request.user = self.public_user
+        self.request.method = 'GET'
+        self.assertTrue(public_reads_writers_write.has_permission(self.request, MagicMock()))
+        self.request.method = 'POST'
+        self.assertFalse(public_reads_writers_write.has_permission(self.request, MagicMock()))
+
+        # Test that an analyst can read and write.
+        self.request.user = self.analyst
+        self.request.method = 'GET'
+        self.assertTrue(public_reads_writers_write.has_permission(self.request, MagicMock()))
+        self.request.method = 'POST'
+        self.assertTrue(public_reads_writers_write.has_permission(self.request, MagicMock()))
+
+        # Test that an admin can read and write.
+        self.request.user = self.admin
+        self.request.method = 'GET'
+        self.assertTrue(public_reads_writers_write.has_permission(self.request, MagicMock()))
+        self.request.method = 'POST'
+        self.assertTrue(public_reads_writers_write.has_permission(self.request, MagicMock()))
