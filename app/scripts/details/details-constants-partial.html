@@ -1,0 +1,63 @@
+<div class="col-sm-6">
+    <label>
+        Occurred
+    </label>
+    <div class="value constant date occurred">
+        {{ ::ctl.record.occurred_from | localizeRecordDate: ctl.dateFormat : true }}
+        <span ng-if="::ctl.record.isSecondary && ctl.record.occurred_to">
+         - {{ ::ctl.record.occurred_to | localizeRecordDate: ctl.dateFormat : true }}
+        </span>
+    </div>
+    <label>
+        Modified
+    </label>
+    <div class="value constant date">
+        {{ ::ctl.record.modified | localizeRecordDate: ctl.dateFormat : true }}
+    </div>
+</div>
+<div class="col-sm-6">
+    <label>
+        Created
+    </label>
+    <div class="value constant date created">
+        {{ ::ctl.record.created | localizeRecordDate: 'long':'time'}}
+    </div>
+    <div ng-if="ctl.record.modified_by">
+        <label>
+            Modified By
+        </label>
+        <div class="value constant modifiedby">
+            {{ ctl.record.modified_by }}
+        </div>
+    </div>
+</div>
+<div class="col-sm-12">
+    <label>
+        Location
+    </label>
+    <div class="value constant">
+        {{ ::ctl.record.location_text }}
+    </div>
+</div>
+<div class="col-md-12">
+    <div class="map" leaflet-map embed-map
+        lat="{{ ::ctl.record.geom.coordinates[1] }}"
+        lng="{{ ::ctl.record.geom.coordinates[0] }}">
+    </div>
+</div>
+<div class="col-sm-6">
+    <label>
+        Latitude
+    </label>
+    <div class="value constant float latitude">
+        {{ ::ctl.record.geom.coordinates[1] | number:5 }}
+    </div>
+</div>
+<div class="col-sm-6">
+    <label>
+        Longitude
+    </label>
+    <div class="value constant float longitude">
+        {{ ::ctl.record.geom.coordinates[0] | number:5 }}
+    </div>
+</div>
