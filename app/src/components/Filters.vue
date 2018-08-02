@@ -18,6 +18,9 @@
                 {{ type.label }}
             </option>
         </select>
+        <div class="my-2">
+            <datetime-picker/>
+        </div>
         <filter-container :filters="filters"/>
     </form>
 </template>
@@ -26,6 +29,7 @@
 import { mapState } from 'vuex';
 
 import Grout from '@/api';
+import Datetime from './filters/Datetime';
 import FilterContainer from './filters/Container';
 
 
@@ -33,6 +37,7 @@ export default {
     name: 'FliersFilters',
     components: {
         'filter-container': FilterContainer,
+        'datetime-picker': Datetime,
     },
     data() {
         return {

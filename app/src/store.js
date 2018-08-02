@@ -16,6 +16,9 @@ const filterState = {
         activeTypeId: {},  // The RecordType that the user has currently selected.
         records: [],  // Array of records that are currently being displayed.
         filters: [],  // Array of currently selected filters.
+        from: '',  // Minimum date for Records.
+        to: '',  // Maximum date for Records.
+        polygon: {},  // Geometry for filtering records (GeoJSON).
     },
     mutations: {
 
@@ -49,6 +52,38 @@ const filterState = {
              *                          API.
              */
             state.records = records;
+        },
+
+        updateMinDate(state, from) {
+            /*
+             * Set the minimum date for filtering Records.
+             *
+             * @param {string} from - The minimum date, formatted
+             *                        as YYY:MM:DDTHH:mm:ss.SSS
+             * @param {string} to - The maximum date, formatted
+             *                        as YYY:MM:DDTHH:mm:ss.SSS
+             */
+            state.from = from;
+        },
+
+        updateMaxDate(state, to) {
+            /*
+             * Set the maximum date for filtering Records.
+             *
+             * @param {string} to - The maximum date, formatted
+             *                        as YYY:MM:DDTHH:mm:ss.SSS
+             */
+            state.to = to;
+        },
+
+        updatePolygon(state, geojson) {
+            /*
+             * Set the value for the geometry to use to filter records.
+             *
+             * @param {Object} geojson - The GeoJSON object to use for
+             *                           filtering.
+             */
+            state.polygon = geojson;
         },
 
         updateFilter(state, filter) {
@@ -171,11 +206,31 @@ const filterState = {
              * Given the current filters, update the array of
              * Records. Useful when a new filter has been selected.
              */
-            const type = context.state.activeTypeId;
-            const filters = context.state.filters;
+            // The only required filter is the RecordType filter.
+            let queryParams = [
+                {type: context.state.activeTypeId},
+            ]
+
+            // Add temporal filters if they're defined in the filter state.
+            // We want to be careful about not including the paramters if the
+            // filters are not defined, since the Grout API will turn an empty
+            // string into a hardcoded min/max date during parsing, which could
+            // leave out nontemporal records.
+            if (context.state.from) {
+                queryParams.push({from: context.state.from});
+            }
+            if (context.state.to) {
+                queryParams.push({to: context.state.to});
+            }
+            if (Object.keys(context.state.polygon).length > 0) {
+                queryParams.push({polygon: context.state.polygon})
+            }
+
+            // Add any other filters that are defined in the filter state.
+            queryParams = queryParams.concat(context.state.filters);
 
             return new Promise((resolve, reject) => {
-                Grout.records.query({type: type}, ...filters)
+                Grout.records.query(...queryParams)
                     .then(records => {
                         context.commit('updateRecords', records);
                         resolve(records);
