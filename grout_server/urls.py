@@ -34,4 +34,5 @@ urlpatterns = grout_urlpatterns
 urlpatterns += [
     url(r'^api-token-auth/', auth_views.obtain_auth_token),
     url(r'^api/', include(router.urls)),
+    url(r'^api/auth/token/post/', auth_views.obtain_auth_token),
 ]
