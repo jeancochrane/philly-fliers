@@ -1,5 +1,6 @@
 <template>
     <form>
+        <h5>Show me:</h5>
         <select
             :value="activeTypeId"
             @change="selectNewType"
@@ -15,12 +16,13 @@
                 :key="type.uuid"
                 :value="type.uuid"
             >
-                {{ type.label }}
+                {{ type.plural_label }}
             </option>
         </select>
         <div class="my-2">
             <datetime-picker/>
         </div>
+        <p>Use the map controls to filter by region&nbsp;<strong>&#8594;</strong></p>
         <filter-container :filters="filters"/>
     </form>
 </template>
@@ -87,3 +89,11 @@ export default {
     }
 }
 </script>
+
+<style>
+.mx-datepicker-popup {
+    /* Override the datepicker popup z-index to make sure it always shows up
+       on top of map elements (which have a max z-index of 1000) */
+    z-index: 1001;
+}
+</style>

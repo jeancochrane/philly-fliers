@@ -1,5 +1,5 @@
 <template>
-    <div class="row mt-3">
+    <div class="row my-3">
         <div class="col-sm-12">
             <hr />
             <div class="accordion">

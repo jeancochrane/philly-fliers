@@ -1,10 +1,10 @@
 <template>
     <div class="row">
-        <div class="col-sm-8 col-xl-9">
-            <leaflet-map ref="map"/>
-        </div>
         <div class="col-sm-4 col-xl-3">
             <fliers-sidebar/>
+        </div>
+        <div class="col-sm-8 col-xl-9">
+            <leaflet-map ref="map"/>
         </div>
         <fliers-modal/>
     </div>
