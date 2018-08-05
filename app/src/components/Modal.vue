@@ -9,7 +9,30 @@
         >
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
+                    <h4
+                        v-if="type.label === 'Poster'"
+                        class="modal-title"
+                    >
+                        {{ details['Event name'] }}
+                        <small class="text-muted">
+                            Poster
+                        </small>
+                    </h4>
+                    <h4
+                        v-else-if="type.label === 'Event'"
+                        class="modal-title"
+                    >
+                        {{ details['Title'] }}
+                        <small class="text-muted">
+                            Event
+                        </small>
+                    </h4>
+                    <h4
+                        v-else
+                        class="modal-title"
+                    >
+                        No record found
+                    </h4>
                     <button
                         type="button"
                         class="close"
@@ -21,9 +44,17 @@
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
-                        <p>
-                            Some information to display in the modal.
-                        </p>
+                        <template v-if="type.label === 'Poster'">
+                            Displaying a <strong>poster</strong>.
+                        </template>
+                        <template v-else-if="type.label === 'Event'">
+                            Displaying an <strong>event</strong>.
+                        </template>
+                        <template v-else>
+                            <p>
+                                No information to display.
+                            </p>
+                        </template>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -41,7 +72,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
+
 export default {
-    name: 'FliersModal'
+    name: 'FliersModal',
+    computed: {
+        ...mapGetters({
+            type: 'activeType',
+            record: 'activeRecord',
+            details: 'activeRecordDetails'
+        })
+    }
 }
 </script>

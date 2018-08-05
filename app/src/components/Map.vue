@@ -8,6 +8,7 @@
 <script>
 import { mapState } from 'vuex';
 
+import JQuery from 'jquery';
 import L from 'leaflet';
 import leafletDraw from 'leaflet-draw';
 import 'leaflet/dist/leaflet.css';
@@ -113,7 +114,16 @@ export default {
                 // Update Records.
                 this.$store.commit('updatePolygon', {});
                 this.$store.dispatch('updateRecords');
-            })
+            });
+
+            // When a user opens a popup, bind a listener to the "Show more"
+            // button to trigger the modal on click
+            this.map.on('popupopen', event => {
+                JQuery('#show-more').click(e => {
+                    e.preventDefault();
+                    JQuery('.modal').modal('show');
+                });
+            });
         },
 
         initTiles() {
@@ -135,6 +145,10 @@ export default {
             if (this.activeLayer && this.map.hasLayer(this.activeLayer)) {
                 this.map.removeLayer(this.activeLayer);
             }
+
+            // Alias the $store so that we can dispatch actions and commit
+            // mutations in event handlers.
+            const store = this.$store;
 
             // Create a marker layer from the set of active Records.
             let markers = [];
@@ -158,9 +172,17 @@ export default {
                             ${details}
                         </code>
                     </pre>
+                    <a href="#" id="show-more">Show more details &#8594;</a>
                 `;
 
-                markers.push(new L.marker([lng, lat]).bindPopup(popup));
+                let marker = new L.marker([lng, lat]).bindPopup(popup);
+                marker.record = record;
+                marker.on('click', event => {
+                    // When the user clicks a marker, update the global store
+                    // to register the selected record.
+                    store.commit('updateActiveRecordId', event.target.record.uuid);
+                });
+                markers.push(marker);
             }
 
             // Add the layer to the map.

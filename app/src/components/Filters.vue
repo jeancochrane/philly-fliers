@@ -69,6 +69,9 @@ export default {
             // Clear existing filters.
             this.$store.commit('clearFilters');
 
+            // Clear existing Record selection.
+            this.$store.commit('updateActiveRecordId', '');
+
             // Use the currently-selected RecordType to update the array of
             // Records in the datastore.
             this.$store.dispatch('updateRecords');
