@@ -51,6 +51,15 @@
                             </p>
                             <template v-if="type.label === 'Poster'">
                                 <!-- Poster-specific attributes. -->
+                                <div
+                                    v-if="details['Image']"
+                                    class="text-center"
+                                >
+                                    <img
+                                        :src="details['Image']"
+                                        class="mb-3"
+                                    />
+                                </div>
                                 <h5>First seen</h5>
                                 <p>{{ displayDateTime(record.occurred_from) }}</p>
                                 <h5>Last seen</h5>

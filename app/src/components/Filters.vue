@@ -22,13 +22,22 @@
         <div class="my-2">
             <datetime-picker/>
         </div>
-        <p>Use the map controls to filter by region&nbsp;<strong>&#8594;</strong></p>
+        <p class="text-muted">
+            <font-awesome-icon
+                icon="info-circle"
+                size="xs"
+            />
+                Use the map controls to filter by region&nbsp;<font-awesome-icon
+            icon="arrow-right"
+            size="xs"/>
+        </p>
         <filter-container :filters="filters"/>
     </form>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import Grout from '@/api';
 import Datetime from './filters/Datetime';
@@ -40,6 +49,7 @@ export default {
     components: {
         'filter-container': FilterContainer,
         'datetime-picker': Datetime,
+        'font-awesome-icon': FontAwesomeIcon
     },
     data() {
         return {
