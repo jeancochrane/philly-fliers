@@ -44,8 +44,10 @@ export default {
     data() {
         return {
             filters: {
+                /* eslint-disable vue/require-valid-default-prop */
                 type: Array,
-                default: [],
+                default: []
+                /* eslint-enable vue/require-valid-default-prop */
             },
         }
     },

@@ -1,6 +1,9 @@
 <template>
     <div class="row">
-        <div class="col-sm-4 col-xl-3">
+        <div
+            ref="sidebar"
+            class="col-sm-4 col-xl-3 sidebar"
+        >
             <fliers-sidebar/>
         </div>
         <div class="col-sm-8 col-xl-9">
@@ -36,14 +39,24 @@ export default {
         // function scope of the `window` object.
         let localState = this;
 
-        // Bind the height of the map to the full height of the screen.
+        // Bind the height of the map and sidebar to the full height of the screen.
         const resizeMap = () => {
             const windowHeight = window.innerHeight;
             const offsetTop = document.getElementById('navbar').offsetHeight;
             const offsetBottom = document.getElementById('footer').offsetHeight;
-            const offset = `${windowHeight - (offsetTop + offsetBottom)}px`;
+            const height = `${windowHeight - (offsetTop + offsetBottom)}px`;
 
-            localState.$refs.map.setStyle('height', offset);
+            localState.$refs.map.setStyle('height', height);
+
+            // If the window is smaller than the Bootstrap 4 smallest breakpoint
+            // (540px), set the sidebar to be the same height as the map to
+            // make it scrollable.
+            if (window.innerWidth > 540) {
+                localState.$refs.sidebar.style.height = height;
+            } else {
+                localState.$refs.sidebar.style.height = 'auto';
+            }
+
         };
 
         resizeMap();
@@ -51,3 +64,19 @@ export default {
     }
 }
 </script>
+
+<style>
+.sidebar {
+    /* Make the sidebar scrollable. */
+    overflow-y: scroll;
+}
+
+/* 540px = Bootstrap 4 smallest breakpoint. */
+@media (max-width: 540px) {
+    /* At small sizes, the sidebar should stack above the map. */
+    .sidebar {
+        overflow-y: inherit;
+        height: auto;
+    }
+}
+</style>
