@@ -44,65 +44,78 @@
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
-                        <template v-if="type.label === 'Poster'">
+                        <template v-if="type.label === 'Poster' || type.label === 'Event'">
+                            <!-- Common attributes for Posters and Events. -->
                             <p>
                                 {{ details['Short description'] }}
                             </p>
-                            <h5>First seen</h5>
-                            <p>{{ displayDateTime(record.occurred_from) }}</p>
-                            <h5>Last seen</h5>
-                            <p>{{ displayDateTime(record.occurred_to) }}</p>
-                            <template v-if="details['URL']">
-                                <h5>URL</h5>
-                                <p>
-                                    <a :href="details['URL']">
-                                        {{ details['URL'] }}
-                                    </a>
-                                </p>
+                            <template v-if="type.label === 'Poster'">
+                                <!-- Poster-specific attributes. -->
+                                <h5>First seen</h5>
+                                <p>{{ displayDateTime(record.occurred_from) }}</p>
+                                <h5>Last seen</h5>
+                                <p>{{ displayDateTime(record.occurred_to) }}</p>
+                                <template v-if="details['URL']">
+                                    <h5>URL</h5>
+                                    <p>
+                                        <a :href="details['URL']">
+                                            {{ details['URL'] }}
+                                        </a>
+                                    </p>
+                                </template>
+                                <template v-if="details['Artist name']">
+                                    <h5>Artist name</h5>
+                                    <p>{{ details['Artist name'] }}</p>
+                                </template>
+                                <template v-if="details['Artist URL']">
+                                    <h5>Artist URL</h5>
+                                    <p>
+                                        <a :href="details['Artist URL']">
+                                            {{ details['Artist URL'] }}
+                                        </a>
+                                    </p>
+                                </template>
                             </template>
-                            <template v-if="details['Artist name']">
-                                <h5>Artist name</h5>
-                                <p>{{ details['Artist name'] }}</p>
-                            </template>
-                            <template v-if="details['Artist URL']">
-                                <h5>Artist URL</h5>
-                                <p>
-                                    <a :href="details['Artist URL']">
-                                        {{ details['Artist URL'] }}
-                                    </a>
-                                </p>
+                            <template v-else>
+                                <!-- Event-specific attributes. -->
+                                <template v-if="details['URL']">
+                                    <h5>URL</h5>
+                                    <p>
+                                        <a :href="details['URL']">
+                                            {{ details['URL'] }}
+                                        </a>
+                                    </p>
+                                </template>
                             </template>
                             <div
                                 v-if="details['Long description']"
                                 class="card bg-light"
                             >
                                 <div class="card-body">
-                                    {{ details['Long description'] }}
-                                </div>
-                            </div>
-                        </template>
-                        <template v-else-if="type.label === 'Event'">
-                            <p>
-                                {{ details['Short description'] }}
-                            </p>
-                            <template v-if="details['URL']">
-                                <h5>URL</h5>
-                                <p>
-                                    <a :href="details['URL']">
-                                        {{ details['URL'] }}
+                                    <div
+                                        id="long-description"
+                                        class="collapse description-text"
+                                    >
+                                        <p>
+                                            {{ details['Long description'] }}
+                                        </p>
+                                    </div>
+                                    <a
+                                        href="#long-description"
+                                        data-toggle="collapse"
+                                        class="collapsed"
+                                    >
+                                        <span class="show-more">Show more</span>
+                                        <span class="show-less">Show less</span>
                                     </a>
-                                </p>
-                            </template>
-                            <div
-                                v-if="details['Long description']"
-                                class="card bg-light"
-                            >
-                                <div class="card-body">
-                                    {{ details['Long description'] }}
                                 </div>
                             </div>
                         </template>
                         <template v-else>
+                            <!-- This should only get displayed if the modal is -->
+                            <!-- accidentally triggered programmatically, since the -->
+                            <!-- only active link to trigger the modal requires a -->
+                            <!-- Record to be selected first. -->
                             <p>
                                 No information to display.
                             </p>
@@ -122,6 +135,7 @@
         </div>
     </div>
 </template>
+
 <script>
 import { mapGetters } from 'vuex';
 import fecha from 'fecha';
@@ -150,3 +164,34 @@ export default {
     }
 }
 </script>
+
+<style>
+/* =======================  *
+ * show more/less logic for *
+ * long description boxes   *
+ * =======================  */
+
+a .show-more {
+    display: none;
+}
+
+a .show-less {
+    display: inline;
+}
+
+a.collapsed .show-more {
+    display: inline;
+}
+
+a.collapsed .show-less {
+    display: none;
+}
+
+.description-text:not(.show) {
+    min-height: 4.25em;
+    height: 4.25em;
+    display: block;
+    overflow: hidden;
+    visibility: visible;
+}
+</style>
