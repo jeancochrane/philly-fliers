@@ -158,21 +158,25 @@ export default {
                 const lat = coords[0];
                 const lng = coords[1];
 
-                const details = JSON.stringify({
-                    start: record.occurred_from,
-                    end: record.occurred_to,
-                    data: record.data,
-                }, null, 2);
+                let title = '';
+                let shortDescription = ''
+                if (record.data.driverPosterDetails) {
+                    title = record.data.driverPosterDetails['Event name'];
+                    shortDescription = record.data.driverPosterDetails['Short description'];
+                } else if (record.data.driverEventDetails) {
+                    title = record.data.driverEventDetails['Title'];
+                    shortDescription = record.data.driverEventDetails['Short description'];
+                }
 
                 let popup = `
-                    <h3>Details</h3>
+                    <h5>${title}</h5>
                     <hr/>
-                    <pre>
-                        <code>
-                            ${details}
-                        </code>
-                    </pre>
-                    <a href="#" id="show-more">Show more details &#8594;</a>
+                    <p>
+                        ${shortDescription}
+                    </p>
+                    <p>
+                        <a href="#" id="show-more">Show more details &#8594;</a>
+                    </p>
                 `;
 
                 let marker = new L.marker([lng, lat]).bindPopup(popup);
