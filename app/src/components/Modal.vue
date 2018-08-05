@@ -45,10 +45,62 @@
                 <div class="modal-body">
                     <div class="container-fluid">
                         <template v-if="type.label === 'Poster'">
-                            Displaying a <strong>poster</strong>.
+                            <p>
+                                {{ details['Short description'] }}
+                            </p>
+                            <h5>First seen</h5>
+                            <p>{{ displayDateTime(record.occurred_from) }}</p>
+                            <h5>Last seen</h5>
+                            <p>{{ displayDateTime(record.occurred_to) }}</p>
+                            <template v-if="details['URL']">
+                                <h5>URL</h5>
+                                <p>
+                                    <a :href="details['URL']">
+                                        {{ details['URL'] }}
+                                    </a>
+                                </p>
+                            </template>
+                            <template v-if="details['Artist name']">
+                                <h5>Artist name</h5>
+                                <p>{{ details['Artist name'] }}</p>
+                            </template>
+                            <template v-if="details['Artist URL']">
+                                <h5>Artist URL</h5>
+                                <p>
+                                    <a :href="details['Artist URL']">
+                                        {{ details['Artist URL'] }}
+                                    </a>
+                                </p>
+                            </template>
+                            <div
+                                v-if="details['Long description']"
+                                class="card bg-light"
+                            >
+                                <div class="card-body">
+                                    {{ details['Long description'] }}
+                                </div>
+                            </div>
                         </template>
                         <template v-else-if="type.label === 'Event'">
-                            Displaying an <strong>event</strong>.
+                            <p>
+                                {{ details['Short description'] }}
+                            </p>
+                            <template v-if="details['URL']">
+                                <h5>URL</h5>
+                                <p>
+                                    <a :href="details['URL']">
+                                        {{ details['URL'] }}
+                                    </a>
+                                </p>
+                            </template>
+                            <div
+                                v-if="details['Long description']"
+                                class="card bg-light"
+                            >
+                                <div class="card-body">
+                                    {{ details['Long description'] }}
+                                </div>
+                            </div>
                         </template>
                         <template v-else>
                             <p>
@@ -70,9 +122,9 @@
         </div>
     </div>
 </template>
-
 <script>
 import { mapGetters } from 'vuex';
+import fecha from 'fecha';
 
 
 export default {
@@ -83,6 +135,18 @@ export default {
             record: 'activeRecord',
             details: 'activeRecordDetails'
         })
+    },
+    methods: {
+        displayDateTime(dt) {
+            /*
+             * Format an ISO 8601 timestamp for human-readable display.
+             */
+            const inputFormat = 'YYYY-MM-DDTHH:mm:ssZ';
+            const outputFormat = 'MMMM Do, YYYY h:mm A';
+
+            const parsedDate = fecha.parse(dt, 'YYYY', inputFormat);
+            return fecha.format(parsedDate, outputFormat);
+        }
     }
 }
 </script>
