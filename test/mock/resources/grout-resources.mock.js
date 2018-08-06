@@ -422,7 +422,7 @@
         };
     }
 
-    angular.module('driver.mock.resources', [])
-    .factory('DriverResourcesMock', DriverResourcesMock);
+    angular.module('ase.mock.resources', [])
+    .factory('GroutResourcesMock', DriverResourcesMock);
 
 })();

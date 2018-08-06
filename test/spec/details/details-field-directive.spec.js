@@ -1,10 +1,9 @@
 'use strict';
 
-describe('driver.details: DetailsField', function () {
+describe('ase.details: DetailsField', function () {
 
     beforeEach(module('ase.templates'));
-    beforeEach(module('driver.details'));
-    beforeEach(module('pascalprecht.translate'));
+    beforeEach(module('ase.details'));
 
     var $compile;
     var $httpBackend;
@@ -26,8 +25,8 @@ describe('driver.details: DetailsField', function () {
         };
         scope.data = '#ea1313';
 
-        var element = $compile('<driver-details-field property="property" data="data">' +
-                               '</driver-details-field>')(scope);
+        var element = $compile('<ase-details-field property="property" data="data">' +
+                               '</ase-details-field>')(scope);
         $rootScope.$apply();
 
         expect(element.find('rect').length).toEqual(1);
@@ -46,9 +45,9 @@ describe('driver.details: DetailsField', function () {
         };
         scope.data = '#ea1313';
 
-        var element = $compile('<driver-details-field compact="true"' +
+        var element = $compile('<ase-details-field compact="true"' +
                                ' property="property" data="data">' +
-                               '</driver-details-field>')(scope);
+                               '</ase-details-field>')(scope);
         $rootScope.$apply();
 
         expect(element.find('rect').length).toEqual(1);
@@ -69,8 +68,8 @@ describe('driver.details: DetailsField', function () {
         };
         scope.data = 'data:image/png;base64,xxxtestxxx';
 
-        var element = $compile('<driver-details-field property="property" data="data">' +
-                               '</driver-details-field>')(scope);
+        var element = $compile('<ase-details-field property="property" data="data">' +
+                               '</ase-details-field>')(scope);
         $rootScope.$apply();
 
         expect(element.find('.value.image').length).toEqual(1);
@@ -91,9 +90,9 @@ describe('driver.details: DetailsField', function () {
         };
         scope.data = 'data:image/png;base64,xxxtestxxx';
 
-        var element = $compile('<driver-details-field compact="true"' +
+        var element = $compile('<ase-details-field compact="true"' +
                                ' property="property" data="data">' +
-                               '</driver-details-field>')(scope);
+                               '</ase-details-field>')(scope);
         $rootScope.$apply();
 
         expect(element.find('.value.image').length).toEqual(1);
@@ -113,8 +112,8 @@ describe('driver.details: DetailsField', function () {
         };
         scope.data = 'Second option';
 
-        var element = $compile('<driver-details-field property="property" data="data">' +
-                               '</driver-details-field>')(scope);
+        var element = $compile('<ase-details-field property="property" data="data">' +
+                               '</ase-details-field>')(scope);
         $rootScope.$apply();
 
         expect(element.find('.value.selectlist').length).toEqual(1);
@@ -133,9 +132,9 @@ describe('driver.details: DetailsField', function () {
         };
         scope.data = 'Second option';
 
-        var element = $compile('<driver-details-field compact="true"' +
+        var element = $compile('<ase-details-field compact="true"' +
                                ' property="property" data="data">' +
-                               '</driver-details-field>')(scope);
+                               '</ase-details-field>')(scope);
         $rootScope.$apply();
 
         expect(element.find('.value.selectlist').length).toEqual(1);
@@ -152,9 +151,9 @@ describe('driver.details: DetailsField', function () {
         scope.data = '2ed9a5f0-b5de-4b93-9972-353b85dd7837';
         scope.record = { data: null };
 
-        var element = $compile('<driver-details-field ' +
+        var element = $compile('<ase-details-field ' +
                                'property="property" data="data" record="record">' +
-                               '</driver-details-field>')(scope);
+                               '</ase-details-field>')(scope);
         $rootScope.$apply();
 
         expect(element.find('.value.reference').length).toEqual(1);
@@ -171,9 +170,9 @@ describe('driver.details: DetailsField', function () {
         scope.data = '2ed9a5f0-b5de-4b93-9972-353b85dd7837';
         scope.record = { data: null };
 
-        var element = $compile('<driver-details-field compact="true"' +
+        var element = $compile('<ase-details-field compact="true"' +
                                'property="property" data="data" record="record">' +
-                               '</driver-details-field>')(scope);
+                               '</ase-details-field>')(scope);
         $rootScope.$apply();
 
         expect(element.find('.value.reference').length).toEqual(1);

@@ -1,9 +1,8 @@
 'use strict';
 
-describe('driver.details: DetailsSelectlistController', function () {
+describe('ase.details: DetailsSelectlistController', function () {
 
-    beforeEach(module('driver.details'));
-    beforeEach(module('pascalprecht.translate'));
+    beforeEach(module('ase.details'));
 
     var $controller;
     var $rootScope;

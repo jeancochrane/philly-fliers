@@ -1,9 +1,9 @@
 'use strict';
 
-describe('driver.details: DetailsMultiple', function () {
+describe('ase.details: DetailsMultiple', function () {
 
     beforeEach(module('ase.templates'));
-    beforeEach(module('driver.details'));
+    beforeEach(module('ase.details'));
 
     var $compile;
     var $httpBackend;
@@ -41,9 +41,9 @@ describe('driver.details: DetailsMultiple', function () {
         ];
         scope.record = { data: null };
 
-        var element = $compile('<driver-details-multiple ' +
+        var element = $compile('<ase-details-multiple ' +
                                'properties="properties" data="data" record="record">' +
-                               '</driver-details-multiple>')(scope);
+                               '</ase-details-multiple>')(scope);
         $rootScope.$apply();
 
         // Four compact text fields (from the list view)

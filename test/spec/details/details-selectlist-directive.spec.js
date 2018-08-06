@@ -1,9 +1,9 @@
 'use strict';
 
-describe('driver.details: DetailsSelectlist', function () {
+describe('ase.details: DetailsSelectlist', function () {
 
     beforeEach(module('ase.templates'));
-    beforeEach(module('driver.details'));
+    beforeEach(module('ase.details'));
 
     var $compile;
     var $httpBackend;
@@ -26,8 +26,8 @@ describe('driver.details: DetailsSelectlist', function () {
         };
         scope.data = 'Second option';
 
-        var element = $compile('<driver-details-selectlist property="property" data="data">' +
-                               '</driver-details-selectlist>')(scope);
+        var element = $compile('<ase-details-selectlist property="property" data="data">' +
+                               '</ase-details-selectlist>')(scope);
         $rootScope.$apply();
 
         expect(element.find('.value.selectlist').length).toEqual(1);

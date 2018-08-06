@@ -1,30 +1,29 @@
 'use strict';
 
-describe('driver.details: DetailsConstants', function () {
+describe('ase.details: DetailsConstants', function () {
 
     beforeEach(module('ase.templates'));
-    beforeEach(module('driver.details'));
-    beforeEach(module('driver.mock.resources'));
-    beforeEach(module('pascalprecht.translate'));
+    beforeEach(module('ase.details'));
+    beforeEach(module('ase.mock.resources'));
 
     var $compile;
     var $httpBackend;
     var $rootScope;
-    var DriverResourcesMock;
+    var GroutResourcesMock;
 
-    beforeEach(inject(function (_$compile_, _$httpBackend_, _$rootScope_, _DriverResourcesMock_) {
+    beforeEach(inject(function (_$compile_, _$httpBackend_, _$rootScope_, _GroutResourcesMock_) {
         $compile = _$compile_;
         $httpBackend = _$httpBackend_;
         $rootScope = _$rootScope_;
-        DriverResourcesMock = _DriverResourcesMock_;
+        GroutResourcesMock = _GroutResourcesMock_;
     }));
 
     it('should render constants', function () {
         var scope = $rootScope.$new();
-        scope.record = DriverResourcesMock.RecordResponse.results[0];
+        scope.record = GroutResourcesMock.RecordResponse.results[0];
 
-        var element = $compile('<driver-details-constants record="record">' +
-                               '</driver-details-constants>')(scope);
+        var element = $compile('<ase-details-constants record="record">' +
+                               '</ase-details-constants>')(scope);
         $rootScope.$apply();
 
         expect(element.find('.map').length).toEqual(1);

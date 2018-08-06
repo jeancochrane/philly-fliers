@@ -1,19 +1,21 @@
 'use strict';
 
-describe('driver.details: DetailsImage', function () {
+describe('ase.details: DetailsImage', function () {
 
     beforeEach(module('ase.templates'));
-    beforeEach(module('driver.details'));
+    beforeEach(module('ase.details'));
 
     var $compile;
     var $httpBackend;
     var $rootScope;
 
-    beforeEach(inject(function (_$compile_, _$httpBackend_, _$rootScope_) {
-        $compile = _$compile_;
-        $httpBackend = _$httpBackend_;
-        $rootScope = _$rootScope_;
-    }));
+    beforeEach(function () {
+        inject(function (_$compile_, _$httpBackend_, _$rootScope_) {
+            $compile = _$compile_;
+            $httpBackend = _$httpBackend_;
+            $rootScope = _$rootScope_;
+        });
+    });
 
     it('should render image', function () {
         var scope = $rootScope.$new();
@@ -27,8 +29,8 @@ describe('driver.details: DetailsImage', function () {
         };
         scope.data = 'data:image/png;base64,xxxtestxxx';
 
-        var element = $compile('<driver-details-image property="property" data="data">' +
-                               '</driver-details-image>')(scope);
+        var element = $compile('<ase-details-image property="property" data="data">' +
+                               '</ase-details-image>')(scope);
         $rootScope.$apply();
 
         expect(element.find('.value.image').length).toEqual(1);
