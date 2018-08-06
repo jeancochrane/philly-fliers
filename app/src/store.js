@@ -257,27 +257,45 @@ const filterState = {
             /*
              * Retrieve the Type object with the UUID corresponding to the
              * current activeTypeId.
+             *
+             * @return {Object} -- If a Type in the state store matches the activeTypeId,
+             *                     return that Type. Otherwise, return an empty
+             *                     object.
              */
-            return state.types.find(type => { return type.uuid === state.activeTypeId });
+            const type = state.types.find(type => { return type.uuid === state.activeTypeId });
+            return (type) ? type : {};
         },
 
         activeRecord: state => {
             /*
              * Retrieve the Record object with the UUID corresponding to the
              * current activeRecordId.
+             *
+             * @return {Object} -- If a Record in the state store matches the
+             *                     activeRecordId, return that Record.
+             *                     Otherwise, return an empty object.
              */
-            return state.records.find(record => { return record.uuid === state.activeRecordId });
+            const record = state.records.find(record => { return record.uuid === state.activeRecordId });
+            return (record) ? record : {};
         },
 
         activeRecordDetails: (state, getters) => {
+            /*
+             * Retrieve the details (the primary form) of the currently-active
+             * Record object in the state store.
+             *
+             * @return {Object} -- If a Record is active in the state store,
+             *                     return its Details object. Otherwise, return
+             *                     an empty object.
+             */
             const activeType = getters.activeType;
             const activeRecord = getters.activeRecord;
 
             switch (activeType.label) {
                 case 'Poster':
-                    return (activeRecord) ? activeRecord.data.driverPosterDetails : {};
+                    return (Object.keys(activeRecord).length > 0) ? activeRecord.data.driverPosterDetails : {};
                 case 'Event':
-                    return (activeRecord) ? activeRecord.data.driverEventDetails : {};
+                    return (Object.keys(activeRecord).length > 0) ? activeRecord.data.driverEventDetails : {};
                 default:
                     return {};
             }

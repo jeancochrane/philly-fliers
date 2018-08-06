@@ -55,12 +55,7 @@ export default {
     },
     data() {
         return {
-            filters: {
-                /* eslint-disable vue/require-valid-default-prop */
-                type: Array,
-                default: []
-                /* eslint-enable vue/require-valid-default-prop */
-            },
+            filters: [],
         }
     },
     computed: mapState({
