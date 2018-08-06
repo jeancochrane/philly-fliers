@@ -13,6 +13,9 @@
             />
             {{ title }}
         </a>
+        <span class="text-white-50">
+            {{ subtitle }}
+        </span>
     </nav>
 </template>
 
@@ -29,6 +32,10 @@ export default {
         title: {
             type: String,
             default: 'Now For Now',
+        },
+        subtitle: {
+            type: String,
+            default: 'Archiving queer fliers and events in West Philadelphia.'
         }
     }
 }

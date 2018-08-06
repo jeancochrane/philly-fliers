@@ -1,12 +1,12 @@
 <template>
     <footer
         id="footer"
-        class="bg-dark text-light text-center py-3"
+        class="bg-dark text-white-50 text-center py-3"
     >
         &#169; 2018. Website by Jean Cochrane.
         Built for the
         <a
-            class="text-light"
+            class="text-white-50"
             href="https://fellowship.azavea.com/">
             2018 Azavea Open Source Fellowship.
         </a>
