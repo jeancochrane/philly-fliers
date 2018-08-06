@@ -1,9 +1,9 @@
 'use strict';
 
-describe('driver.details: DetailsSingle', function () {
+describe('ase.details: DetailsSingle', function () {
 
     beforeEach(module('ase.templates'));
-    beforeEach(module('driver.details'));
+    beforeEach(module('ase.details'));
 
     var $compile;
     var $httpBackend;
@@ -35,9 +35,9 @@ describe('driver.details: DetailsSingle', function () {
         };
         scope.record = { data: null };
 
-        var element = $compile('<driver-details-single ' +
+        var element = $compile('<ase-details-single ' +
                                'properties="properties" data="data" record="record">' +
-                               '</driver-details-single>')(scope);
+                               '</ase-details-single>')(scope);
         $rootScope.$apply();
 
         expect(element.find('.value.text').length).toEqual(2);

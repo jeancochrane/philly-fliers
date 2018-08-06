@@ -1,9 +1,9 @@
 'use strict';
 
-describe('driver.details: DetailsText', function () {
+describe('ase.details: DetailsText', function () {
 
     beforeEach(module('ase.templates'));
-    beforeEach(module('driver.details'));
+    beforeEach(module('ase.details'));
 
     var $compile;
     var $httpBackend;
@@ -25,8 +25,8 @@ describe('driver.details: DetailsText', function () {
         };
         scope.data = '#ea1313';
 
-        var element = $compile('<driver-details-text property="property" data="data">' +
-                               '</driver-details-text>')(scope);
+        var element = $compile('<ase-details-text property="property" data="data">' +
+                               '</ase-details-text>')(scope);
         $rootScope.$apply();
 
         expect(element.find('rect').length).toEqual(1);
@@ -43,8 +43,8 @@ describe('driver.details: DetailsText', function () {
         };
         scope.data = 'A single line of text';
 
-        var element = $compile('<driver-details-text property="property" data="data">' +
-                               '</driver-details-text>')(scope);
+        var element = $compile('<ase-details-text property="property" data="data">' +
+                               '</ase-details-text>')(scope);
         $rootScope.$apply();
 
         expect(element.find('.value.text').length).toEqual(1);
@@ -60,8 +60,8 @@ describe('driver.details: DetailsText', function () {
         };
         scope.data = 'Multiple \n lines \n of \n text';
 
-        var element = $compile('<driver-details-text property="property" data="data">' +
-                               '</driver-details-text>')(scope);
+        var element = $compile('<ase-details-text property="property" data="data">' +
+                               '</ase-details-text>')(scope);
         $rootScope.$apply();
 
         expect(element.find('pre').length).toEqual(1);
@@ -78,8 +78,8 @@ describe('driver.details: DetailsText', function () {
         };
         scope.data = '42';
 
-        var element = $compile('<driver-details-text property="property" data="data">' +
-                               '</driver-details-text>')(scope);
+        var element = $compile('<ase-details-text property="property" data="data">' +
+                               '</ase-details-text>')(scope);
         $rootScope.$apply();
 
         expect(element.find('.value.text').length).toEqual(1);
@@ -95,8 +95,8 @@ describe('driver.details: DetailsText', function () {
         };
         scope.data = '867-5309';
 
-        var element = $compile('<driver-details-text property="property" data="data">' +
-                               '</driver-details-text>')(scope);
+        var element = $compile('<ase-details-text property="property" data="data">' +
+                               '</ase-details-text>')(scope);
         $rootScope.$apply();
 
         expect(element.find('.value.text').length).toEqual(1);
@@ -112,8 +112,8 @@ describe('driver.details: DetailsText', function () {
         };
         scope.data = '2015/09/01 00:00:00';
 
-        var element = $compile('<driver-details-text property="property" data="data">' +
-                               '</driver-details-text>')(scope);
+        var element = $compile('<ase-details-text property="property" data="data">' +
+                               '</ase-details-text>')(scope);
         $rootScope.$apply();
 
         expect(element.find('.value.text').length).toEqual(1);
@@ -130,8 +130,8 @@ describe('driver.details: DetailsText', function () {
         };
         scope.data = 'http://test.com';
 
-        var element = $compile('<driver-details-text property="property" data="data">' +
-                               '</driver-details-text>')(scope);
+        var element = $compile('<ase-details-text property="property" data="data">' +
+                               '</ase-details-text>')(scope);
         $rootScope.$apply();
 
         expect(element.find('a').length).toEqual(1);

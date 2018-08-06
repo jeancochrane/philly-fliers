@@ -1,9 +1,8 @@
 'use strict';
 
-describe('driver.details: DetailsMultipleController', function () {
+describe('ase.details: DetailsMultipleController', function () {
 
-    beforeEach(module('driver.details'));
-    beforeEach(module('pascalprecht.translate'));
+    beforeEach(module('ase.details'));
 
     var $controller;
     var $rootScope;
