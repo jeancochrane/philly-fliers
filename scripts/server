@@ -79,6 +79,7 @@ function run_editor_service() {
     #
     run_grout_service detached
     checkport 9000
+    checkport 8081
     if [ $# -eq 0 ];
     then
         # No arguments -- default to running a Grunt server

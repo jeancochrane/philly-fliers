@@ -44,7 +44,7 @@ function editor_tests() {
     echo "Testing the Schema Editor app..."
     echo "-------------------------------------------------------------------"
 
-    docker-compose run --rm --no-deps editor test
+    docker-compose run --rm --no-deps --service-ports editor test
 
     echo "PASSED: Grout Server tests passed."
 }
