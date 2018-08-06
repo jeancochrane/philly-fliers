@@ -70,6 +70,12 @@ class AbstractApiClass {
                 });
         });
     }
+
+    active() {
+        throw new Error(`
+            Children of AbstractApiClass must implement the 'active' method.
+        `);
+    }
 }
 
 
@@ -332,6 +338,26 @@ class Type extends AbstractApiClass {
                         .catch(error => {
                             reject(error);
                         });
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
+    }
+
+    active() {
+        /*
+         * Retrieve all RecordTypes from the Grout API that
+         * are currently active (not marked as deleted or superceded).
+         *
+         * @returns {Promise} - If successful, the promise contains an array of
+         *                      all data type instances, represented by JSON blobs.
+         *                      If unsuccessful, the promise throws an error.
+         */
+        return new Promise((resolve, reject) => {
+            axios.get(`${this.url}?limit=all&active=True`)
+                .then(response => {
+                    resolve(response.data.results);
                 })
                 .catch(error => {
                     reject(error);

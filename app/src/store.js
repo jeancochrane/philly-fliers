@@ -178,7 +178,7 @@ const filterState = {
              * initialize RecordType state in the app.
              */
             return new Promise((resolve, reject) => {
-                Grout.types.all()
+                Grout.types.active()
                     .then(types => {
                         context.commit('updateTypes', types);
 
