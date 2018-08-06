@@ -16,7 +16,7 @@
             prefix: '!'
         },
         api: {
-            hostname: 'https://nfn.jeancochrane.com/api',
+            hostname: 'https://nfn.jeancochrane.com',
             // These group names are defined server-side in settings.py
             groups: {
                 admin: 'admin',
