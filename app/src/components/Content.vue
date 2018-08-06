@@ -64,19 +64,3 @@ export default {
     }
 }
 </script>
-
-<style>
-.sidebar {
-    /* Make the sidebar scrollable. */
-    overflow-y: scroll;
-}
-
-/* 540px = Bootstrap 4 smallest breakpoint. */
-@media (max-width: 540px) {
-    /* At small sizes, the sidebar should stack above the map. */
-    .sidebar {
-        overflow-y: inherit;
-        height: auto;
-    }
-}
-</style>

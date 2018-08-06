@@ -45,10 +45,6 @@
                 <div class="modal-body">
                     <div class="container-fluid">
                         <template v-if="type.label === 'Poster' || type.label === 'Event'">
-                            <!-- Common attributes for Posters and Events. -->
-                            <p>
-                                {{ details['Short description'] }}
-                            </p>
                             <template v-if="type.label === 'Poster'">
                                 <!-- Poster-specific attributes. -->
                                 <div
@@ -60,10 +56,17 @@
                                         class="mb-3"
                                     />
                                 </div>
-                                <h5>First seen</h5>
-                                <p>{{ displayDateTime(record.occurred_from) }}</p>
-                                <h5>Last seen</h5>
-                                <p>{{ displayDateTime(record.occurred_to) }}</p>
+                                <p>
+                                    {{ details['Short description'] }}
+                                </p>
+                                <template v-if="record.occurred_from">
+                                    <h5>First seen</h5>
+                                    <p>{{ displayDateTime(record.occurred_from) }}</p>
+                                </template>
+                                <template v-if="record.occurred_to">
+                                    <h5>Last seen</h5>
+                                    <p>{{ displayDateTime(record.occurred_to) }}</p>
+                                </template>
                                 <template v-if="details['URL']">
                                     <h5>URL</h5>
                                     <p>
@@ -87,6 +90,9 @@
                             </template>
                             <template v-else>
                                 <!-- Event-specific attributes. -->
+                                <p>
+                                    {{ details['Short description'] }}
+                                </p>
                                 <template v-if="details['URL']">
                                     <h5>URL</h5>
                                     <p>
@@ -106,7 +112,7 @@
                                         class="collapse description-text"
                                     >
                                         <p>
-                                            {{ details['Long description'] }}
+                                        <span v-html="newlinesToBreaks(details['Long description'])"></span>
                                         </p>
                                     </div>
                                     <a
@@ -169,6 +175,10 @@ export default {
 
             const parsedDate = fecha.parse(dt, 'YYYY', inputFormat);
             return fecha.format(parsedDate, outputFormat);
+        },
+
+        newlinesToBreaks(str) {
+            return str.replace(/\n/g, '<br>');
         }
     }
 }

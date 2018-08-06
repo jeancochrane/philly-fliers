@@ -61,8 +61,8 @@ export default {
              * Initialize a Leaflet map in this component.
              */
             this.map = new L.map(this.$refs.map, {
-                center: [39.95, -75.16],
-                zoom: 12,
+                center: [39.95, -75.2129],
+                zoom: 14,
                 dragging: true,
                 touchZoom: true,
                 tap: true,

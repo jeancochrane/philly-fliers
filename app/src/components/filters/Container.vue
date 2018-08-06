@@ -1,7 +1,6 @@
 <template>
-    <div class="row my-3">
+    <div class="row my-3 filter-container">
         <div class="col-sm-12">
-            <hr />
             <div class="accordion">
                 <div
                     v-for="(filter, index) in filters"
@@ -56,3 +55,21 @@ export default {
     }
 }
 </script>
+
+<style>
+/* Make the filter container scrollable. */
+.filter-container {
+    height: auto;
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+/* 540px = Bootstrap 4 smallest breakpoint. */
+@media (max-width: 540px) {
+    /* At small sizes, the sidebar should stack above the map. */
+    .filter-container {
+        overflow-y: inherit;
+        max-height: 100%;
+    }
+}
+</style>

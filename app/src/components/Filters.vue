@@ -31,6 +31,8 @@
             icon="arrow-right"
             size="xs"/>
         </p>
+        <hr />
+        <h5>Filter by field:</h5>
         <filter-container :filters="filters"/>
     </form>
 </template>
