@@ -1,7 +1,9 @@
 <template>
-    <div class="container-fluid">
+    <div>
         <fliers-navbar/>
-        <fliers-content/>
+        <div class="container-fluid">
+            <fliers-content/>
+        </div>
         <fliers-footer/>
     </div>
 </template>

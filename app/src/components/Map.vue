@@ -8,6 +8,7 @@
 <script>
 import { mapState } from 'vuex';
 
+import JQuery from 'jquery';
 import L from 'leaflet';
 import leafletDraw from 'leaflet-draw';
 import 'leaflet/dist/leaflet.css';
@@ -60,8 +61,8 @@ export default {
              * Initialize a Leaflet map in this component.
              */
             this.map = new L.map(this.$refs.map, {
-                center: [39.95, -75.16],
-                zoom: 12,
+                center: [39.95, -75.2129],
+                zoom: 14,
                 dragging: true,
                 touchZoom: true,
                 tap: true,
@@ -113,7 +114,16 @@ export default {
                 // Update Records.
                 this.$store.commit('updatePolygon', {});
                 this.$store.dispatch('updateRecords');
-            })
+            });
+
+            // When a user opens a popup, bind a listener to the "Show more"
+            // button to trigger the modal on click
+            this.map.on('popupopen', event => {
+                JQuery('#show-more').click(e => {
+                    e.preventDefault();
+                    JQuery('.modal').modal('show');
+                });
+            });
         },
 
         initTiles() {
@@ -136,6 +146,10 @@ export default {
                 this.map.removeLayer(this.activeLayer);
             }
 
+            // Alias the $store so that we can dispatch actions and commit
+            // mutations in event handlers.
+            const store = this.$store;
+
             // Create a marker layer from the set of active Records.
             let markers = [];
             for (let record of this.records) {
@@ -144,28 +158,47 @@ export default {
                 const lat = coords[0];
                 const lng = coords[1];
 
-                const details = JSON.stringify({
-                    start: record.occurred_from,
-                    end: record.occurred_to,
-                    data: record.data,
-                }, null, 2);
+                let title = '';
+                let shortDescription = ''
+                if (record.data.driverPosterDetails) {
+                    title = record.data.driverPosterDetails['Event name'];
+                    shortDescription = record.data.driverPosterDetails['Short description'];
+                } else if (record.data.driverEventDetails) {
+                    title = record.data.driverEventDetails['Title'];
+                    shortDescription = record.data.driverEventDetails['Short description'];
+                }
 
                 let popup = `
-                    <h3>Details</h3>
+                    <h5>${title}</h5>
                     <hr/>
-                    <pre>
-                        <code>
-                            ${details}
-                        </code>
-                    </pre>
+                    <p>
+                        ${shortDescription}
+                    </p>
+                    <p>
+                        <a href="#" id="show-more">Show more details &#8594;</a>
+                    </p>
                 `;
 
-                markers.push(new L.marker([lng, lat]).bindPopup(popup));
+                let marker = new L.marker([lng, lat]).bindPopup(popup);
+                marker.record = record;
+                marker.on('click', event => {
+                    // When the user clicks a marker, update the global store
+                    // to register the selected record.
+                    store.commit('updateActiveRecordId', event.target.record.uuid);
+                });
+                markers.push(marker);
             }
 
             // Add the layer to the map.
             this.activeLayer = new L.layerGroup(markers);
             this.map.addLayer(this.activeLayer);
+        },
+
+        setStyle(attr, val) {
+            /*
+             * Set the style of the map for a given CSS `attr` to `val`.
+             */
+            this.$refs.map.style[attr] = val;
         }
     }
 }

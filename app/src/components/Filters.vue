@@ -1,5 +1,6 @@
 <template>
     <form>
+        <h5>Show me:</h5>
         <select
             :value="activeTypeId"
             @change="selectNewType"
@@ -15,18 +16,30 @@
                 :key="type.uuid"
                 :value="type.uuid"
             >
-                {{ type.label }}
+                {{ type.plural_label }}
             </option>
         </select>
         <div class="my-2">
             <datetime-picker/>
         </div>
+        <p class="text-muted">
+            <font-awesome-icon
+                icon="info-circle"
+                size="xs"
+            />
+                Use the map controls to filter by region&nbsp;<font-awesome-icon
+            icon="arrow-right"
+            size="xs"/>
+        </p>
+        <hr />
+        <h5>Filter by field:</h5>
         <filter-container :filters="filters"/>
     </form>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import Grout from '@/api';
 import Datetime from './filters/Datetime';
@@ -38,13 +51,11 @@ export default {
     components: {
         'filter-container': FilterContainer,
         'datetime-picker': Datetime,
+        'font-awesome-icon': FontAwesomeIcon
     },
     data() {
         return {
-            filters: {
-                type: Array,
-                default: [],
-            },
+            filters: [],
         }
     },
     computed: mapState({
@@ -67,6 +78,9 @@ export default {
             // Clear existing filters.
             this.$store.commit('clearFilters');
 
+            // Clear existing Record selection.
+            this.$store.commit('updateActiveRecordId', '');
+
             // Use the currently-selected RecordType to update the array of
             // Records in the datastore.
             this.$store.dispatch('updateRecords');
@@ -87,3 +101,11 @@ export default {
     }
 }
 </script>
+
+<style>
+.mx-datepicker-popup {
+    /* Override the datepicker popup z-index to make sure it always shows up
+       on top of map elements (which have a max z-index of 1000) */
+    z-index: 1001;
+}
+</style>

@@ -1,7 +1,9 @@
 # load.py -- load sample data into an Grout Blueprint instance
+import os
 import time
 import json
 import sys
+import base64
 
 import requests
 
@@ -92,6 +94,18 @@ if __name__ == '__main__':
         # POST the records
         for record in schema['records']:
             record['schema'] = schema_json['uuid']
+
+            # Add images to Poster Records.
+            if rt['label'] == 'Poster':
+                # Convert the image file to a base64-encoded data URI string.
+                filename = record['data']['driverPosterDetails']['Image']
+                image_path = os.path.join('images', filename)
+                with open(image_path, 'rb') as imgfile:
+                    bytestring = base64.b64encode(imgfile.read()).decode('ascii')
+
+                image = 'data:image/jpeg;base64,' + bytestring
+                record['data']['driverPosterDetails']['Image'] = image
+
             record_res = requests.post(BASE_URL + 'records/', json=record, headers=headers)
             raise_for_status(record_res)
             record_json = record_res.json()
