@@ -3,6 +3,7 @@
 describe('ase.details: DetailsTabs', function () {
 
     beforeEach(module('ase.mock.resources'));
+    beforeEach(module('ase.mock.resources.grout'));
     beforeEach(module('ase.templates'));
     beforeEach(module('ase.details'));
 

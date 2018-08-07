@@ -1,28 +1,27 @@
 'use strict';
 
-describe('driver.views.record: RecordDetailsModalController', function () {
+describe('ase.views.record: RecordDetailsModalController', function () {
 
     beforeEach(module('ase.mock.resources'));
-    beforeEach(module('driver.mock.resources'));
-    beforeEach(module('driver.views.record'));
-    beforeEach(module('pascalprecht.translate'));
+    beforeEach(module('ase.mock.resources.grout'));
+    beforeEach(module('ase.views.record'));
 
     var $controller;
     var $httpBackend;
     var $rootScope;
     var $scope;
     var Controller;
-    var DriverResourcesMock;
+    var GroutResourcesMock;
     var ResourcesMock;
     var ModalInstance;
 
     beforeEach(inject(function (_$controller_, _$httpBackend_, _$rootScope_,
-                                _DriverResourcesMock_, _ResourcesMock_) {
+                                _GroutResourcesMock_, _ResourcesMock_) {
         $controller = _$controller_;
         $httpBackend = _$httpBackend_;
         $rootScope = _$rootScope_;
         $scope = $rootScope.$new();
-        DriverResourcesMock = _DriverResourcesMock_;
+        GroutResourcesMock = _GroutResourcesMock_;
         ResourcesMock = _ResourcesMock_;
         ModalInstance = {
             close: jasmine.createSpy('ModalInstance.close')
@@ -37,7 +36,7 @@ describe('driver.views.record: RecordDetailsModalController', function () {
         Controller = $controller('RecordDetailsModalController', {
             $scope: $scope,
             $modalInstance: ModalInstance,
-            record: DriverResourcesMock.RecordResponse,
+            record: GroutResourcesMock.RecordResponse,
             recordType: ResourcesMock.RecordTypeResponse,
             recordSchema: ResourcesMock.RecordSchema,
             userCanWrite: true
@@ -46,7 +45,7 @@ describe('driver.views.record: RecordDetailsModalController', function () {
         $httpBackend.flush();
         $httpBackend.verifyNoOutstandingRequest();
 
-        expect(Controller.record).toEqual(DriverResourcesMock.RecordResponse);
+        expect(Controller.record).toEqual(GroutResourcesMock.RecordResponse);
         expect(Controller.recordType).toEqual(ResourcesMock.RecordTypeResponse);
         expect(Controller.recordSchema).toEqual(ResourcesMock.RecordSchema);
 

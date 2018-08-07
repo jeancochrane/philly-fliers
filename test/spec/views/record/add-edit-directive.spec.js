@@ -8,16 +8,14 @@ Function.prototype.bind = Function.prototype.bind || function (thisp) {
     };
 };
 
-describe('driver.views.record: RecordAddEdit', function () {
+describe('ase.views.record: RecordAddEdit', function () {
 
     beforeEach(module('ase.mock.resources'));
-    beforeEach(module('nominatim.mock'));
+    beforeEach(module('ase.mock.resources.grout'));
     beforeEach(module('ase.auth'));
     beforeEach(module('ase.resources'));
-    beforeEach(module('driver.mock.resources'));
-    beforeEach(module('driver.views.record'));
+    beforeEach(module('ase.views.record'));
     beforeEach(module('ase.templates'));
-    beforeEach(module('pascalprecht.translate'));
 
     var $compile;
     var $httpBackend;
@@ -25,9 +23,8 @@ describe('driver.views.record: RecordAddEdit', function () {
     var $stateParams;
     var AuthService;
     var RecordTypes;
-    var DriverResourcesMock;
+    var GroutResourcesMock;
     var ResourcesMock;
-    var NominatimMock;
 
     beforeEach(function() {
         var $window;
@@ -62,8 +59,8 @@ describe('driver.views.record: RecordAddEdit', function () {
             $provide.constant('$window', $window);
         });
 
-        inject(function (_$compile_, _$httpBackend_, _$rootScope_, _$stateParams_, _NominatimMock_,
-                         _AuthService_, _RecordTypes_, _DriverResourcesMock_, _ResourcesMock_) {
+        inject(function (_$compile_, _$httpBackend_, _$rootScope_, _$stateParams_,
+                         _AuthService_, _RecordTypes_, _GroutResourcesMock_, _ResourcesMock_) {
 
             $compile = _$compile_;
             $httpBackend = _$httpBackend_;
@@ -71,9 +68,8 @@ describe('driver.views.record: RecordAddEdit', function () {
             $stateParams = _$stateParams_;
             AuthService = _AuthService_;
             RecordTypes = _RecordTypes_;
-            DriverResourcesMock = _DriverResourcesMock_;
+            GroutResourcesMock = _GroutResourcesMock_;
             ResourcesMock = _ResourcesMock_;
-            NominatimMock = _NominatimMock_;
         });
     });
 
@@ -88,23 +84,21 @@ describe('driver.views.record: RecordAddEdit', function () {
         $httpBackend.flush();
         $rootScope.$digest();
 
-        var recordId = DriverResourcesMock.RecordResponse.results[0].uuid;
+        var recordId = GroutResourcesMock.RecordResponse.results[0].uuid;
         $stateParams.recorduuid = recordId;
         var recordSchema = ResourcesMock.RecordSchema;
         var recordSchemaIdUrl = new RegExp('api/recordschemas/' + recordSchema.uuid);
         var recordTypeUrl = new RegExp('api/recordtypes/.*record=' + recordId);
         var allRecordTypesUrl = new RegExp('api/recordtypes/');
         var recordUrl = new RegExp('api/records/' + recordId);
-        var nominatimRevUrl = /\/reverse/;
 
         $httpBackend.expectGET(allRecordTypesUrl).respond(200, ResourcesMock.RecordTypeResponse);
-        $httpBackend.expectGET(recordUrl).respond(200, DriverResourcesMock.RecordResponse.results[0]);
+        $httpBackend.expectGET(recordUrl).respond(200, GroutResourcesMock.RecordResponse.results[0]);
         $httpBackend.expectGET(recordTypeUrl).respond(200, ResourcesMock.RecordTypeResponse);
-        $httpBackend.expectGET(nominatimRevUrl).respond(200, NominatimMock.ReverseResponse);
         $httpBackend.expectGET(recordSchemaIdUrl).respond(200, recordSchema);
 
         var scope = $rootScope.$new();
-        var element = $compile('<driver-record-add-edit></driver-record-add-edit>')(scope);
+        var element = $compile('<ase-record-add-edit></ase-record-add-edit>')(scope);
         $rootScope.$digest();
 
         // TODO: there's a hard-to-debug exception raised here when running the following code.

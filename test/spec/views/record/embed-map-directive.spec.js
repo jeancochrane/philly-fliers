@@ -1,14 +1,12 @@
 'use strict';
 
-describe('driver.views.record: Embedded Map Directive', function () {
+describe('ase.views.record: Embedded Map Directive', function () {
 
     beforeEach(module('ase.mock.resources'));
+    beforeEach(module('ase.mock.resources.grout'));
     beforeEach(module('ase.resources'));
-    beforeEach(module('driver.mock.resources'));
-    beforeEach(module('driver.resources'));
     beforeEach(module('ase.templates'));
-    beforeEach(module('driver.views.record'));
-    beforeEach(module('pascalprecht.translate'));
+    beforeEach(module('ase.views.record'));
 
     var $compile;
     var $httpBackend;
@@ -17,20 +15,20 @@ describe('driver.views.record: Embedded Map Directive', function () {
     var Element;
     var RecordTypes;
     var ResourcesMock;
-    var DriverResourcesMock;
+    var GroutResourcesMock;
 
     beforeEach(inject(function (_$compile_, _$httpBackend_, _$rootScope_,
-                                _RecordTypes_, _DriverResourcesMock_, _ResourcesMock_) {
+                                _RecordTypes_, _GroutResourcesMock_, _ResourcesMock_) {
         $compile = _$compile_;
         $httpBackend = _$httpBackend_;
         $rootScope = _$rootScope_;
         RecordTypes = _RecordTypes_;
         ResourcesMock = _ResourcesMock_;
-        DriverResourcesMock = _DriverResourcesMock_;
+        GroutResourcesMock = _GroutResourcesMock_;
 
         // create element with directive
         $scope = $rootScope.$new();
-        Element = $compile('<div class="map" leaflet-map driver-embed-map></div>')($scope);
+        Element = $compile('<div class="map" leaflet-map ase-embed-map></div>')($scope);
         $rootScope.$apply();
     }));
 
@@ -40,17 +38,17 @@ describe('driver.views.record: Embedded Map Directive', function () {
 
     it('should not be editable', function() {
         // map is not editable unless directive attribute 'editable' is set to true
-        var controller = Element.controller('driverEmbedMap');
+        var controller = Element.controller('embedMapController');
         expect(controller.isEditable).toBeFalsy();
     });
 
     it('should not have location marker set if no initial coordinates provided', function() {
-        var controller = Element.controller('driverEmbedMap');
+        var controller = Element.controller('embedMapController');
         expect(controller.locationMarker).toBeNull();
     });
 
     it('should not listen to click events unless editable', function() {
-        var controller = Element.controller('driverEmbedMap');
+        var controller = Element.controller('embedMapController');
 
         var lat = 11.3;
         var lng = 124.2;
