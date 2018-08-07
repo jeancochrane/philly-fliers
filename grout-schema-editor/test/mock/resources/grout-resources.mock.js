@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function DriverResourcesMock () {
+    function GroutResourcesMock () {
 
         var RecordList = [
             {
@@ -422,7 +422,7 @@
         };
     }
 
-    angular.module('ase.mock.resources', [])
-    .factory('GroutResourcesMock', DriverResourcesMock);
+    angular.module('ase.mock.resources.grout', [])
+    .factory('GroutResourcesMock', GroutResourcesMock);
 
 })();

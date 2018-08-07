@@ -1,11 +1,10 @@
 'use strict';
 
-describe('driver.views.record: DetailsController', function () {
+describe('ase.views.record: DetailsController', function () {
 
     beforeEach(module('ase.mock.resources'));
-    beforeEach(module('driver.mock.resources'));
-    beforeEach(module('driver.views.record'));
-    beforeEach(module('pascalprecht.translate'));
+    beforeEach(module('ase.mock.resources.grout'));
+    beforeEach(module('ase.views.record'));
 
     var $controller;
     var $httpBackend;
@@ -13,23 +12,23 @@ describe('driver.views.record: DetailsController', function () {
     var $scope;
     var $stateParams;
     var Controller;
-    var DriverResourcesMock;
+    var GroutResourcesMock;
     var ResourcesMock;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function (_$controller_, _$httpBackend_, _$rootScope_, _$stateParams_,
-                                _DriverResourcesMock_, _ResourcesMock_) {
+                                _GroutResourcesMock_, _ResourcesMock_) {
         $controller = _$controller_;
         $httpBackend = _$httpBackend_;
         $rootScope = _$rootScope_;
         $scope = $rootScope.$new();
         $stateParams = _$stateParams_;
-        DriverResourcesMock = _DriverResourcesMock_;
+        GroutResourcesMock = _GroutResourcesMock_;
         ResourcesMock = _ResourcesMock_;
     }));
 
     it('should load the record', function () {
-        var recordId = DriverResourcesMock.RecordResponse.results[0].uuid;
+        var recordId = GroutResourcesMock.RecordResponse.results[0].uuid;
         $stateParams.recorduuid = recordId;
         var recordSchema = ResourcesMock.RecordSchema;
 
@@ -39,7 +38,7 @@ describe('driver.views.record: DetailsController', function () {
         var recordSchemaIdUrl = new RegExp('api/recordschemas/' + recordSchema.uuid);
 
         $httpBackend.expectGET(allRecordTypesUrl).respond(200, ResourcesMock.RecordTypeResponse);
-        $httpBackend.expectGET(recordUrl).respond(200, DriverResourcesMock.RecordResponse);
+        $httpBackend.expectGET(recordUrl).respond(200, GroutResourcesMock.RecordResponse);
         $httpBackend.expectGET(recordTypeUrl).respond(200, ResourcesMock.RecordTypeResponse);
         $httpBackend.expectGET(recordSchemaIdUrl).respond(200, recordSchema);
 

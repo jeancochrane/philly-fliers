@@ -1,12 +1,10 @@
 'use strict';
 
-describe('driver.views.record: AddEditController', function () {
+describe('ase.views.record: AddEditController', function () {
 
     beforeEach(module('ase.mock.resources'));
-    beforeEach(module('nominatim.mock'));
-    beforeEach(module('driver.mock.resources'));
-    beforeEach(module('driver.views.record'));
-    beforeEach(module('pascalprecht.translate'));
+    beforeEach(module('ase.mock.resources.grout'));
+    beforeEach(module('ase.views.record'));
 
 
     var $controller;
@@ -15,35 +13,30 @@ describe('driver.views.record: AddEditController', function () {
     var $scope;
     var $window;
     var Controller;
-    var DriverResourcesMock;
+    var GroutResourcesMock;
     var ResourcesMock;
-    var NominatimMock;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function (_$controller_, _$httpBackend_, _$rootScope_, _$window_,
-                                _DriverResourcesMock_, _NominatimMock_,
-                                _ResourcesMock_) {
+                                _GroutResourcesMock_, _ResourcesMock_) {
         $controller = _$controller_;
         $httpBackend = _$httpBackend_;
         $rootScope = _$rootScope_;
         $scope = $rootScope.$new();
         $window = _$window_;
-        DriverResourcesMock = _DriverResourcesMock_;
-        NominatimMock = _NominatimMock_;
+        GroutResourcesMock = _GroutResourcesMock_;
         ResourcesMock = _ResourcesMock_;
 
-        var recordId = DriverResourcesMock.RecordResponse.results[0].uuid;
+        var recordId = GroutResourcesMock.RecordResponse.results[0].uuid;
         var recordSchema = ResourcesMock.RecordSchema;
         var recordSchemaIdUrl = new RegExp('api/recordschemas/' + recordSchema.uuid);
         var recordTypeUrl = new RegExp('api/recordtypes/.*record=' + recordId);
         var allRecordTypesUrl = new RegExp('api/recordtypes/');
         var recordUrl = new RegExp('api/records/' + recordId);
-        var nominatimRevUrl = /\/reverse/;
 
         $httpBackend.expectGET(allRecordTypesUrl).respond(200, ResourcesMock.RecordTypeResponse);
-        $httpBackend.expectGET(recordUrl).respond(200, DriverResourcesMock.RecordResponse.results[0]);
+        $httpBackend.expectGET(recordUrl).respond(200, GroutResourcesMock.RecordResponse.results[0]);
         $httpBackend.expectGET(recordTypeUrl).respond(200, ResourcesMock.RecordTypeResponse);
-        $httpBackend.expectGET(nominatimRevUrl).respond(200, NominatimMock.ReverseResponse);
         $httpBackend.expectGET(recordSchemaIdUrl).respond(200, recordSchema);
 
         Controller = $controller('RecordAddEditController', {

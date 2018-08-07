@@ -1,9 +1,8 @@
 'use strict';
 
-describe('driver.views.record: Embedded Map Controller', function () {
+describe('ase.views.record: Embedded Map Controller', function () {
 
-    beforeEach(module('driver.views.record'));
-    beforeEach(module('pascalprecht.translate'));
+    beforeEach(module('ase.views.record'));
 
     var $compile;
     var $controller;
@@ -14,7 +13,7 @@ describe('driver.views.record: Embedded Map Controller', function () {
 
     var Controller;
 
-    var snippet = ['<div class="map" leaflet-map driver-embed-map ',
+    var snippet = ['<div class="map" leaflet-map ase-embed-map ',
                    'editable="true" lat=11.1 lng=121.8></div>'].join('');
 
     beforeEach(inject(function (_$compile_, _$controller_, _$httpBackend_, _$rootScope_, _$timeout_) {
@@ -29,7 +28,7 @@ describe('driver.views.record: Embedded Map Controller', function () {
         $rootScope.$apply();
 
         // find the controller by name
-        Controller = Element.controller('driverEmbedMap');
+        Controller = Element.controller('embedMapController');
     }));
 
     it('should have a map on the controller', function() {
@@ -57,7 +56,7 @@ describe('driver.views.record: Embedded Map Controller', function () {
         // was actually the beginning of a double-click.
         $timeout.flush(); // Synchronously resolve all timeouts immediately.
         expect($rootScope.$broadcast).toHaveBeenCalled();
-        expect($rootScope.$broadcast).toHaveBeenCalledWith('driver.views.record:marker-moved',
+        expect($rootScope.$broadcast).toHaveBeenCalledWith('ase.views.record:marker-moved',
                                                            [lng, lat]);
     });
 
@@ -81,7 +80,7 @@ describe('driver.views.record: Embedded Map Controller', function () {
         // should have a map to start with
         expect(Controller.map).toBeDefined();
 
-        $rootScope.$broadcast('driver.views.record:close');
+        $rootScope.$broadcast('ase.views.record:close');
 
         // should have no map or marker after record close event
         expect(Controller.map).toBeNull();
