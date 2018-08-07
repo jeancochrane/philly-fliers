@@ -20,15 +20,13 @@ describe('ase.views.settings: settingsList', function () {
     }));
 
     it('should load directive', function () {
-        var requestUrl = /\/api\/blackspotconfig/;
-        $httpBackend.expectGET(requestUrl).respond(200, ResourcesMock.BlackSpotConfigResponse);
-
         var scope = $rootScope.$new();
         var element = $compile('<ase-settings-list></ase-settings-list>')(scope);
         $rootScope.$apply();
 
-        // 'update' button for black spot severity threshold
-        expect(element.find('button').length).toEqual(1);
+        // Currently the settings are empty. For now, just make sure that the
+        // directive loads the empty form.
+        expect(element.find('.form-area').length).toEqual(1);
     });
 
 });

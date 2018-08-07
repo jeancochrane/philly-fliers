@@ -1,23 +1,23 @@
 'use strict';
 
-describe('driver.resources: Records', function () {
+describe('ase.resources: Records', function () {
 
-    beforeEach(module('driver.mock.resources'));
-    beforeEach(module('driver.resources'));
+    beforeEach(module('ase.mock.resources'));
+    beforeEach(module('ase.resources'));
 
     var $httpBackend;
     var Records;
-    var DriverResourcesMock;
+    var ResourcesMock;
 
-    beforeEach(inject(function (_$httpBackend_, _Records_, _DriverResourcesMock_) {
+    beforeEach(inject(function (_$httpBackend_, _Records_, _ResourcesMock_) {
         $httpBackend = _$httpBackend_;
         Records = _Records_;
-        DriverResourcesMock = _DriverResourcesMock_;
+        ResourcesMock = _ResourcesMock_;
     }));
 
     it('should extract records from paginated response', function () {
         var requestUrl = /\/api\/records/;
-        $httpBackend.whenGET(requestUrl).respond(DriverResourcesMock.RecordResponse);
+        $httpBackend.whenGET(requestUrl).respond(ResourcesMock.RecordResponse);
         Records.query({ active: 'True' }).$promise.then(function (data) {
             expect(data.length).toBe(3);
 

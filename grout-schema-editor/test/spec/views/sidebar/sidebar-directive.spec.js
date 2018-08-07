@@ -27,7 +27,7 @@ describe('ase.views.sidebar: Sidebar', function () {
         var element = $compile('<ase-sidebar></ase-sidebar>')(scope);
         $rootScope.$apply();
 
-        // 'All Event Types' and 'Geographies' sections
-        expect(element.find('.active-parent').length).toEqual(2);
+        // 'All Event Types' section.
+        expect(element.find('.active-parent').length).toEqual(1);
     });
 });

@@ -3,7 +3,6 @@
 describe('Leaflet: Map Directive', function () {
 
     beforeEach(module('Leaflet'));
-    beforeEach(module('pascalprecht.translate'));
 
     var $compile;
     var $rootScope;

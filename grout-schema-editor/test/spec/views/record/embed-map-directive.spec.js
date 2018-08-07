@@ -2,8 +2,6 @@
 
 describe('ase.views.record: Embedded Map Directive', function () {
 
-    beforeEach(module('ase.mock.resources'));
-    beforeEach(module('ase.mock.resources.grout'));
     beforeEach(module('ase.resources'));
     beforeEach(module('ase.templates'));
     beforeEach(module('ase.views.record'));
@@ -14,21 +12,17 @@ describe('ase.views.record: Embedded Map Directive', function () {
     var $scope;
     var Element;
     var RecordTypes;
-    var ResourcesMock;
-    var GroutResourcesMock;
 
     beforeEach(inject(function (_$compile_, _$httpBackend_, _$rootScope_,
-                                _RecordTypes_, _GroutResourcesMock_, _ResourcesMock_) {
+                                _RecordTypes_) {
         $compile = _$compile_;
         $httpBackend = _$httpBackend_;
         $rootScope = _$rootScope_;
         RecordTypes = _RecordTypes_;
-        ResourcesMock = _ResourcesMock_;
-        GroutResourcesMock = _GroutResourcesMock_;
 
         // create element with directive
         $scope = $rootScope.$new();
-        Element = $compile('<div class="map" leaflet-map ase-embed-map></div>')($scope);
+        Element = $compile('<div class="map" leaflet-map embed-map></div>')($scope);
         $rootScope.$apply();
     }));
 
@@ -38,17 +32,17 @@ describe('ase.views.record: Embedded Map Directive', function () {
 
     it('should not be editable', function() {
         // map is not editable unless directive attribute 'editable' is set to true
-        var controller = Element.controller('embedMapController');
+        var controller = Element.controller('embedMap');
         expect(controller.isEditable).toBeFalsy();
     });
 
     it('should not have location marker set if no initial coordinates provided', function() {
-        var controller = Element.controller('embedMapController');
+        var controller = Element.controller('embedMap');
         expect(controller.locationMarker).toBeNull();
     });
 
     it('should not listen to click events unless editable', function() {
-        var controller = Element.controller('embedMapController');
+        var controller = Element.controller('embedMap');
 
         var lat = 11.3;
         var lng = 124.2;
