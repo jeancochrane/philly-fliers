@@ -3,9 +3,7 @@
 describe('ase.views.record: AddEditController', function () {
 
     beforeEach(module('ase.mock.resources'));
-    beforeEach(module('ase.mock.resources.grout'));
     beforeEach(module('ase.views.record'));
-
 
     var $controller;
     var $httpBackend;
@@ -13,35 +11,37 @@ describe('ase.views.record: AddEditController', function () {
     var $scope;
     var $window;
     var Controller;
-    var GroutResourcesMock;
     var ResourcesMock;
+    var StateMock = {
+        go: angular.noop,
+        current: {}
+    };
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function (_$controller_, _$httpBackend_, _$rootScope_, _$window_,
-                                _GroutResourcesMock_, _ResourcesMock_) {
+                                _ResourcesMock_) {
         $controller = _$controller_;
         $httpBackend = _$httpBackend_;
         $rootScope = _$rootScope_;
         $scope = $rootScope.$new();
         $window = _$window_;
-        GroutResourcesMock = _GroutResourcesMock_;
         ResourcesMock = _ResourcesMock_;
 
-        var recordId = GroutResourcesMock.RecordResponse.results[0].uuid;
+        var recordId = ResourcesMock.RecordResponse.results[0].uuid;
         var recordSchema = ResourcesMock.RecordSchema;
+
         var recordSchemaIdUrl = new RegExp('api/recordschemas/' + recordSchema.uuid);
         var recordTypeUrl = new RegExp('api/recordtypes/.*record=' + recordId);
-        var allRecordTypesUrl = new RegExp('api/recordtypes/');
-        var recordUrl = new RegExp('api/records/' + recordId);
+        var recordUrl = new RegExp('api/records/' + recordId + '/\\?archived=False');
 
-        $httpBackend.expectGET(allRecordTypesUrl).respond(200, ResourcesMock.RecordTypeResponse);
-        $httpBackend.expectGET(recordUrl).respond(200, GroutResourcesMock.RecordResponse.results[0]);
+        $httpBackend.expectGET(recordUrl).respond(200, ResourcesMock.RecordResponse.results[0]);
         $httpBackend.expectGET(recordTypeUrl).respond(200, ResourcesMock.RecordTypeResponse);
         $httpBackend.expectGET(recordSchemaIdUrl).respond(200, recordSchema);
 
         Controller = $controller('RecordAddEditController', {
             $scope: $scope,
-            $stateParams: { recorduuid: recordId }
+            $stateParams: { recorduuid: recordId },
+            $state: StateMock,
         });
         $httpBackend.flush();
         $httpBackend.verifyNoOutstandingRequest();
@@ -83,9 +83,16 @@ describe('ase.views.record: AddEditController', function () {
         // Should submit a PATCH request to record endpoint
         var recordEndpoint = new RegExp('api/records/');
         $httpBackend.expectPATCH(recordEndpoint).respond(200);
+
+        spyOn(StateMock, 'go');
+
         Controller.onSaveClicked();
+
         $httpBackend.flush();
         $httpBackend.verifyNoOutstandingRequest();
+
+        var params = {'recordtype': ResourcesMock.RecordType.uuid};
+        expect(StateMock.go).toHaveBeenCalledWith('record.list', params);
     });
 
     it('should allow deleting a record', function () {
@@ -93,13 +100,20 @@ describe('ase.views.record: AddEditController', function () {
         spyOn($window, 'confirm').and.callFake(function () {
             return true;
         });
+        spyOn(StateMock, 'go');
 
         // Should submit a PATCH request to record endpoint
         var recordEndpoint = new RegExp('api/records/');
         $httpBackend.expectPATCH(recordEndpoint).respond(200);
+
         Controller.onDeleteClicked();
+
         $httpBackend.flush();
         $httpBackend.verifyNoOutstandingRequest();
+
+        var params = {'recordtype': ResourcesMock.RecordType.uuid};
+        expect(StateMock.go).toHaveBeenCalledWith('record.list', params);
+
         expect($window.confirm).toHaveBeenCalled();
     });
 
@@ -107,10 +121,17 @@ describe('ase.views.record: AddEditController', function () {
         // Should submit a PUT request to record endpoint
         var recordEndpoint = new RegExp('api/records/');
         Controller.record = null;
+        spyOn(StateMock, 'go');
+
         $httpBackend.expectPOST(recordEndpoint).respond(201);
+
         Controller.onSaveClicked();
+
         $httpBackend.flush();
         $httpBackend.verifyNoOutstandingRequest();
+
+        var params = {'recordtype': ResourcesMock.RecordType.uuid};
+        expect(StateMock.go).toHaveBeenCalledWith('record.list', params);
     });
 
     it('should fix occurredFrom for date pickers', function () {

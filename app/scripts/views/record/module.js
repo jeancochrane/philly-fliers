@@ -42,6 +42,7 @@
         'ase.resources',
         'ase.schemas',
         'ase.map-layers',
+        'ase.localization',
         'datetimepicker',
         'Leaflet',
         'json-editor',

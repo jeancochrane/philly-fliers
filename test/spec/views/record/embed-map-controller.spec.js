@@ -13,7 +13,7 @@ describe('ase.views.record: Embedded Map Controller', function () {
 
     var Controller;
 
-    var snippet = ['<div class="map" leaflet-map ase-embed-map ',
+    var snippet = ['<div class="map" leaflet-map embed-map ',
                    'editable="true" lat=11.1 lng=121.8></div>'].join('');
 
     beforeEach(inject(function (_$compile_, _$controller_, _$httpBackend_, _$rootScope_, _$timeout_) {
@@ -28,7 +28,7 @@ describe('ase.views.record: Embedded Map Controller', function () {
         $rootScope.$apply();
 
         // find the controller by name
-        Controller = Element.controller('embedMapController');
+        Controller = Element.controller('embedMap');
     }));
 
     it('should have a map on the controller', function() {

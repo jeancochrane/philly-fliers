@@ -9,18 +9,18 @@ describe('ase.details: DetailsConstants', function () {
     var $compile;
     var $httpBackend;
     var $rootScope;
-    var GroutResourcesMock;
+    var ResourcesMock;
 
-    beforeEach(inject(function (_$compile_, _$httpBackend_, _$rootScope_, _GroutResourcesMock_) {
+    beforeEach(inject(function (_$compile_, _$httpBackend_, _$rootScope_, _ResourcesMock_) {
         $compile = _$compile_;
         $httpBackend = _$httpBackend_;
         $rootScope = _$rootScope_;
-        GroutResourcesMock = _GroutResourcesMock_;
+        ResourcesMock = _ResourcesMock_;
     }));
 
     it('should render constants', function () {
         var scope = $rootScope.$new();
-        scope.record = GroutResourcesMock.RecordResponse.results[0];
+        scope.record = ResourcesMock.RecordResponse.results[0];
 
         var element = $compile('<ase-details-constants record="record">' +
                                '</ase-details-constants>')(scope);
@@ -31,7 +31,5 @@ describe('ase.details: DetailsConstants', function () {
         expect(element.find('.value.latitude').length).toEqual(1);
         expect(element.find('.value.longitude').length).toEqual(1);
         expect(element.find('.value.occurred').length).toEqual(1);
-        expect(element.find('.value.weather').length).toEqual(1);
-        expect(element.find('.value.light').length).toEqual(1);
     });
 });

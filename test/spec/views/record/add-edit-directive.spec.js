@@ -11,7 +11,6 @@ Function.prototype.bind = Function.prototype.bind || function (thisp) {
 describe('ase.views.record: RecordAddEdit', function () {
 
     beforeEach(module('ase.mock.resources'));
-    beforeEach(module('ase.mock.resources.grout'));
     beforeEach(module('ase.auth'));
     beforeEach(module('ase.resources'));
     beforeEach(module('ase.views.record'));
@@ -23,7 +22,6 @@ describe('ase.views.record: RecordAddEdit', function () {
     var $stateParams;
     var AuthService;
     var RecordTypes;
-    var GroutResourcesMock;
     var ResourcesMock;
 
     beforeEach(function() {
@@ -60,7 +58,7 @@ describe('ase.views.record: RecordAddEdit', function () {
         });
 
         inject(function (_$compile_, _$httpBackend_, _$rootScope_, _$stateParams_,
-                         _AuthService_, _RecordTypes_, _GroutResourcesMock_, _ResourcesMock_) {
+                         _AuthService_, _RecordTypes_, _ResourcesMock_) {
 
             $compile = _$compile_;
             $httpBackend = _$httpBackend_;
@@ -68,7 +66,6 @@ describe('ase.views.record: RecordAddEdit', function () {
             $stateParams = _$stateParams_;
             AuthService = _AuthService_;
             RecordTypes = _RecordTypes_;
-            GroutResourcesMock = _GroutResourcesMock_;
             ResourcesMock = _ResourcesMock_;
         });
     });
@@ -78,27 +75,25 @@ describe('ase.views.record: RecordAddEdit', function () {
         spyOn(AuthService, 'hasWriteAccess').and.returnValue(true);
 
         // log in first
-        var queryUrl = /\/api-token-auth/;
+        var queryUrl = /\/api\/auth\/token\/post/;
         $httpBackend.expectPOST(queryUrl).respond({user: 1, token: 'gotatoken'});
         AuthService.authenticate({username: 'foo', password: 'foo'});
         $httpBackend.flush();
         $rootScope.$digest();
 
-        var recordId = GroutResourcesMock.RecordResponse.results[0].uuid;
+        var recordId = ResourcesMock.RecordResponse.results[0].uuid;
         $stateParams.recorduuid = recordId;
         var recordSchema = ResourcesMock.RecordSchema;
         var recordSchemaIdUrl = new RegExp('api/recordschemas/' + recordSchema.uuid);
         var recordTypeUrl = new RegExp('api/recordtypes/.*record=' + recordId);
-        var allRecordTypesUrl = new RegExp('api/recordtypes/');
         var recordUrl = new RegExp('api/records/' + recordId);
 
-        $httpBackend.expectGET(allRecordTypesUrl).respond(200, ResourcesMock.RecordTypeResponse);
-        $httpBackend.expectGET(recordUrl).respond(200, GroutResourcesMock.RecordResponse.results[0]);
+        $httpBackend.expectGET(recordUrl).respond(200, ResourcesMock.RecordResponse.results[0]);
         $httpBackend.expectGET(recordTypeUrl).respond(200, ResourcesMock.RecordTypeResponse);
         $httpBackend.expectGET(recordSchemaIdUrl).respond(200, recordSchema);
 
         var scope = $rootScope.$new();
-        var element = $compile('<ase-record-add-edit></ase-record-add-edit>')(scope);
+        var element = $compile('<record-add-edit></record-add-edit>')(scope);
         $rootScope.$digest();
 
         // TODO: there's a hard-to-debug exception raised here when running the following code.
