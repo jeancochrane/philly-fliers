@@ -21,7 +21,7 @@
             ctl.isInitialized = false;
             ctl.userCanWrite = AuthService.hasWriteAccess();
 
-            if (typeof($stateParams.recordtype !== 'undefined')) {
+            if (typeof($stateParams.recordtype) !== 'undefined') {
                 var recordTypeUuid = $stateParams.recordtype;
                 loadRecordSchema(recordTypeUuid);
             } else {
