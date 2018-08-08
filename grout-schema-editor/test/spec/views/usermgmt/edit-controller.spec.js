@@ -45,8 +45,6 @@ describe('ase.views.usermgmt: UserEditController', function () {
 
         var responseUser = angular.extend({}, ResourcesMock.UserInfoResponse);
 
-        console.log(responseUser);
-
         // 1) user has one group, which is public
         $httpBackend.expectGET(requestUrl).respond(200, responseUser);
 

@@ -74,7 +74,7 @@
                     .sortBy('propertyOrder')
                     .value();
             }
-        }
+        };
     }
 
     angular.module('ase.details')
