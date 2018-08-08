@@ -1,6 +1,15 @@
-FROM node:4-slim
+FROM node:10-slim
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+
+# Install Chrome for running ng test
+RUN apt-get update -yq \
+    && karmaDeps=' \
+        g++ \
+        chromium \
+    ' \
+    && apt-get install -y ${karmaDeps}
+
+RUN apt-get install -y --no-install-recommends \
   build-essential \
   git \
   libfontconfig \
