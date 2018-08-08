@@ -20,15 +20,9 @@ describe('ase.views.record: RecordList', function () {
          * which Records to load.
          */
         var scope = $rootScope.$new();
-        var element = $compile('<record-list></record-list>')(scope);
-        $rootScope.$apply();
+        $compile('<record-list></record-list>')(scope);
 
-        /* The container element should exist. */
-        expect(element.find('.container').length).toBe(1);
-
-        /* The Record details should not exist. */
-        expect(element.find('.date').length).toBe(0);
-        expect(element.find('.detail').length).toBe(0);
-        expect(element.find('.links').length).toBe(0);
+        var expectedErr = 'Possibly unhandled rejection: Unable to load record schema: no RecordType specified.';
+        expect(function() { $rootScope.$apply(); }).toThrow(expectedErr);
     });
 });
