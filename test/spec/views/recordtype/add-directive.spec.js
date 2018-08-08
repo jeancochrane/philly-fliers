@@ -27,12 +27,6 @@ describe('ase.views.recordtype: RTAdd', function () {
         var scope = $rootScope.$new();
         var element = $compile('<ase-rt-add></ase-rt-add>')(scope);
         $rootScope.$apply();
-
-        // PhantomJS doesn't fire events for elements in memory, so the form
-        // element needs to live on a document in order for click events to
-        // register. Append it to the body, following this suggestion:
-        // https://stackoverflow.com/questions/17211466/how-can-i-simulate-a-click-event-in-my-angularjs-directive-test#answer-34801507
-        $document.body.appendChild('body').append(element);
         spyOn(scope.rt, 'submitForm');
 
         // Check for existence of 'Save' and 'Cancel' buttons
@@ -56,8 +50,5 @@ describe('ase.views.recordtype: RTAdd', function () {
         // All required fields are entered, press Save and verify it's submitted
         saveButton.click();
         expect(scope.rt.submitForm).toHaveBeenCalled();
-
-        // Remove the form element from the body.
-        $document.body.appendChild('body').empty();
     });
 });
