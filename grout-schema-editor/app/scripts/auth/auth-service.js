@@ -28,11 +28,12 @@
         module.authenticate = function(auth, needsAdmin) {
             var dfd = $q.defer();
             $http.post(ASEConfig.api.hostname + '/api/auth/token/post/', auth)
-            .success(function(data, status) {
+            .then(function(response) {
                 var result = {
-                    status: status,
+                    status: response.status,
                     error: ''
                 };
+                var data = response.data;
 
                 if (data && data.user && data.token) {
                     $log.debug('sending user service user:');
@@ -93,7 +94,8 @@
                         }
                     }
                 });
-            }).error(function(data, status) {
+            }).catch(function(response) {
+                var data = response.data;
                 var error = _.values(data).join(' ');
                 if (data.username) {
                     error = 'Username field required.';
@@ -103,7 +105,7 @@
                 }
                 var result = {
                     isAuthenticated: false,
-                    status: status,
+                    status: response.status,
                     error: error
                 };
                 dfd.resolve(result);

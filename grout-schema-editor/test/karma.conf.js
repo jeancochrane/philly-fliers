@@ -218,6 +218,8 @@ module.exports = function(config) {
       'app/scripts/**/*.html',
       'app/scripts/utils/module.js',
       'app/scripts/utils/**.js',
+      'app/scripts/details/module.js',
+      'app/scripts/details/**.js',
       'app/scripts/directives/module.js',
       'app/scripts/directives/**.js',
       'app/scripts/userdata/module.js',
@@ -230,16 +232,22 @@ module.exports = function(config) {
       'app/scripts/resources/**.js',
       'app/scripts/json-editor/module.js',
       'app/scripts/json-editor/**.js',
+      'app/scripts/leaflet/module.js',
+      'app/scripts/leaflet/**.js',
+      'app/scripts/localization/module.js',
+      'app/scripts/localization/**.js',
+      'app/scripts/map-layers/module.js',
+      'app/scripts/map-layers/**.js',
       'app/scripts/notifications/module.js',
       'app/scripts/notifications/**.js',
       'app/scripts/navbar/module.js',
       'app/scripts/navbar/**.js',
       'app/scripts/views/sidebar/module.js',
       'app/scripts/views/sidebar/**.js',
-      'app/scripts/views/geography/module.js',
-      'app/scripts/views/geography/**.js',
       'app/scripts/views/login/module.js',
       'app/scripts/views/login/**.js',
+      'app/scripts/views/record/module.js',
+      'app/scripts/views/record/**.js',
       'app/scripts/views/recordtype/module.js',
       'app/scripts/views/recordtype/**.js',
       'app/scripts/views/settings/module.js',
@@ -273,12 +281,19 @@ module.exports = function(config) {
     // - PhantomJS
     // - IE (only Windows)
     browsers: [
-      'PhantomJS'
+      'ChromeHeadless'
     ],
+
+    customLaunchers: {
+        ChromeHeadless: {
+            base: 'Chromium',
+            flags: ['--no-sandbox', '--disable-gpu', '--headless', '--remote-debugging-port=9222', '--remote-debugging-address=0.0.0.0']
+        }
+    },
 
     // Which plugins to enable
     plugins: [
-      'karma-phantomjs-launcher',
+      'karma-chrome-launcher',
       'karma-jasmine',
       'karma-ng-html2js-preprocessor'
     ],

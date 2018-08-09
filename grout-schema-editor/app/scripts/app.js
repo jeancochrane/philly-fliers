@@ -80,6 +80,7 @@
         'ase.localization',
         'ase.details',
         'ui.router',
+        'ui.router.state.events',
         'LocalStorageModule'
     ])
     .config(DefaultRoutingConfig)
