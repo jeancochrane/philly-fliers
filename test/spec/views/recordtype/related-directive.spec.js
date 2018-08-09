@@ -2,10 +2,7 @@
 
 describe('ase.views.recordtype: RTRelatedAdd', function () {
 
-    beforeEach(module('ase', function ($controllerProvider) {
-        $controllerProvider.register('RTRelatedController', angular.noop);
-    }));
-
+    beforeEach(module('ase.auth'));
     beforeEach(module('ase.mock.resources'));
     beforeEach(module('ase.templates'));
     beforeEach(module('ase.views.recordtype'));
@@ -30,8 +27,10 @@ describe('ase.views.recordtype: RTRelatedAdd', function () {
     }));
 
     it('should load directive', function () {
-        var scope = $rootScope.$new();
+        var recordTypeUrl = /api\/recordtypes\/\?limit=all/;
+        $httpBackend.expectGET(recordTypeUrl).respond(200, ResourcesMock.RecordType);
 
+        var scope = $rootScope.$new();
         var element = $compile('<ase-rt-related></ase-rt-related>')(scope);
         $rootScope.$apply();
 
@@ -48,6 +47,9 @@ describe('ase.views.recordtype: RTRelatedAdd', function () {
 
     it('should reflect multiple rows', function () {
         var scope = $rootScope.$new();
+
+        var recordTypeUrl = /api\/recordtypes\/\?limit=all/;
+        $httpBackend.expectGET(recordTypeUrl).respond(200, ResourcesMock.RecordType);
 
         var element = $compile('<ase-rt-related></ase-rt-related>')(scope);
         $rootScope.$apply();

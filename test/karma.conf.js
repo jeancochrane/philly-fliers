@@ -236,8 +236,6 @@ module.exports = function(config) {
       'app/scripts/leaflet/**.js',
       'app/scripts/localization/module.js',
       'app/scripts/localization/**.js',
-      'app/scripts/login/module.js',
-      'app/scripts/login/**.js',
       'app/scripts/map-layers/module.js',
       'app/scripts/map-layers/**.js',
       'app/scripts/notifications/module.js',
@@ -246,8 +244,6 @@ module.exports = function(config) {
       'app/scripts/navbar/**.js',
       'app/scripts/views/sidebar/module.js',
       'app/scripts/views/sidebar/**.js',
-      'app/scripts/views/geography/module.js',
-      'app/scripts/views/geography/**.js',
       'app/scripts/views/login/module.js',
       'app/scripts/views/login/**.js',
       'app/scripts/views/record/module.js',
@@ -285,12 +281,19 @@ module.exports = function(config) {
     // - PhantomJS
     // - IE (only Windows)
     browsers: [
-      'PhantomJS'
+      'ChromeHeadless'
     ],
+
+    customLaunchers: {
+        ChromeHeadless: {
+            base: 'Chromium',
+            flags: ['--no-sandbox', '--disable-gpu', '--headless', '--remote-debugging-port=9222', '--remote-debugging-address=0.0.0.0']
+        }
+    },
 
     // Which plugins to enable
     plugins: [
-      'karma-phantomjs-launcher',
+      'karma-chrome-launcher',
       'karma-jasmine',
       'karma-ng-html2js-preprocessor'
     ],

@@ -2,12 +2,7 @@
 
 describe('ase.views.recordtype: RTRelatedAdd', function () {
 
-    // Need to override the controller, mostly because it relies on $stateParams being set,
-    // but also because we already have tests for the controller, and don't need extra logic here
-    beforeEach(module('ase', function ($controllerProvider) {
-        $controllerProvider.register('RTRelatedAddController', angular.noop);
-    }));
-
+    beforeEach(module('ase.auth'));
     beforeEach(module('ase.mock.resources'));
     beforeEach(module('ase.templates'));
     beforeEach(module('ase.views.recordtype'));
@@ -35,6 +30,9 @@ describe('ase.views.recordtype: RTRelatedAdd', function () {
     }));
 
     it('should allow adding new related type', function () {
+        var recordTypeUrl = /api\/recordtypes\/\?limit=all/;
+        $httpBackend.expectGET(recordTypeUrl).respond(200, ResourcesMock.RecordType);
+
         var scope = $rootScope.$new();
         var element = $compile('<ase-rt-related-add></ase-rt-related-add>')(scope);
         $rootScope.$apply();
