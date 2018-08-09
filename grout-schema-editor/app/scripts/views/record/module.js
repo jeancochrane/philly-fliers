@@ -1,3 +1,13 @@
+// This is an ugly import, but because the module is not packaged for npm, we
+// can't resolve it directly by name and have to use a path instead.
+import '../../../../node_modules/angular-bootstrap-datetimepicker-directive/angular-bootstrap-datetimepicker-directive';
+import 'angular-uuid';
+
+import '../../map-layers/module';
+import '../../localization/module';
+import '../../leaflet/module';
+
+
 (function () {
     'use strict';
 

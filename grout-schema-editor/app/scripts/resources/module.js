@@ -1,3 +1,6 @@
+import 'angular-resource';
+import 'ng-file-upload';
+
 (function () {
     'use strict';
 

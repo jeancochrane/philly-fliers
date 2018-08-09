@@ -1,3 +1,10 @@
+import 'json-editor';
+
+import '../../directives/module';
+import '../../schemas/module';
+import '../../resources/module';
+
+
 (function () {
     'use strict';
 

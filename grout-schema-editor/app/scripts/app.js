@@ -1,3 +1,22 @@
+import '../styles/main.scss';
+import 'angular';
+import 'angular-local-storage';
+// Polyfill to support legacy stateEvents for Angular UI router. See:
+// https://ui-router.github.io/ng1/docs/latest/modules/ng1_state_events.html
+import 'angular-ui-router/lib/legacy/stateEvents';
+
+import './auth/module';
+import './notifications/module';
+import './navbar/module';
+import './views/login/module';
+import './json-editor/module';
+import './views/recordtype/module';
+import './views/record/module';
+import './views/settings/module';
+import './views/usermgmt/module';
+import './details/module';
+
+
 (function () {
     'use strict';
 

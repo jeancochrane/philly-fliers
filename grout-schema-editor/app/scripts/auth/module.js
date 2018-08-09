@@ -1,3 +1,9 @@
+import 'angular-cookies';
+
+import '~/scripts/config';
+import '~/scripts/userdata/module';
+
+
 (function () {
 'use strict';
 

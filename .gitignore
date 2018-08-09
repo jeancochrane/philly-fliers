@@ -11,3 +11,5 @@ selenium-debug.log
 
 # Env files.
 .env
+
+.cache

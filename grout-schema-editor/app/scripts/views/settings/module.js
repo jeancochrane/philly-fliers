@@ -1,3 +1,6 @@
+import '../../utils/module';
+import '../sidebar/module';
+
 (function () {
 'use strict';
 
