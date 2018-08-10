@@ -23,12 +23,10 @@ services:
       - grout
     volumes:
       - ./grout-schema-editor:/opt/schema_editor
-    entrypoint: ./node_modules/parcel-bundler/bin/cli.js
-    command: app/index.html --hmr-port 35845
+    entrypoint: npm
+    command: start
     ports:
-      - "1234:1234"
       - "9000:9000"
-      - "35845:35845"
 
   app:
     image: node:9.11.1-alpine

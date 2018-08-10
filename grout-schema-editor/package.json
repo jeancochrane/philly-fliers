@@ -29,22 +29,49 @@
   },
   "repository": {},
   "devDependencies": {
+    "ajv": "^6.4.0",
     "angular-mocks": "~1.7.3",
+    "autoprefixer": "^8.4.1",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-es2015": "^6.1.18",
     "babel-plugin-angularjs-annotate": "^0.9.0",
-    "jasmine-core": "~3.1.0",
+    "copy-webpack-plugin": "^4.5.1",
+    "css-loader": "^0.28.11",
+    "extract-text-webpack-plugin": "2.0.0-beta.5",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^3.2.0",
+    "istanbul-instrumenter-loader": "^3.0.1",
+    "jasmine-core": "^3.1.0",
     "jjv": "~1.0.2",
     "jshint-stylish": "^1.0.0",
-    "karma": "~2.0.0",
+    "karma": "^2.0.2",
+    "karma-coverage": "^1.0.0",
+    "karma-jasmine": "^1.0.2",
     "karma-chrome-launcher": "~2.2.0",
-    "karma-jasmine": "*",
-    "karma-ng-html2js-preprocessor": "^0.1.2",
-    "node-sass": "~4.9.3",
-    "parcel-bundler": "git+https://github.com/parcel-bundler/parcel.git#master"
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-spec-reporter": "^0.0.32",
+    "karma-webpack": "^3.0.0",
+    "node-libs-browser": "^2.1.0",
+    "node-sass": "^4.9.3",
+    "null-loader": "^0.1.1",
+    "phantomjs-prebuilt": "^2.1.4",
+    "postcss-loader": "^2.1.5",
+    "raw-loader": "^0.5.1",
+    "rimraf": "^2.5.1",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.21.0",
+    "webpack": "^2.7.0",
+    "webpack-dev-server": "^2.11.2"
   },
   "engines": {
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "grunt test"
+    "build": "rimraf dist && webpack --bail --progress --profile",
+    "server": "webpack-dev-server --history-api-fallback --inline --progress",
+    "test": "karma start",
+    "test-watch": "karma start --auto-watch --no-single-run",
+    "start": "npm run server"
   }
 }

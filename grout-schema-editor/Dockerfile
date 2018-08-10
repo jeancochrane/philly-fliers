@@ -25,4 +25,4 @@ WORKDIR /opt/schema_editor
 COPY . /opt/schema_editor
 RUN yarn install
 
-ENTRYPOINT ["parcel"]
+ENTRYPOINT ["npm", "start"]

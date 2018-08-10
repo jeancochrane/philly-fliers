@@ -1,4 +1,4 @@
-import '~styles/main.scss';
+import '@/../styles/main.scss';
 import 'angular';
 import 'angular-local-storage';
 import '@uirouter/angularjs';

@@ -1,7 +1,7 @@
 import 'angular-cookies';
 
-import '~/scripts/config';
-import '~/scripts/userdata/module';
+import '@/config';
+import '@/userdata/module';
 
 
 (function () {
