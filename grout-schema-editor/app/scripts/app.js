@@ -1,11 +1,19 @@
-import '../styles/main.scss';
+import '~styles/main.scss';
 import 'angular';
 import 'angular-local-storage';
+import '@uirouter/angularjs';
 // Polyfill to support legacy stateEvents for Angular UI router. See:
 // https://ui-router.github.io/ng1/docs/latest/modules/ng1_state_events.html
-import 'angular-ui-router/lib/legacy/stateEvents';
+//import '@uirouter/angularjs/lib/legacy/stateEvents';
 
 import './auth/module';
+import './auth/auth-service';
+import './auth/auth-interceptor';
+import './auth/logout-interceptor';
+
+import './userdata/module';
+import './userdata/user-service';
+
 import './notifications/module';
 import './navbar/module';
 import './views/login/module';
@@ -99,7 +107,7 @@ import './details/module';
         'ase.localization',
         'ase.details',
         'ui.router',
-        'ui.router.state.events',
+        //'ui.router.state.events',
         'LocalStorageModule'
     ])
     .config(DefaultRoutingConfig)

@@ -1,3 +1,5 @@
+import template from './login-partial.html';
+
 (function () {
     'use strict';
 
@@ -7,7 +9,7 @@
     function StateConfig($stateProvider) {
         $stateProvider.state('login', {
             url: '/login',
-            templateUrl: 'scripts/views/login/login-partial.html',
+            template: template,
             controller: 'AuthController',
         });
     }
