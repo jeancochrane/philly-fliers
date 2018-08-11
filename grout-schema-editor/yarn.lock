@@ -101,6 +101,10 @@ angular-aria@~1.7.3:
   version "0.0.0"
   resolved "git+https://github.com/diosney/angular-bootstrap-datetimepicker-directive.git#8f22c3ec938511a380fdbe89b8d6d03ac75476f7"
 
+angular-bootstrap@^0.12.0:
+  version "0.12.2"
+  resolved "https://registry.yarnpkg.com/angular-bootstrap/-/angular-bootstrap-0.12.2.tgz#de9900a7db087a7e9da47304a9c2f77f9c069827"
+
 angular-cookies@~1.7.3:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/angular-cookies/-/angular-cookies-1.7.3.tgz#9abf1968e8327a81e16a466184c7dd80f013eaa4"
@@ -129,17 +133,11 @@ angular-ui-bootstrap@~0.13.0:
   version "0.13.4"
   resolved "https://registry.yarnpkg.com/angular-ui-bootstrap/-/angular-ui-bootstrap-0.13.4.tgz#d9981523b12ecb5f911cb0b4829fa3e5f20ed9ec"
 
-angular-ui-router@~0.2.14:
-  version "0.2.18"
-  resolved "https://registry.yarnpkg.com/angular-ui-router/-/angular-ui-router-0.2.18.tgz#1dad70415c73d7046fd2e130df03d62fb7464360"
-  dependencies:
-    angular "^1.0.8"
-
 angular-uuid@~0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/angular-uuid/-/angular-uuid-0.0.4.tgz#87a860ca1d36ae389f7ec60fd04366edc0e3584d"
 
-angular@^1.0.8, angular@^1.7.3:
+angular@^1.7.3:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.3.tgz#0f25a661d079fc84d5ccc877a2ef9d7178575ddb"
 
@@ -475,15 +473,7 @@ bin-check@^2.0.0:
   dependencies:
     executable "^1.0.0"
 
-bin-version-check@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/bin-version-check/-/bin-version-check-1.0.0.tgz#f0e95430350ae95154b14a36e27a61ebe5ec05f7"
-  dependencies:
-    bin-version "^1.0.0"
-    minimist "^1.1.0"
-    semver "^3.0.1"
-
-bin-version-check@^2.1.0:
+bin-version-check@^2.0.0, bin-version-check@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/bin-version-check/-/bin-version-check-2.1.0.tgz#e4e5df290b9069f7d111324031efc13fdd11a5b0"
   dependencies:
@@ -2664,14 +2654,16 @@ grunt-contrib-clean@^0.6.0:
   dependencies:
     rimraf "~2.2.1"
 
-grunt-contrib-compass@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/grunt-contrib-compass/-/grunt-contrib-compass-1.0.0.tgz#f1c53e956d03779e750fbab0a4d40bbfed7af914"
+grunt-contrib-compass@^1.0.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/grunt-contrib-compass/-/grunt-contrib-compass-1.1.1.tgz#3c25d209e018825aac9fa82315bbe6dfc1c636dc"
   dependencies:
-    async "^0.9.0"
-    bin-version-check "^1.0.0"
+    async "^1.5.2"
+    bin-version-check "^2.0.0"
     dargs "^2.0.3"
-    tmp "0.0.24"
+    onetime "^1.0.0"
+    tmp "0.0.28"
+    which "^1.0.9"
 
 grunt-contrib-concat@^0.5.0, grunt-contrib-concat@~0.5.0:
   version "0.5.1"
@@ -4982,7 +4974,7 @@ os-name@^1.0.0:
     osx-release "^1.0.0"
     win-release "^1.0.0"
 
-os-tmpdir@^1.0.0, os-tmpdir@~1.0.2:
+os-tmpdir@^1.0.0, os-tmpdir@~1.0.1, os-tmpdir@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
 
@@ -5838,10 +5830,6 @@ semver@^2.2.1, semver@^2.3.0, semver@~2.3.0:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-2.3.2.tgz#b9848f25d6cf36333073ec9ef8856d42f1233e52"
 
-semver@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-3.0.1.tgz#720ac012515a252f91fb0dd2e99a56a70d6cf078"
-
 semver@~5.0.1:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.0.3.tgz#77466de589cd5d3c95f138aa78bc569a3cb5d27a"
@@ -6593,9 +6581,11 @@ tmp@0.0.23:
   version "0.0.23"
   resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.23.tgz#de874aa5e974a85f0a32cdfdbd74663cb3bd9c74"
 
-tmp@0.0.24:
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.24.tgz#d6a5e198d14a9835cc6f2d7c3d9e302428c8cf12"
+tmp@0.0.28:
+  version "0.0.28"
+  resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.28.tgz#172735b7f614ea7af39664fa84cf0de4e515d120"
+  dependencies:
+    os-tmpdir "~1.0.1"
 
 tmp@0.0.33, tmp@0.0.x:
   version "0.0.33"
@@ -7027,7 +7017,7 @@ which-module@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/which-module/-/which-module-1.0.0.tgz#bba63ca861948994ff307736089e3b96026c2a4f"
 
-which@1, which@^1.2.1, which@^1.2.9:
+which@1, which@^1.0.9, which@^1.2.1, which@^1.2.9:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/which/-/which-1.3.1.tgz#a45043d54f5805316da8d62f9f50918d3da70b0a"
   dependencies:
@@ -7080,6 +7070,10 @@ wordwrap@~0.0.2:
 wordwrap@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-1.0.0.tgz#27584810891456a4171c8d0226441ade90cbcaeb"
+
+"world-calendars@git+https://github.com/azavea/calendars#master":
+  version "0.0.0"
+  resolved "git+https://github.com/azavea/calendars#4e4504e08e9188c01c3ad39a543b8b2e789760a2"
 
 wrap-ansi@^2.0.0:
   version "2.1.0"
