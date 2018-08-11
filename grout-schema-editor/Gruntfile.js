@@ -176,35 +176,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // Automatically inject Bower components into the app
-    wiredep: {
-      app: {
-        src: ['<%= yeoman.app %>/index.html'],
-        exclude: [],
-        ignorePath:  /\.\.\//
-      },
-      test: {
-        devDependencies: true,
-        src: '<%= karma.unit.configFile %>',
-        ignorePath:  /\.\.\//,
-        fileTypes:{
-          js: {
-            block: /(([\s\t]*)\/{2}\s*?bower:\s*?(\S*))(\n|\r|.)*?(\/{2}\s*endbower)/gi,
-              detect: {
-                js: /'(.*\.js)'/gi
-              },
-              replace: {
-                js: '\'{{filePath}}\','
-              }
-            }
-          }
-      },
-      sass: {
-        src: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-        ignorePath: /(\.\.\/){1,2}bower_components\//
-      }
-    },
-
     // Compiles Sass to CSS and generates necessary files if requested
     compass: {
       options: {
@@ -214,13 +185,15 @@ module.exports = function (grunt) {
         imagesDir: '<%= yeoman.app %>/images',
         javascriptsDir: '<%= yeoman.app %>/scripts',
         fontsDir: '<%= yeoman.app %>/styles/fonts',
-        importPath: './node_modules',
         httpImagesPath: '/images',
         httpGeneratedImagesPath: '/images/generated',
         httpFontsPath: '/styles/fonts',
         relativeAssets: false,
         assetCacheBuster: false,
-        raw: 'Sass::Script::Number.precision = 10\n',
+        // The importPath option is not working due to
+        // https://github.com/gruntjs/grunt-contrib-compass/issues/194#issue-42052110.
+        // Use a raw config option instead.
+        raw: 'Sass::Script::Number.precision = 10\nadd_import_path "./node_modules"\n',
         force: true,
         trace: true,
       },
@@ -433,7 +406,6 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
-      'wiredep',
       'concurrent:server',
       'autoprefixer:server',
       'connect:livereload',
@@ -454,7 +426,6 @@ module.exports = function (grunt) {
   grunt.registerTask('test', [
     'newer:jshint',
     'clean:server',
-    'wiredep',
     'concurrent:test',
     'autoprefixer',
     'connect:test',
@@ -463,7 +434,6 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
-    'wiredep',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
