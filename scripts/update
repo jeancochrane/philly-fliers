@@ -27,20 +27,37 @@ then
     then
         usage
     else
-        # Build containers.
+        echo "Building containers..."
+        echo "----------------------------------------------------------"
         docker-compose build
+        echo
 
-        # Run migrations.
+        echo "Running migrations in the Grout app..."
+        echo "----------------------------------------------------------"
         init_db
         docker-compose run --rm grout manage.py migrate
+        echo
 
-        # Upload sample data.
+        echo "Uploading sample data..."
+        echo "----------------------------------------------------------"
         docker-compose run --rm loaddata
+        echo
 
-        # Install NPM modules.
+        echo "Installing NPM modules in the frontend app..."
+        echo "----------------------------------------------------------"
         docker-compose run --rm app install
+        echo
 
-        # Stop all services.
+        echo "Installing NPM modules in the schema editor backend app..."
+        echo "----------------------------------------------------------"
+        docker-compose run --rm --entrypoint "yarn install" editor
+        echo
+
+        echo "Stopping all running services..."
+        echo "----------------------------------------------------------"
         docker-compose stop
+        echo
+
+        echo "Build complete!"
     fi
 fi
