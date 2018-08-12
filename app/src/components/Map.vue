@@ -119,10 +119,14 @@ export default {
             // When a user opens a popup, bind a listener to the "Show more"
             // button to trigger the modal on click
             this.map.on('popupopen', event => {
-                JQuery('#show-more').click(e => {
+                // Set the event listener for the modal trigger on the button.
+                JQuery('.show-more').click(e => {
                     e.preventDefault();
                     JQuery('.modal').modal('show');
                 });
+                // Show the button.
+                JQuery('.show-more').removeClass('disabled');
+                JQuery('.show-more').attr('aria-disabled', 'false');
             });
         },
 
@@ -174,9 +178,13 @@ export default {
                     <p>
                         ${shortDescription}
                     </p>
-                    <p>
-                        <a href="#" id="show-more">Show more details &#8594;</a>
-                    </p>
+                        <button
+                            type="button"
+                            class="show-more btn btn-link pl-0 disabled"
+                            aria-disabled="true"
+                        >
+                            Show more details &#8594;
+                        </a>
                 `;
 
                 let marker = new L.marker([lng, lat]).bindPopup(popup);
