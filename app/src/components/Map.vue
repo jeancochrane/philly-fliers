@@ -52,7 +52,6 @@ export default {
     },
     mounted() {
         this.initMap();
-        this.initTiles();
         this.map.whenReady(this.updateLayers);
     },
     methods: {
@@ -60,12 +59,21 @@ export default {
             /*
              * Initialize a Leaflet map in this component.
              */
+            // Use a cleaner default basemap.
+            const basemapUrl = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}{r}.png';
+            const attribution = 'Map styles &copy; <a href="http://cartodb.com/attributions">CartoDB</a>, ' +
+                                'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> Contributors';
+            const basemap = L.tileLayer(basemapUrl, {
+                attribution: attribution,
+            });
+
             this.map = new L.map(this.$refs.map, {
                 center: [39.95, -75.2129],
                 zoom: 14,
                 dragging: true,
                 touchZoom: true,
                 tap: true,
+                layers: [basemap],
                 scrollWheelZoom: false,
             });
 
@@ -128,16 +136,6 @@ export default {
                 JQuery('.show-more').removeClass('disabled');
                 JQuery('.show-more').attr('aria-disabled', 'false');
             });
-        },
-
-        initTiles() {
-            /*
-             * Add tile layers from OSM to the map.
-             */
-            const streets = new L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> Contributors',
-                maxZoom: 18,
-            }).addTo(this.map);
         },
 
         updateLayers() {
