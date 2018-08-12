@@ -1,12 +1,15 @@
 (function () {
     'use strict';
-
-    // Note: This module is mocked for Travis. If any changes are made to it, they should also
-    // be made in: `schema_editor/test/mock/config.js`
-    //
-    // The web project loads the resources for this project, which includes this config.
-    // The web app has its own config.js constant, which is why these are namespaced.
-
+    /* Configuration variables for the Grout Schema Editor application.
+     *
+     * These defaults should work fine for most applications. The most important
+     * setting is `config.api.hostname`, which corresponds to the URI of your
+     * Grout database server.
+     *
+     * Development note: This module is mocked for Travis. If any changes are
+     * made to the structure of the `config` object, they should also
+     * be made in: `schema_editor/test/mock/config.js`
+     */
     var config = {
         debug: true,
         html5Mode: {
@@ -15,8 +18,7 @@
         },
         api: {
             hostname: 'http://localhost:8000',
-            // These group names are defined server-side in settings.py
-            groups: {
+            groups: {  // These group names should be defined in the settings file for the Grout server.
                 admin: 'admin',
                 readOnly: 'public',
                 readWrite: 'staff'
