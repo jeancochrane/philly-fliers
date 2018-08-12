@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+
+  test:
+    build: .
+    volumes:
+      - .:/opt/schema_editor
+    command: test
+    ports:
+      - "9000:9000"
+      - "35731:35731"
