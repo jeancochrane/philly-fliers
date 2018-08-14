@@ -164,7 +164,7 @@
                 typePromise = RecordTypes.query({ record: ctl.record.uuid }).$promise;
                 recordLoaded = true;
 
-            } else if (typeof(recordTypeUuid !== 'undefined')) {
+            } else if (typeof(recordTypeUuid) !== 'undefined') {
                 // The user is adding a new record, so retrieve the schema for
                 // the record type that they selected
                 typePromise = RecordTypes.get({ id: recordTypeUuid }).$promise;

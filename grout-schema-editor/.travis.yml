@@ -4,6 +4,7 @@ services:
   - docker
 
 install:
+  - cp example/config.js app/scripts/config.js
   - ./scripts/update
 
 script:

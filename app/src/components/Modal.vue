@@ -53,7 +53,7 @@
                                 >
                                     <img
                                         :src="details['Image']"
-                                        class="mb-3"
+                                        class="img img-fluid mb-3"
                                     />
                                 </div>
                                 <p>
