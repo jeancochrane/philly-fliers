@@ -19,6 +19,7 @@ env:
 
 before_install:
   - cp grout-server/.env.example grout-server/.env
+  - cp grout-schema-editor/exampple/config.js grout-schema-editor/app/scripts/config.js
 
 install:
   # Build containers and install NPM modules.
