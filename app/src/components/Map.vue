@@ -9,6 +9,7 @@
 import { mapState } from 'vuex';
 
 import JQuery from 'jquery';
+import fecha from 'fecha';
 import L from 'leaflet';
 import leafletDraw from 'leaflet-draw';
 import 'leaflet/dist/leaflet.css';
@@ -155,10 +156,15 @@ export default {
             // Create a marker layer from the set of active Records.
             let markers = [];
             for (let record of this.records) {
-                // Extract data for display as a marker.
+                // Extract location data for display as a marker.
                 const coords = record.geom.coordinates;
                 const lat = coords[0];
                 const lng = coords[1];
+
+                // Extract date/time data.
+                const from = this.displayDateTime(record.occurred_from);
+                const to = this.displayDateTime(record.occurred_to);
+                const dateRange = (from === to) ? from : `${from} - ${to}`;
 
                 let title = '';
                 let shortDescription = ''
@@ -172,6 +178,7 @@ export default {
 
                 let popup = `
                     <h5>${title}</h5>
+                    <h6>${dateRange}</h6>
                     <hr/>
                     <p>
                         ${shortDescription}
@@ -205,7 +212,18 @@ export default {
              * Set the style of the map for a given CSS `attr` to `val`.
              */
             this.$refs.map.style[attr] = val;
-        }
+        },
+
+        displayDateTime(dt) {
+            /*
+             * Format an ISO 8601 timestamp for human-readable display.
+             */
+            const inputFormat = 'YYYY-MM-DDTHH:mm:ssZ';
+            const outputFormat = 'MMMM Do, YYYY';
+
+            const parsedDate = fecha.parse(dt, 'YYYY', inputFormat);
+            return fecha.format(parsedDate, outputFormat);
+        },
     }
 }
 </script>
