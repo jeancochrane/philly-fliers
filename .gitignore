@@ -11,3 +11,6 @@ yarn-error.log
 
 # macOS
 .DS_Store
+
+# App config
+app/scripts/config.js
