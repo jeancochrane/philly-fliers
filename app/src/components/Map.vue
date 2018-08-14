@@ -167,29 +167,33 @@ export default {
                 const dateRange = (from === to) ? from : `${from} - ${to}`;
 
                 let title = '';
-                let shortDescription = ''
+                let shortDescription = '';
+                let image = false;
                 if (record.data.driverPosterDetails) {
                     title = record.data.driverPosterDetails['Event name'];
                     shortDescription = record.data.driverPosterDetails['Short description'];
+                    image = record.data.driverPosterDetails['Image'];
                 } else if (record.data.driverEventDetails) {
                     title = record.data.driverEventDetails['Title'];
                     shortDescription = record.data.driverEventDetails['Short description'];
+                    image = false;
                 }
 
                 let popup = `
                     <h5>${title}</h5>
                     <h6>${dateRange}</h6>
                     <hr/>
+                    ${ (image) ? `<img src="${image}" class="img img-fluid poster-thumbnail mb-3"/>` : '' }
                     <p>
                         ${shortDescription}
                     </p>
-                        <button
-                            type="button"
-                            class="show-more btn btn-link pl-0 disabled"
-                            aria-disabled="true"
-                        >
-                            Show more details &#8594;
-                        </a>
+                    <button
+                        type="button"
+                        class="show-more btn btn-link pl-0 disabled"
+                        aria-disabled="true"
+                    >
+                        Show more details &#8594;
+                    </a>
                 `;
 
                 let marker = new L.marker([lng, lat]).bindPopup(popup);
@@ -227,3 +231,9 @@ export default {
     }
 }
 </script>
+
+<style>
+.poster-thumbnail {
+    max-height: 200px;
+}
+</style>
