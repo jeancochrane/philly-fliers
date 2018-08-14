@@ -34,14 +34,14 @@ git remote add -f grout-schema-editor git@github.com:azavea/grout-schema-editor.
 git subtree add --prefix grout-schema-editor grout-schema-editor master
 ```
 
-Next, edit the app config file to match the requirements of your project. The
-default values should generally be fine for most applications, but the most
-important part is to edit `config.api.hostname` to match the URI that your
-Grout database server lives on:
+Next, copy and edit the example app config file to match the requirements of your project.
+The default config values should be fine for most applications, with
+the exception of `config.api.hostname`, which will likely need to be changed in order
+to match the URI of your Grout database server instance:
 
 ```bash
-# Replace Vim with your editor of choice.
-vim app/scripts/config.js
+# Move the example config file into the app directory.
+cp example/config.js app/scripts/config.js
 ```
 
 Finally, you'll have to run Grout server in parallel with your app so that
