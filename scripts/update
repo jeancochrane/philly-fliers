@@ -24,6 +24,16 @@ then
     then
         usage
     else
-        docker build -t ashlar-schema-editor:latest .
+        echo "Building container image..."
+        echo "----------------------------"
+        docker-compose build
+        echo
+
+        echo "Installing NPM packages..."
+        echo "----------------------------"
+        docker-compose run --rm --entrypoint "yarn install" test
+        echo
+
+        echo "Build complete!"
     fi
 fi

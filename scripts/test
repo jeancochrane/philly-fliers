@@ -18,18 +18,8 @@ Run tests.
 Options:
     -h --help       Display this help text
     git             Check git commit titles
-    app             Run tests for the app, optionally limited to Python/Django VERSIONS
+    app             Run tests for the app
     <none>          Run all tests
-
-Versions:
-    When running tests for the app, you can limit the Python/Django versions you'd like
-    to test in order to speed up test execution. For example, the following command will only
-    run tests for Python 3.4 and Django 1.11:
-
-        ./scripts/test app py34-django111
-
-    To view available versions, see the envlist in the tox.ini file at the root of
-    this repo.
 "
 }
 
@@ -37,7 +27,7 @@ function app_tests() {
     echo "Testing the app..."
     echo "-------------------------------------------------------------------"
 
-    docker run ashlar-schema-editor test
+    docker-compose run --rm test
 
     echo "PASSED: app tests passed."
 
