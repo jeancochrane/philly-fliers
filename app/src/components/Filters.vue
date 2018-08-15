@@ -32,7 +32,7 @@
             size="xs"/>
         </p>
         <hr />
-        <h5>Filter by field:</h5>
+        <h5>Custom filters</h5>
         <filter-container :filters="filters"/>
     </form>
 </template>
