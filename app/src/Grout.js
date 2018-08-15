@@ -264,7 +264,44 @@ class Schema extends AbstractApiClass {
             });
         });
 
-        return filters;
+        return this._reorder(filters);
+    }
+
+    _reorder(arr) {
+        /*
+         * Private helper method to reorder an array of `Form` or `Filter` objects
+         * based on the `order` property of the contained objects.
+         *
+         * @param {Array.<Form>|Array.<Filter>} - An array of Form or Filter objects
+         *                                        to reorder.
+         * @returns {Array.<Form>|Array.<Filter>} - The reordered array of Form
+         *                                          or Filter objects.
+         */
+        // Validate the input.
+        if (!Array.isArray(arr)) {
+            throw new Error('The _reorder method requires an Array as input, ' +
+                            'not' + typeof(arr));
+        }
+
+        // Create an empty output array of the same length as the input array.
+        let output = new Array(arr.length);
+
+        // Iterate the input and reorder elements based on their `order`
+        // attribute.
+        arr.forEach(elem => {
+            // Validate the type of the element.
+            if (!(elem instanceof Form || elem instanceof Filter)) {
+                throw new Error('All elements of the input array must be instances of the ' +
+                                'Form or Filter class, not ' + elem.constructor.name);
+            }
+
+            // `order` attributes are 1-indexed, but JS is 0-indexed.
+            let index = elem.order - 1;
+
+            output.splice(index, 1, elem);
+        });
+
+        return output;
     }
 
     _parseForms(definitions) {
@@ -298,7 +335,7 @@ class Schema extends AbstractApiClass {
             forms.push(form);
         });
 
-        return forms;
+        return this._reorder(forms);
     }
 }
 
