@@ -9,6 +9,7 @@
 import { mapState } from 'vuex';
 
 import JQuery from 'jquery';
+import fecha from 'fecha';
 import L from 'leaflet';
 import leafletDraw from 'leaflet-draw';
 import 'leaflet/dist/leaflet.css';
@@ -52,7 +53,6 @@ export default {
     },
     mounted() {
         this.initMap();
-        this.initTiles();
         this.map.whenReady(this.updateLayers);
     },
     methods: {
@@ -60,12 +60,21 @@ export default {
             /*
              * Initialize a Leaflet map in this component.
              */
+            // Use a cleaner default basemap.
+            const basemapUrl = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}{r}.png';
+            const attribution = 'Map styles &copy; <a href="http://cartodb.com/attributions">CartoDB</a>, ' +
+                                'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> Contributors';
+            const basemap = L.tileLayer(basemapUrl, {
+                attribution: attribution,
+            });
+
             this.map = new L.map(this.$refs.map, {
                 center: [39.95, -75.2129],
-                zoom: 14,
+                zoom: 15,
                 dragging: true,
                 touchZoom: true,
                 tap: true,
+                layers: [basemap],
                 scrollWheelZoom: false,
             });
 
@@ -119,21 +128,15 @@ export default {
             // When a user opens a popup, bind a listener to the "Show more"
             // button to trigger the modal on click
             this.map.on('popupopen', event => {
-                JQuery('#show-more').click(e => {
+                // Set the event listener for the modal trigger on the button.
+                JQuery('.show-more').click(e => {
                     e.preventDefault();
                     JQuery('.modal').modal('show');
                 });
+                // Show the button.
+                JQuery('.show-more').removeClass('disabled');
+                JQuery('.show-more').attr('aria-disabled', 'false');
             });
-        },
-
-        initTiles() {
-            /*
-             * Add tile layers from OSM to the map.
-             */
-            const streets = new L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> Contributors',
-                maxZoom: 18,
-            }).addTo(this.map);
         },
 
         updateLayers() {
@@ -153,30 +156,44 @@ export default {
             // Create a marker layer from the set of active Records.
             let markers = [];
             for (let record of this.records) {
-                // Extract data for display as a marker.
+                // Extract location data for display as a marker.
                 const coords = record.geom.coordinates;
                 const lat = coords[0];
                 const lng = coords[1];
 
+                // Extract date/time data.
+                const from = this.displayDateTime(record.occurred_from);
+                const to = this.displayDateTime(record.occurred_to);
+                const dateRange = (from === to) ? from : `${from} - ${to}`;
+
                 let title = '';
-                let shortDescription = ''
+                let shortDescription = '';
+                let image = false;
                 if (record.data.driverPosterDetails) {
                     title = record.data.driverPosterDetails['Event name'];
                     shortDescription = record.data.driverPosterDetails['Short description'];
+                    image = record.data.driverPosterDetails['Image'];
                 } else if (record.data.driverEventDetails) {
                     title = record.data.driverEventDetails['Title'];
                     shortDescription = record.data.driverEventDetails['Short description'];
+                    image = false;
                 }
 
                 let popup = `
                     <h5>${title}</h5>
+                    <h6>${dateRange}</h6>
                     <hr/>
+                    ${ (image) ? `<img src="${image}" class="img img-fluid poster-thumbnail mb-3"/>` : '' }
                     <p>
                         ${shortDescription}
                     </p>
-                    <p>
-                        <a href="#" id="show-more">Show more details &#8594;</a>
-                    </p>
+                    <button
+                        type="button"
+                        class="show-more btn btn-link pl-0 disabled"
+                        aria-disabled="true"
+                    >
+                        Show more details &#8594;
+                    </a>
                 `;
 
                 let marker = new L.marker([lng, lat]).bindPopup(popup);
@@ -199,7 +216,24 @@ export default {
              * Set the style of the map for a given CSS `attr` to `val`.
              */
             this.$refs.map.style[attr] = val;
-        }
+        },
+
+        displayDateTime(dt) {
+            /*
+             * Format an ISO 8601 timestamp for human-readable display.
+             */
+            const inputFormat = 'YYYY-MM-DDTHH:mm:ssZ';
+            const outputFormat = 'MMMM Do, YYYY';
+
+            const parsedDate = fecha.parse(dt, inputFormat);
+            return fecha.format(parsedDate, outputFormat);
+        },
     }
 }
 </script>
+
+<style>
+.poster-thumbnail {
+    height: 200px;
+}
+</style>

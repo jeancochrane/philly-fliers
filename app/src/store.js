@@ -182,8 +182,8 @@ const filterState = {
                     .then(types => {
                         context.commit('updateTypes', types);
 
-                        // Select the first returned Type and set it to `active`.
-                        let initialType = types[0].uuid;
+                        // Set "Posters" to be the active type.
+                        const initialType = types.find(type => type.label === 'Poster').uuid;
                         context.commit('updateActiveTypeId', initialType);
 
                         resolve(initialType);
