@@ -2,7 +2,7 @@
     'use strict';
 
     /* ngInject */
-    function RTSchemaEditController($log, $stateParams, BuilderSchemas, RecordTypes,
+    function RTSchemaEditController($log, $stateParams, $window, BuilderSchemas, RecordTypes,
                                     RecordSchemas, Schemas, Notifications, JsonEditorDefaults) {
         var ctl = this;
         var editorData = null;
@@ -190,6 +190,11 @@
                         displayClass: 'alert-danger',
                         timeout: 3000
                     });
+                })
+                .finally(function() {
+                    // Scroll to the top of the window so that the user can see
+                    // the notification.
+                    $window.scrollTo(0, 0);
                 });
         }
     }
