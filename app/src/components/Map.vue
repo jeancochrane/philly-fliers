@@ -70,7 +70,7 @@ export default {
 
             this.map = new L.map(this.$refs.map, {
                 center: [39.95, -75.2129],
-                zoom: 14,
+                zoom: 15,
                 dragging: true,
                 touchZoom: true,
                 tap: true,
