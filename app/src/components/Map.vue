@@ -225,7 +225,7 @@ export default {
             const inputFormat = 'YYYY-MM-DDTHH:mm:ssZ';
             const outputFormat = 'MMMM Do, YYYY';
 
-            const parsedDate = fecha.parse(dt, 'YYYY', inputFormat);
+            const parsedDate = fecha.parse(dt, inputFormat);
             return fecha.format(parsedDate, outputFormat);
         },
     }
