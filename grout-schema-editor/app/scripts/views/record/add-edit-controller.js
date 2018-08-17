@@ -249,7 +249,7 @@
 
             // If a record is loaded, seed the editor with that record.
             if (ctl.record) {
-                ctl.editor.startval = ctl.record.data
+                ctl.editor.startval = ctl.record.data;
             }
             /* jshint camelcase: true */
         }

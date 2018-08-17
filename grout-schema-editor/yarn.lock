@@ -3709,9 +3709,9 @@ jshint@~2.8.0:
     shelljs "0.3.x"
     strip-json-comments "1.0.x"
 
-"json-editor@git+https://github.com/azavea/json-editor.git#v10.7.25":
-  version "10.7.25"
-  resolved "git+https://github.com/azavea/json-editor.git#75120c8abe2c4a524495c45eddcbb443ef86ec07"
+"json-editor@git+https://github.com/jeancochrane/json-editor-community.git#azavea-changes":
+  version "1.1.0-beta.4"
+  resolved "git+https://github.com/jeancochrane/json-editor-community.git#f9e6eb2bedbb8939b49e3a7cd30c2db60efa790d"
 
 json-schema-traverse@^0.3.0:
   version "0.3.1"

@@ -19,7 +19,7 @@
     "bootstrap-sass": "^3.3.7",
     "eonasdan-bootstrap-datetimepicker": "~4.17.0",
     "jquery": "~3.3.0",
-    "json-editor": "git+https://github.com/azavea/json-editor.git#v10.7.25",
+    "json-editor": "git+https://github.com/jeancochrane/json-editor-community.git#azavea-changes",
     "leaflet": "~0.7.3",
     "lodash": "^3.8.0",
     "moment": "2.13.0",
