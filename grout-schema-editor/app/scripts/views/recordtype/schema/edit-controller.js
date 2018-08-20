@@ -107,6 +107,7 @@
                     show_errors: 'change',
                     startval: initialData,
                     keep_oneof_values: false,
+                    prompt_before_delete: false,
                 },
                 errors: []
             };

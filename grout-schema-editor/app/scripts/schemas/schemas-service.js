@@ -334,6 +334,8 @@
                                     break;
                                 case 'enumSource': // Companion to 'watch', but not used here
                                     break;
+                                case 'minLength':  // String fields need a 'minLength' field to be 'required',
+                                    break;         // but the user shouldn't be able to edit it directly.
                                 default:
                                     fieldData[key] = value;
                             }
